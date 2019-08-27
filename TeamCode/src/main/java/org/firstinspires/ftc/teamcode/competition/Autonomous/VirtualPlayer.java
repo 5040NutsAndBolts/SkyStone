@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.competition.Autonomous;
 
-import org.firstinspires.ftc.teamcode.competition.Hardware;
 import org.firstinspires.ftc.teamcode.helperclasses.WayPoint;
 
 import java.util.ArrayList;
