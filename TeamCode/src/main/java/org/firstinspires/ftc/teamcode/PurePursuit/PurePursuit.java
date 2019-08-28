@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.PurePursuit;
 
 
 
+import org.firstinspires.ftc.teamcode.competition.Hardware;
+import org.firstinspires.ftc.teamcode.competition.MecanumDrive;
+import org.firstinspires.ftc.teamcode.helperclasses.OdometryPosition;
 import org.firstinspires.ftc.teamcode.opencv.core.Point;
 
 import java.util.ArrayList;
@@ -13,6 +16,8 @@ import static org.firstinspires.ftc.teamcode.helperclasses.OdometryPosition.worl
 
 public class PurePursuit
 {
+    Hardware robot = new Hardware();
+    MecanumDrive drive = new MecanumDrive(robot);
     
     //will possibly center the search for goal point around project location in the future
     /*public Point projectedLocation()
@@ -114,12 +119,12 @@ public class PurePursuit
         double relativeYToPoint = Math.sin(relativeAngleToPoint)*distanceToTarget;
         double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint)+Math.abs(relativeYToPoint));
         double movementYPower = relativeYToPoint / (Math.abs(relativeYToPoint)+Math.abs(relativeXToPoint));
-
+        double movementTurn=0;
         relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(worldAngle_rad));
 
 
 
-        double turnPowerToGoal;
+        double turnPowerToGoal=0;
         if(iRel<p.size()-2) {
             try {
 
@@ -178,22 +183,21 @@ public class PurePursuit
             */} catch (Exception e)
             {
 
-                //MovementVars.movement_turn = turnPowerToGoal;
+                movementTurn = turnPowerToGoal;
 
             }
-        }/*else
+        }else
         {
 
-            MovementVars.movement_turn = (relativeAngleToPoint) / Math.sqrt(Math.abs(relativeAngleToPoint )) ;
+            movementTurn = (relativeAngleToPoint) / Math.sqrt(Math.abs(relativeAngleToPoint )) ;
 
         }
-        MovementVars.movement_y = movementYPower;
-        MovementVars.movement_x = movementXPower;
-*/
+        drive.drive(movementYPower,movementXPower,movementTurn);
+
     }
 
     //follow path with pure pursuit
-    boolean getBreak=false;
+
 
     public void followPath(ArrayList<WayPoint> p,double lookAheadDistance)
     {
@@ -202,24 +206,14 @@ public class PurePursuit
 
         //add a point for calculations on the last segment
 
-        if(!(worldXPosition>p.get(p.size()-2).x-30&&worldXPosition<p.get(p.size()-2).x+30&&worldYPosition>p.get(p.size()-2).y-30&&worldYPosition<p.get(p.size()-2).y+30)&&!getBreak)
-        {
+
 
 
             double[] d  = goalPoint(p.size() - 2, p, lookAheadDistance);
             Point g = new Point(d[0],d[1]);
             goToPosition(g,p,(int) d[2]);
 
-        }else
-        {
 
-
-                /*MovementVars.movement_x=0;
-                MovementVars.movement_y=0;
-                MovementVars.movement_turn=0;*/
-                getBreak=true;
-
-        }
     }
 
 }

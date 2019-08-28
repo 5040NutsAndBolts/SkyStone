@@ -4,8 +4,8 @@ public class WayPoint
 {
 
 
-    double x;
-    double y;
+    public double x;
+    public double y;
     double maxSpeed;
     double goalTurnPercentageBias;
     double turnAccelerationCap;
