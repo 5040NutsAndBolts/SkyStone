@@ -22,14 +22,14 @@ public class PurePursuit
     }
     */
     //determine how far a point is along the path
-    public double distanceAlongPath(Point location, Point p)
+    private double distanceAlongPath(Point location, Point p)
     {
 
         return Math.sqrt(Math.pow(location.x-p.x,2)+Math.pow(location.y-p.y,2));
 
     }
 //returns the point that pure pursuit will move to by looking at the line segments and finding the intersections of a circle centered at the robot with radius of the look ahead distance
-    public double[] goalPoint(int iRel, ArrayList<WayPoint> p, double lookAheadDistance)
+    private double[] goalPoint(int iRel, ArrayList<WayPoint> p, double lookAheadDistance)
     {
 
         try {
@@ -37,7 +37,6 @@ public class PurePursuit
             double y1 = p.get(iRel-1).y - worldYPosition;
             double x2 = p.get(iRel).x - worldXPosition;
             double y2 = p.get(iRel).y - worldYPosition;
-            double r = lookAheadDistance;
             double dx = x2 - x1;
             double dy = y2 - y1;
             double dr = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -49,7 +48,7 @@ public class PurePursuit
             //if the last segment is selected and there is no goal on that segment go to the end of the path
             if(iRel==p.size()-2&&Math.sqrt(Math.pow(y2,2)+Math.pow(x2,2))<=lookAheadDistance)
                 {return goalPoint(iRel,p,lookAheadDistance-1);}
-            double radicand = Math.pow(r, 2) * Math.pow(dr, 2) - Math.pow(D, 2);
+            double radicand = Math.pow(lookAheadDistance, 2) * Math.pow(dr, 2) - Math.pow(D, 2);
             //if no points on the line intersect the circle where the robot is looking move to the next line 
             if(radicand<0)
                 {
@@ -105,7 +104,7 @@ public class PurePursuit
     }
     
     //move the robot to to a specified point
-    public void goToPosition(Point goalPoint, double movementSpeed,ArrayList<WayPoint> p,int iRel)
+    private void goToPosition(Point goalPoint,ArrayList<WayPoint> p,int iRel)
     {
 
         double distanceToTarget = Math.hypot(goalPoint.x-worldXPosition,goalPoint.y-worldYPosition);
@@ -120,7 +119,7 @@ public class PurePursuit
 
 
 
-        double turnPowerToGoal=0;
+        double turnPowerToGoal;
         if(iRel<p.size()-2) {
             try {
 
@@ -196,7 +195,7 @@ public class PurePursuit
     //follow path with pure pursuit
     boolean getBreak=false;
 
-    public void followPath(ArrayList<WayPoint> p,double lookAheadDistance, double speed)
+    public void followPath(ArrayList<WayPoint> p,double lookAheadDistance)
     {
 
         p.add(p.get(p.size() - 1));
@@ -209,7 +208,7 @@ public class PurePursuit
 
             double[] d  = goalPoint(p.size() - 2, p, lookAheadDistance);
             Point g = new Point(d[0],d[1]);
-            goToPosition(g, speed,p,(int) d[2]);
+            goToPosition(g,p,(int) d[2]);
 
         }else
         {
