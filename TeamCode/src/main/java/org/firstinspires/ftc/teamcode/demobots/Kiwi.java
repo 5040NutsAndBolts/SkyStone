@@ -37,8 +37,8 @@ public class Kiwi extends OpMode
     {
 
         // Controller values
-        double r=gamepad1.right_stick_x/3;
-        double r2=gamepad2.right_stick_x/3;
+        double r=-gamepad1.right_stick_x/3;
+        double r2=-gamepad2.right_stick_x/3;
         boolean leftBumper = gamepad2.left_bumper;
         boolean rightBumper = gamepad2.right_bumper;
         double leftStickX1 = gamepad1.left_stick_x;
@@ -47,13 +47,13 @@ public class Kiwi extends OpMode
         double leftStickY2 = gamepad2.left_stick_y;
 
 
-        if(gamepad1.a&&!aPressed)
+        if(gamepad2.a&&!aPressed)
         {
 
             aPressed=true;
             override=!override;
 
-        }else if(!gamepad1.a)
+        }else if(!gamepad2.a)
         {
 
             aPressed=false;
@@ -110,16 +110,12 @@ public class Kiwi extends OpMode
             speed += 0.1;
             pressed = true;
         }
-        else if(pressed && !leftBumper)
-        {
-            pressed = false;
-        }
         if(rightBumper && !pressed)
         {
             speed -= 0.1;
             pressed = true;
         }
-        else if(pressed && !rightBumper)
+        else if(pressed && !rightBumper&&!leftBumper)
         {
             pressed = false;
         }
