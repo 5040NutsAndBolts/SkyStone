@@ -18,8 +18,6 @@ public class Teleop extends OpMode {
     private MecanumDrive driveTrain;
 
 
-    private boolean resettingPos = false;
-
     /**
      * Instantiates objects
      */
@@ -47,9 +45,6 @@ public class Teleop extends OpMode {
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        // Odometry setup
-        robot.resetEncoders();
-
     }
 
     /**
@@ -66,33 +61,7 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        //robot.bulkData = robot.expansionHub.getBulkInputData();
-        robot.updatePosition();
-        telemetry.addData("left traveled", robot.rightOdomTraveled);
-        telemetry.addData("right traveled", robot.leftOdomTraveled);
-        telemetry.addData("center traveled", robot.centerOdomTraveled);
-        telemetry.addData("avg forward traveled", robot.avgForwardOdomTraveled);
-        telemetry.addLine("==========");
-        telemetry.addData("xPos", robot.x);
-        telemetry.addData("yPos", robot.y);
-        telemetry.addData("theta", robot.theta);
-        telemetry.addLine("==========");
-        telemetry.addData("leftEncoder", robot.leftEncoderPos);
-        telemetry.addData("rightEncoder", robot.rightEncoderPos);
-        telemetry.addData("centerEncoder", robot.centerEncoderPos);
-        telemetry.addLine("==========");
-        telemetry.addData("X pressed", gamepad1.x);
-        telemetry.addData("Resetting", resettingPos);
         telemetry.update();
-
-        // Reset robot position = X
-        if(gamepad1.x && !resettingPos){
-            robot.resetPosition();
-            robot.resetEncoders();
-            resettingPos = true;
-        } else if (!gamepad1.x){
-            resettingPos = false;
-        }
 
         if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
             driveTrain.brakeMotors();
