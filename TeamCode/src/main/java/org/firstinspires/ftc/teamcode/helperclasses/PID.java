@@ -8,9 +8,9 @@ public class PID
     private double distanceFromGoal;
     private double lastDistanceFromGoal;
     private double integral;
-    private double p;
-    private double i;
-    private double d;
+    private double kP;
+    private double kI;
+    private double kD;
 
     private double pComponent;
     private double iComponent;
@@ -18,12 +18,21 @@ public class PID
 
     private ElapsedTime e = new ElapsedTime();
     private double elapsedTime;
+
+    /**
+     *
+     * @param goal The position the controller is headed towards.
+     * @param current The position the controller in at.
+     * @param p The proportional gain.
+     * @param i The integral gain.
+     * @param d The derivative gain.
+     */
     public PID(double goal, double current, double p, double i, double d)
     {
 
-        this.p=p;
-        this.i=i;
-        this.d=d;
+        this.kP=p;
+        this.kI=i;
+        this.kD=d;
         distanceFromGoal=goal-current;
         e.startTime();
 
@@ -48,6 +57,7 @@ public class PID
 
     }
 
+    //sets the value of the distance from goal for the controller
     private void setDistanceFromGoal(double d)
     {
 
@@ -55,14 +65,17 @@ public class PID
 
     }
 
+    //calculates the proportional component
     public double p()
-        {return distanceFromGoal*d;}
+        {return distanceFromGoal*kP;}
 
+    //calculates the integral component
     public double i()
-        {return integral*i; }
+        {return integral*kI; }
 
+    //calculates the derivative component
     public double d()
-        {return (distanceFromGoal-lastDistanceFromGoal)/elapsedTime;}
+        {return (distanceFromGoal-lastDistanceFromGoal)/elapsedTime*kD;}
 
     /**
      *@return Returns the output of the PID controller
