@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.competition;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+package org.firstinspires.ftc.teamcode.competition.drivetrain;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.competition.Hardware;
 
 import static java.lang.Math.abs;
 
@@ -79,15 +77,11 @@ public class MecanumDrive {
         double v7 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
         double v8 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
 
-        robot.leftFront.setPower(v5);
-        robot.rightFront.setPower(v6);
-        robot.leftRear.setPower(v7);
-        robot.rightRear.setPower(v8);
+        powerSet(v5, v6, v7, v8);
     }
 
     /**
-     * Sets power of motors
-     *
+     * Sets power of all motors to a single value
      * @param power The power the robot is set to 0-1
      */
     public void powerSet(double power) {
@@ -95,6 +89,20 @@ public class MecanumDrive {
         robot.rightFront.setPower(power);
         robot.leftRear.setPower(power);
         robot.rightRear.setPower(power);
+    }
+
+    /**
+     * Sets individual powers of the motors
+     * @param v Left front motor power
+     * @param v1 Right front motor power
+     * @param v2 Left rear motor power
+     * @param v3 Right rear motor power
+     */
+    public void powerSet(double v, double v1, double v2, double v3) {
+        robot.leftFront.setPower(v);
+        robot.rightFront.setPower(v1);
+        robot.leftRear.setPower(v2);
+        robot.rightRear.setPower(v3);
     }
 
     /**

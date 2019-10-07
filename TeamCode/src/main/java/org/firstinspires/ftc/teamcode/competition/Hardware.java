@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.competition;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
@@ -27,8 +29,8 @@ public class Hardware {
     private static final double WHEEL_CIRCUM = 2.0 * Math.PI * ODOM_WHEEL_RADIUS;
         // Number of ticks in a centimeter using dimensional analysis
     private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION / WHEEL_CIRCUM;
-        // Adjust for theta so it reads proper values (found through testing)
-    private static final double THETA_ADJUST = 1.06221854294517;
+        // Theta adjust
+    private static final double THETA_ADJUST = 1.028;
 
     // Robot physical location
     public double x = 0;
@@ -42,15 +44,15 @@ public class Hardware {
     public BNO055IMU imu;
 
     // Drive train
-    public DcMotor leftFront = null;
-    public DcMotor rightFront = null;
-    public DcMotor leftRear = null;
-    public DcMotor rightRear = null;
+    public DcMotorEx leftFront = null;
+    public DcMotorEx rightFront = null;
+    public DcMotorEx leftRear = null;
+    public DcMotorEx rightRear = null;
 
     // Odometry hardware
-    private DcMotor leftEncoder = null;
-    private DcMotor rightEncoder = null;
-    private DcMotor centerEncoder = null;
+    private DcMotorEx leftEncoder = null;
+    private DcMotorEx rightEncoder = null;
+    private DcMotorEx centerEncoder = null;
 
     // Rev Expansion Hub Data
     public RevBulkData bulkData;
@@ -82,30 +84,30 @@ public class Hardware {
 
         // Drive train motor setup
           // left front
-        leftFront = hwMap.dcMotor.get("leftFront");
+        leftFront = hwMap.get(DcMotorEx.class, "leftFront");
             // Motors don't have encoders on them because we're using odometry
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             // When motors aren't receiving power, they will attempt to hold their position
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
           // left rear
-        leftRear = hwMap.dcMotor.get("leftRear");
+        leftRear = hwMap.get(DcMotorEx.class, "leftRear");
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
           // right front
-        rightFront = hwMap.dcMotor.get("rightFront");
+        rightFront = hwMap.get(DcMotorEx.class, "rightFront");
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
           // right rear
-        rightRear = hwMap.dcMotor.get("rightRear");
+        rightRear = hwMap.get(DcMotorEx.class, "rightRear");
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Odometry encoder setup
-        leftEncoder = leftFront;
-        rightEncoder = rightFront;  // These would need to be reversed anyway
-        centerEncoder = rightRear;  //  so they are set to the motors which get reversed
+        leftEncoder = hwMap.get(DcMotorEx.class, "leftFront");
+        rightEncoder = hwMap.get(DcMotorEx.class, "rightFront");
+        centerEncoder = hwMap.get(DcMotorEx.class, "rightRear");
 
         // Rev ExpansionHub Bulk Data
         expansionHub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 3");
@@ -115,29 +117,37 @@ public class Hardware {
     }
 
     /**
-     * Update robot position using odometry
+     * Update global robot position using odometry
      */
     public void updatePosition() {
         // Get the circumference of the distance traveled by the wheel since the last update
         // Circumference multiplied by degrees the wheel has rotated
-        double deltaLeftDist = getLeftTicks() / ODOM_TICKS_PER_CM;
-        double deltaRightDist = getRightTicks() / ODOM_TICKS_PER_CM;
+        double deltaLeftDist = -(getLeftTicks() / ODOM_TICKS_PER_CM);
+        double deltaRightDist = -(getRightTicks() / ODOM_TICKS_PER_CM);
         double deltaCenterDist = getCenterTicks() / ODOM_TICKS_PER_CM;
 
-        // Update real world distance traveled by the odometry wheels
+        // Update real world distance traveled by the odometry wheels, regardless of orientation
         leftOdomTraveled += deltaLeftDist;
         rightOdomTraveled += deltaRightDist;
         centerOdomTraveled += deltaCenterDist;
 
-        /* To get theta, we find the arc tangent of the difference between the two wheels'
-            distance traveled divided by the distance between the two wheels */
-        theta += THETA_ADJUST * Math.atan2((deltaLeftDist - deltaRightDist), DIST_BETWEEN_WHEELS);
 
-        // Finds the unrotated point's position, then rotates it around the origin, then adjusts to robot position
-        x += (deltaLeftDist + deltaRightDist) / 2.0 /* * Math.cos(theta) +
-                ((deltaCenterDist) - Math.sin(theta))*/;
-        y += (deltaCenterDist)/* * Math.cos(theta) +
-                (((deltaLeftDist+deltaRightDist) / 2.0) - Math.sin(theta))*/;
+        // The change in angle of the robot since the last update
+        double deltaTheta = (deltaRightDist - deltaLeftDist) / DIST_BETWEEN_WHEELS;
+
+        // Easy variable just to hold the average between the two wheels for forward movement
+        double deltaY = (deltaLeftDist + deltaRightDist) / 2.0;
+
+        double distFromCenterToCenterEncoder = 19.1;
+
+        //double deltaX = (deltaCenterDist - distFromCenterToCenterEncoder * deltaTheta);
+
+        // The global angle of the robot
+        theta = THETA_ADJUST * (rightOdomTraveled - leftOdomTraveled) / DIST_BETWEEN_WHEELS;
+
+        // Translates the local movement into global position
+        x += (deltaY * Math.sin(theta));
+        y += (deltaY * Math.cos(theta));
 
         resetTicks();
     }

@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.competition.Hardware;
-import org.firstinspires.ftc.teamcode.competition.MecanumDrive;
-import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.competition.drivetrain.MecanumDrive;
+import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 
 import static java.lang.Math.abs;
 
@@ -24,69 +24,6 @@ public class OdometryTest extends LinearOpMode {
         MOVE_TO_POINT
     }
 
-    private class LeftDriveThread extends Thread{
-        public double rotation, forward, sideways;
-
-        public void setValues(double fwd, double sdws, double rot){
-            rotation = rot;
-            forward = fwd;
-            sideways = sdws;
-        }
-
-        public LeftDriveThread(double forward, double sideways, double rotation){
-            this.rotation = rotation;
-            this.forward = forward;
-            this.sideways = sideways;
-        }
-
-        @Override
-        public void run() {
-            //adds all the inputs together to get the number to scale it by
-            double scale = abs(rotation) + abs(forward) + abs(sideways);
-
-            //scales the inputs when needed
-            if(scale > 1) {
-                forward /= scale;
-                rotation /= scale;
-                sideways /= scale;
-            }
-            //setting the motor powers to move
-            robot.leftFront.setPower(forward-rotation-sideways);
-            robot.leftRear.setPower(forward-rotation+sideways);
-        }
-    }
-    private class RightDriveThread extends Thread{
-        public double rotation, forward, sideways;
-
-        public void setValues(double fwd, double sdws, double rot){
-            rotation = rot;
-            forward = fwd;
-            sideways = sdws;
-        }
-
-        public RightDriveThread(double forward, double sideways, double rotation){
-            this.rotation = rotation;
-            this.forward = forward;
-            this.sideways = sideways;
-        }
-
-        @Override
-        public void run() {
-            //adds all the inputs together to get the number to scale it by
-            double scale = abs(rotation) + abs(forward) + abs(sideways);
-
-            //scales the inputs when needed
-            if(scale > 1) {
-                forward /= scale;
-                rotation /= scale;
-                sideways /= scale;
-            }
-            //setting the motor powers to move
-            robot.rightFront.setPower(forward+rotation+sideways);
-            robot.rightRear.setPower(forward+rotation-sideways);
-        }
-    }
-
     @Override
     public void runOpMode() {
         // Sets up classes
@@ -97,10 +34,6 @@ public class OdometryTest extends LinearOpMode {
 
         // Initializes robot
         robot.init(hardwareMap);
-
-        // Creates new threads for running left and right side motors
-        LeftDriveThread leftMotorsThread = new LeftDriveThread(0, 0, 0);
-        RightDriveThread rightMotorsThread = new RightDriveThread(0, 0, 0);
 
         // Waits until "start" or "stop" is pressed
         while(!isStarted()&&!isStopRequested()){
@@ -162,6 +95,7 @@ public class OdometryTest extends LinearOpMode {
                 telemetry.addData("X", robot.x);
                 telemetry.addData("Y", robot.y);
                 telemetry.addData("Theta", robot.theta);
+                telemetry.addData("Power", motorPower);
                 telemetry.update();
             }
 
@@ -174,31 +108,17 @@ public class OdometryTest extends LinearOpMode {
             double endpointX = robot.x + 75;
             double power = .1;
 
-            leftMotorsThread.start();
-            rightMotorsThread.start();
-
             while(opModeIsActive() && robot.x < endpointX && power != 0){
                 robot.bulkData = robot.expansionHub.getBulkInputData();
                 robot.updatePosition();
                 telemetry.addData("X", robot.x);
                 telemetry.addData("Y", robot.y);
                 telemetry.addData("Theta", robot.theta);
-                telemetry.addData("MotorPower", robot.theta);
-                telemetry.addData("Left thread running", leftMotorsThread.isAlive());
-                telemetry.addData("Right thread running", rightMotorsThread.isAlive());
-                telemetry.addLine("===== Left Thread =====");
-                telemetry.addData("Left thread motor power forward", leftMotorsThread.forward);
-                telemetry.addData("Left thread motor power sideways", leftMotorsThread.sideways);
-                telemetry.addData("Left thread motor power rotation", leftMotorsThread.rotation);
-                telemetry.addLine("===== Right Thread =====");
-                telemetry.addData("Right thread motor power forward", rightMotorsThread.forward);
-                telemetry.addData("Right thread motor power sideways", rightMotorsThread.sideways);
-                telemetry.addData("Right thread motor power rotation", rightMotorsThread.rotation);
                 telemetry.addLine("===== Motor Powers =====");
-                telemetry.addData("LeftFront", (leftMotorsThread.forward-leftMotorsThread.rotation-leftMotorsThread.sideways));
-                telemetry.addData("RightFront", (rightMotorsThread.forward+rightMotorsThread.rotation+rightMotorsThread.sideways));
-                telemetry.addData("LeftRear", (leftMotorsThread.forward+leftMotorsThread.rotation-leftMotorsThread.sideways));
-                telemetry.addData("RightRear", (rightMotorsThread.forward+rightMotorsThread.rotation-rightMotorsThread.sideways));
+                telemetry.addData("LeftFront", (robot.leftFront.getPower()));
+                telemetry.addData("RightFront", (robot.rightFront.getPower()));
+                telemetry.addData("LeftRear", (robot.leftRear.getPower()));
+                telemetry.addData("RightRear", (robot.rightRear.getPower()));
                 telemetry.update();
 
                 // Slow down as closer to point
@@ -210,29 +130,13 @@ public class OdometryTest extends LinearOpMode {
                 else
                     power = 1;
 
-                leftMotorsThread.setValues(power, 0, 0);
-                rightMotorsThread.setValues(power, 0,0);
+                driveTrain.drive(power, 0,0);
             }
-
-            // Closes threads
-            try {
-                //closeMotorThreads(leftMotorsThread, rightMotorsThread);
-            } catch(Exception e){}
         }
 
         // If testing new driveTrain.moveToPoint(x, y, theta)
         else {
 
         }
-    }
-
-    private void closeMotorThreads(LeftDriveThread leftMotors, RightDriveThread rightMotors) throws InterruptedException{
-        leftMotors.setValues(0, 0, 0);
-        rightMotors.setValues(0, 0,0);
-
-        leftMotors.join();
-        rightMotors.join();
-
-        driveTrain.powerSet(0);
     }
 }
