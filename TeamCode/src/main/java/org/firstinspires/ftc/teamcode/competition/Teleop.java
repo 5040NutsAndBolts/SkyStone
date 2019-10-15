@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.competition.Hardware;
 import org.firstinspires.ftc.teamcode.competition.drivetrain.MecanumDrive;
 
 /**
@@ -18,6 +19,7 @@ public class Teleop extends OpMode {
     private Hardware robot;
     private MecanumDrive driveTrain;
 
+    private boolean onlyForward = false, onlySideways = false;
 
     /**
      * Instantiates objects
@@ -65,12 +67,14 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        robot.bulkData = robot.expansionHub.getBulkInputData();
         robot.updatePosition();
+        telemetry.addData("onlyForward", onlyForward);
+        telemetry.addData("onlySideways", onlySideways);
+        telemetry.addLine("==========");
         telemetry.addData("xPos", robot.x);
         telemetry.addData("yPos", robot.y);
         telemetry.addData("theta", robot.theta);
-        telemetry.addData("theta degrees", Math.toDegrees(robot.theta));
+        telemetry.addData("theta degrees", robot.theta);
         telemetry.addLine("==========");
         telemetry.addData("total left traveled(cm)", robot.rightOdomTraveled);
         telemetry.addData("total right traveled(cm)", robot.leftOdomTraveled);
@@ -86,11 +90,27 @@ public class Teleop extends OpMode {
             robot.resetPosition();
             robot.resetEncoders();
         }
+        if(gamepad1.y){
+            onlyForward = true;
+            onlySideways = false;
+        }
+        if(gamepad1.b) {
+            onlyForward = false;
+            onlySideways = true;
+        }
+        if(gamepad1.a) {
+            onlyForward = false;
+            onlySideways = false;
+        }
 
         if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
             driveTrain.brakeMotors();
-        } else {
+        } else if (!onlyForward && !onlySideways){
             driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+        } else if (onlyForward) {
+            driveTrain.drive(gamepad1.left_stick_y, 0, -gamepad1.right_stick_x);
+        } else if (onlySideways) {
+            driveTrain.drive(0, gamepad1.left_stick_x, -gamepad1.right_stick_x);
         }
     }
 }

@@ -24,13 +24,15 @@ public class Hardware {
         // Radius of an odometry wheel in cm
     private static final double ODOM_WHEEL_RADIUS = 3.6;
         // Distance from left odometry wheel to the right odometry wheel in cm
-    private static final double DIST_BETWEEN_WHEELS = 40.194;
+    private static final double TRACK_WIDTH = 40.194;
         // Circumference of an odometry wheel in cm
     private static final double WHEEL_CIRCUM = 2.0 * Math.PI * ODOM_WHEEL_RADIUS;
         // Number of ticks in a centimeter using dimensional analysis
     private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION / WHEEL_CIRCUM;
         // Theta adjust
     private static final double THETA_ADJUST = 1.028;
+        // Distance from center to center odometry wheel
+    private static final double DIST_FROM_CENTER_TO_ENCODER = 19.1;
 
     // Robot physical location
     public double x = 0;
@@ -120,49 +122,45 @@ public class Hardware {
      * Update global robot position using odometry
      */
     public void updatePosition() {
-        // Get the circumference of the distance traveled by the wheel since the last update
-        // Circumference multiplied by degrees the wheel has rotated
-        double deltaLeftDist = -(getLeftTicks() / ODOM_TICKS_PER_CM);
-        double deltaRightDist = -(getRightTicks() / ODOM_TICKS_PER_CM);
-        double deltaCenterDist = getCenterTicks() / ODOM_TICKS_PER_CM;
+        bulkData = expansionHub.getBulkInputData();
+        // Change in the distance (centimeters) since the last update for each odometer
+        double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM);
+        double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM);
+        double deltaCenterDist = getDeltaCenterTicks() / ODOM_TICKS_PER_CM;
 
         // Update real world distance traveled by the odometry wheels, regardless of orientation
         leftOdomTraveled += deltaLeftDist;
         rightOdomTraveled += deltaRightDist;
         centerOdomTraveled += deltaCenterDist;
 
-
         // The change in angle of the robot since the last update
-        double deltaTheta = (deltaRightDist - deltaLeftDist) / DIST_BETWEEN_WHEELS;
-
+        double deltaTheta = (deltaRightDist - deltaLeftDist) / TRACK_WIDTH;
         // Easy variable just to hold the average between the two wheels for forward movement
         double deltaY = (deltaLeftDist + deltaRightDist) / 2.0;
-
-        double distFromCenterToCenterEncoder = 19.1;
-
-        //double deltaX = (deltaCenterDist - distFromCenterToCenterEncoder * deltaTheta);
+        double deltaX = (deltaCenterDist);
 
         // The global angle of the robot
-        theta = THETA_ADJUST * (rightOdomTraveled - leftOdomTraveled) / DIST_BETWEEN_WHEELS;
+        theta = (rightOdomTraveled - leftOdomTraveled) / TRACK_WIDTH;
 
         // Translates the local movement into global position
-        x += (deltaY * Math.sin(theta));
-        y += (deltaY * Math.cos(theta));
+        y += deltaY * Math.sin(deltaTheta) + deltaX * Math.cos(deltaTheta);
+        x += deltaY * Math.cos(deltaTheta) + deltaX * Math.sin(deltaTheta);
 
-        resetTicks();
+
+        resetDeltaTicks();
     }
 
-    public void resetTicks() {
-        leftEncoderPos = bulkData.getMotorCurrentPosition(leftOdom);
+    private void resetDeltaTicks() {
+        leftEncoderPos = (int)(1.02 * bulkData.getMotorCurrentPosition(leftOdom));
         rightEncoderPos = bulkData.getMotorCurrentPosition(rightOdom);
         centerEncoderPos = bulkData.getMotorCurrentPosition(centerOdom);
     }
 
-    public int getLeftTicks() { return bulkData.getMotorCurrentPosition(leftOdom) - leftEncoderPos; }
+    private int getDeltaLeftTicks() { return (int)(leftEncoderPos - 1.02 * bulkData.getMotorCurrentPosition(leftOdom)); }
 
-    public int getRightTicks() { return bulkData.getMotorCurrentPosition(rightOdom) - rightEncoderPos; }
+    private int getDeltaRightTicks() { return rightEncoderPos - bulkData.getMotorCurrentPosition(rightOdom); }
 
-    public int getCenterTicks() { return bulkData.getMotorCurrentPosition(centerOdom) - centerEncoderPos; }
+    private int getDeltaCenterTicks() { return centerEncoderPos - bulkData.getMotorCurrentPosition(centerOdom); }
 
     /**
      * Resets position of the robot to x=0, y=0, theta=0

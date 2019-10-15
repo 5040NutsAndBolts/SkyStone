@@ -138,5 +138,13 @@ public class OdometryTest extends LinearOpMode {
         else {
 
         }
+
+        while(opModeIsActive()){
+            robot.updatePosition();
+            telemetry.addData("X", robot.x);
+            telemetry.addData("Y", robot.y);
+            telemetry.addData("Theta", robot.theta);
+            telemetry.update();
+        }
     }
 }
