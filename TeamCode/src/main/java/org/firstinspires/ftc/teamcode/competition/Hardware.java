@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.competition;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
@@ -62,6 +63,9 @@ public class Hardware {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+
     }
 
 }
