@@ -11,6 +11,9 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 /**
  * This class is for setting up all the hardware components of the robot.
  * This will have all the sensors, motors and servos declarations.
@@ -29,10 +32,6 @@ public class Hardware {
     private static final double WHEEL_CIRCUM = 2.0 * Math.PI * ODOM_WHEEL_RADIUS;
         // Number of ticks in a centimeter using dimensional analysis
     private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION / WHEEL_CIRCUM;
-        // Theta adjust
-    private static final double THETA_ADJUST = 1.028;
-        // Distance from center to center odometry wheel
-    private static final double DIST_FROM_CENTER_TO_ENCODER = 19.1;
 
     // Robot physical location
     public double x = 0;
@@ -119,10 +118,12 @@ public class Hardware {
     }
 
     /**
-     * Update global robot position using odometry
+     * Update global robot position using line approximation
+     * Should be used for very small angle measurements (driving in a near-straight line)
      */
     public void updatePosition() {
         bulkData = expansionHub.getBulkInputData();
+
         // Change in the distance (centimeters) since the last update for each odometer
         double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM);
         double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM);
@@ -143,9 +144,82 @@ public class Hardware {
         theta = (rightOdomTraveled - leftOdomTraveled) / TRACK_WIDTH;
 
         // Translates the local movement into global position
-        y += deltaY * Math.sin(deltaTheta) + deltaX * Math.cos(deltaTheta);
-        x += deltaY * Math.cos(deltaTheta) + deltaX * Math.sin(deltaTheta);
+        y += deltaY * sin(deltaTheta) + deltaX * cos(deltaTheta);
+        x += deltaY * cos(deltaTheta) + deltaX * sin(deltaTheta);
 
+        resetDeltaTicks();
+    }
+
+    // Location info for line approximation odometry
+    public double prevHeading = 0, prevL = 0, prevR = 0;
+    public double axisWidth = TRACK_WIDTH;
+    /**
+     * Updates global position of robot using line approximation math
+     * (i.e. driving in straight lines or anywhere there is a very small delta angle)
+     */
+    public void updatePositionLineApprox() {
+        // Get encoder values and previous heading
+        double l = bulkData.getMotorCurrentPosition(leftOdom) / ODOM_TICKS_PER_CM;
+        double r = bulkData.getMotorCurrentPosition(rightOdom) / ODOM_TICKS_PER_CM;
+        double heading = prevHeading;
+
+        // Calculate encoder deltas
+        double lDelta = l - prevL;
+        double rDelta = r - prevR;
+
+        // Calculate omega
+        double hDelta = (rDelta - lDelta) / axisWidth;
+
+        // Approximate position using line approximation method
+        x += lDelta * cos(heading + hDelta);
+        y += rDelta * sin(heading + hDelta);
+
+        // Set previous values to current values
+        prevL = l;
+        prevR = r;
+        prevHeading += heading + hDelta;
+    }
+
+    /**
+     * The robot moved in an arch, the left encoder measured a distance l and the right wheel a
+     * distance r. It was previously at an angle θ and is now at an angle θ + ω. We want to
+     * calculate what the new position of the robot is after this move.
+     *
+     * The way to calculate the new coordinates is to find the radius R of ICC (Instantaneous
+     * Center of Curvature – the point around which the robot is turning) and then rotate x_0​
+     * and y_0​ around it.
+     */
+    public void updatePositionCircleApprox() {
+        bulkData = expansionHub.getBulkInputData();
+
+        // Get encoder values and previous heading
+        double l = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM);
+        double r = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM);
+        double heading = prevHeading;
+
+        // Calculate encoder deltas
+        double lDelta = l - prevL;
+        double rDelta = r- prevR;
+
+        // Calculate omega
+        double hDelta = (rDelta - lDelta) / axisWidth;
+
+        // Approximate if straight line or to calculate arc
+        if (Math.abs(lDelta - rDelta) < 1e-5){
+            x += lDelta * cos(heading);
+            y += rDelta * sin(heading);
+        } else {
+            // Calculate radius of ICC
+            double R = (axisWidth / 2.0) * (rDelta + lDelta) / (rDelta - lDelta);
+
+            // Calculate position by finding point that is rotated around ICC by heading delta
+            x += R * sin(hDelta + heading) - R * sin(heading);
+            y += R * cos(hDelta + heading) - R * cos(heading);
+
+            prevL = l;
+            prevR = r;
+            prevHeading = heading + hDelta;
+        }
 
         resetDeltaTicks();
     }
@@ -166,6 +240,10 @@ public class Hardware {
      * Resets position of the robot to x=0, y=0, theta=0
      */
     public void resetPosition(){
+        prevHeading = 0;
+        prevL = 0;
+        prevR = 0;
+
         x = 0;
         y = 0;
         theta = 0;
