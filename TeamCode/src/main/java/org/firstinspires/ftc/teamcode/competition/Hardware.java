@@ -220,8 +220,15 @@ public class Hardware {
             prevR = r;
             prevHeading = heading + hDelta;
         }
+    }
 
-        resetDeltaTicks();
+    /**
+     * New version of update position which uses the same concept as the circle approximation
+     * BUT the heading is calculated using the middle odometry wheel instead of gyro/weird math
+     */
+    public void newUpdatePosition(){
+        bulkData = expansionHub.getBulkInputData();
+
     }
 
     private void resetDeltaTicks() {
