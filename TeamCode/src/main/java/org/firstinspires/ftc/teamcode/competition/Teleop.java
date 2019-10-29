@@ -67,21 +67,21 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        robot.updatePositionCircleApprox();
+        robot.updatePositionLineApprox();
         telemetry.addData("onlyForward", onlyForward);
         telemetry.addData("onlySideways", onlySideways);
         telemetry.addLine("==========");
         telemetry.addData("xPos", robot.x);
         telemetry.addData("yPos", robot.y);
-        telemetry.addData("theta", robot.theta);
+        telemetry.addData("theta", robot.prevHeading);
         telemetry.addLine("==========");
         telemetry.addData("total left traveled(cm)", robot.rightOdomTraveled);
         telemetry.addData("total right traveled(cm)", robot.leftOdomTraveled);
         telemetry.addData("total center traveled(cm)", robot.centerOdomTraveled);
         telemetry.addLine("==========");
-        telemetry.addData("leftEncoder value", robot.leftEncoderPos);
-        telemetry.addData("rightEncoder value", robot.rightEncoderPos);
-        telemetry.addData("centerEncoder value", robot.centerEncoderPos);
+        telemetry.addData("leftEncoder value", robot.prevL);
+        telemetry.addData("rightEncoder value", robot.prevR);
+        telemetry.addData("centerEncoder value", robot.prevC);
         telemetry.update();
 
         // Reset robot position = X
@@ -105,7 +105,7 @@ public class Teleop extends OpMode {
         if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
             driveTrain.brakeMotors();
         } else if (!onlyForward && !onlySideways){
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x );
         } else if (onlyForward) {
             driveTrain.drive(gamepad1.left_stick_y, 0, -gamepad1.right_stick_x);
         } else if (onlySideways) {

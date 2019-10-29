@@ -27,11 +27,11 @@ public class Hardware {
         // Radius of an odometry wheel in cm
     private static final double ODOM_WHEEL_RADIUS = 3.6;
         // Distance from left odometry wheel to the right odometry wheel in cm
-    private static final double TRACK_WIDTH = 40.194;
+    private static final double TRACK_WIDTH = 40.194/0.893856554;
         // Circumference of an odometry wheel in cm
     private static final double WHEEL_CIRCUM = 2.0 * Math.PI * ODOM_WHEEL_RADIUS;
         // Number of ticks in a centimeter using dimensional analysis
-    private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION / WHEEL_CIRCUM;
+    private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION /( WHEEL_CIRCUM*1.17);
 
     // Robot physical location
     public double x = 0;
@@ -151,33 +151,38 @@ public class Hardware {
     }
 
     // Location info for line approximation odometry
-    public double prevHeading = 0, prevL = 0, prevR = 0;
+    public double prevHeading = 0, prevL = 0, prevR = 0, prevC=0;
     public double axisWidth = TRACK_WIDTH;
     /**
      * Updates global position of robot using line approximation math
      * (i.e. driving in straight lines or anywhere there is a very small delta angle)
      */
-    public void updatePositionLineApprox() {
+    public void updatePositionLineApprox()
+    {
+        bulkData = expansionHub.getBulkInputData();
         // Get encoder values and previous heading
-        double l = bulkData.getMotorCurrentPosition(leftOdom) / ODOM_TICKS_PER_CM;
-        double r = bulkData.getMotorCurrentPosition(rightOdom) / ODOM_TICKS_PER_CM;
+        double l = getDeltaLeftTicks() / ODOM_TICKS_PER_CM;
+        double r = getDeltaRightTicks() / ODOM_TICKS_PER_CM;
+        double c = -getDeltaCenterTicks() / ODOM_TICKS_PER_CM-18.75*prevHeading;
         double heading = prevHeading;
 
         // Calculate encoder deltas
         double lDelta = l - prevL;
         double rDelta = r - prevR;
+        double cDelta = c - prevC;
 
         // Calculate omega
         double hDelta = (rDelta - lDelta) / axisWidth;
 
         // Approximate position using line approximation method
-        x += lDelta * cos(heading + hDelta);
-        y += rDelta * sin(heading + hDelta);
+        x += (lDelta+rDelta)/2 * cos(heading + hDelta)+(cDelta)*sin(heading+hDelta);
+        y += (lDelta+rDelta)/2 * sin(heading + hDelta)+(cDelta)*cos(heading+hDelta);
 
         // Set previous values to current values
         prevL = l;
         prevR = r;
-        prevHeading += heading + hDelta;
+        prevC = c;
+        prevHeading = heading + hDelta;
     }
 
     /**
@@ -232,12 +237,12 @@ public class Hardware {
     }
 
     private void resetDeltaTicks() {
-        leftEncoderPos = (int)(1.02 * bulkData.getMotorCurrentPosition(leftOdom));
+        leftEncoderPos = bulkData.getMotorCurrentPosition(leftOdom);
         rightEncoderPos = bulkData.getMotorCurrentPosition(rightOdom);
         centerEncoderPos = bulkData.getMotorCurrentPosition(centerOdom);
     }
 
-    private int getDeltaLeftTicks() { return (int)(leftEncoderPos - 1.02 * bulkData.getMotorCurrentPosition(leftOdom)); }
+    private int getDeltaLeftTicks() { return (int)(leftEncoderPos - bulkData.getMotorCurrentPosition(leftOdom)*1.01041884); }
 
     private int getDeltaRightTicks() { return rightEncoderPos - bulkData.getMotorCurrentPosition(rightOdom); }
 
