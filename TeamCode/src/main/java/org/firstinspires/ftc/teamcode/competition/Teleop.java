@@ -67,7 +67,7 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        robot.updatePositionLineApprox();
+        robot.updatePositionCircleApprox();
         telemetry.addData("onlyForward", onlyForward);
         telemetry.addData("onlySideways", onlySideways);
         telemetry.addLine("==========");

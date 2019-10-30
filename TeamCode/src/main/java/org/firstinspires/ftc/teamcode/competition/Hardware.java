@@ -206,7 +206,7 @@ public class Hardware {
         double lDelta = l - prevL;
         double rDelta = r- prevR;
 
-        // Calculate omega
+        // Calculate change in angle
         double hDelta = (rDelta - lDelta) / axisWidth;
 
         // Approximate if straight line or to calculate arc
@@ -218,13 +218,13 @@ public class Hardware {
             double R = (axisWidth / 2.0) * (rDelta + lDelta) / (rDelta - lDelta);
 
             // Calculate position by finding point that is rotated around ICC by heading delta
-            x += R * sin(hDelta + heading) - R * sin(heading);
+            x -= R * sin(hDelta + heading) - R * sin(heading);
             y += R * cos(hDelta + heading) - R * cos(heading);
-
-            prevL = l;
-            prevR = r;
-            prevHeading = heading + hDelta;
         }
+
+        prevL = l;
+        prevR = r;
+        prevHeading = heading + hDelta;
     }
 
     /**
