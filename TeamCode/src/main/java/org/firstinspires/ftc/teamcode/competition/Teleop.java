@@ -61,7 +61,7 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        telemetry.update();
+
 
         if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
             driveTrain.brakeMotors();
