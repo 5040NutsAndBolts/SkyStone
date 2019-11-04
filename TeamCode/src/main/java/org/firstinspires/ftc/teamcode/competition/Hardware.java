@@ -26,6 +26,11 @@ public class Hardware {
     public DcMotor leftRear = null;
     public DcMotor rightRear = null;
 
+    //intake
+    public DcMotor intakeLeft;
+    public DcMotor intakeRight;
+    public Servo stoneGuide;
+
 
     /**
      * Simple constructor to set hardware mapping to null
@@ -64,6 +69,14 @@ public class Hardware {
         rightRear.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        intakeLeft = hwMap.dcMotor.get("intakeLeft");
+        intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        intakeRight = hwMap.dcMotor.get("intakeRight");
+        intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeRight.setDirection(DcMotor.Direction.REVERSE);
+
+        stoneGuide = hwMap.servo.get("stoneGuide");
 
 
     }

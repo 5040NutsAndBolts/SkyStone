@@ -7,26 +7,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class IntakeMech
 {
 
-    public DcMotor intakeLeft;
-    public DcMotor intakeRight;
+    private Hardware robot;
 
-    public Servo stoneGuide;
 
-    public IntakeMech(HardwareMap hwMap)
+    public IntakeMech(Hardware r)
     {
 
-        intakeLeft = hwMap.dcMotor.get("intakeLeft");
-        intakeLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        intakeRight = hwMap.dcMotor.get("intakeRight");
-        intakeRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeRight.setDirection(DcMotor.Direction.REVERSE);
-
-        stoneGuide = hwMap.servo.get("stoneGuide");
+        robot = r;
 
     }
 
-    public void intakePower(){}
+    public void intakePower(double power)
+    {
+
+        robot.intakeLeft.setPower(power);
+        robot.intakeRight.setPower(power);
+
+    }
 
     public void placeStone(){}
 
