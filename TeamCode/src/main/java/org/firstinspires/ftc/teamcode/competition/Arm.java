@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class TowerMech
+public class Arm
 {
 
     public DcMotor armMotor;
@@ -12,7 +12,7 @@ public class TowerMech
     public Servo leftClaw;
     public Servo rightClaw;
 
-    public TowerMech(HardwareMap hwMap)
+    public Arm(HardwareMap hwMap)
     {
         armMotor = hwMap.dcMotor.get("armMotor");
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
