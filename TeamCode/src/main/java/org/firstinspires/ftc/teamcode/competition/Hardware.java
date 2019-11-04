@@ -26,10 +26,19 @@ public class Hardware {
     public DcMotor leftRear = null;
     public DcMotor rightRear = null;
 
-    //intake
+    // Intake
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
     public Servo stoneGuide;
+
+    // Tower arm
+    public DcMotor armMotor;
+    public Servo leftClaw;
+    public Servo rightClaw;
+
+    // Capstone arm
+    public Servo capstonePlacer;
+    public DcMotor capstoneStoneSlides;
 
 
     /**
@@ -48,37 +57,58 @@ public class Hardware {
         hwMap = mapping;
 
         // Drive train motor setup
-        // left front
-        leftFront = hwMap.dcMotor.get("leftFront");
-        // Motors don't have encoders on them because we're using odometry
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // When motors aren't receiving power, they will attempt to hold their position
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // left rear
-        leftRear = hwMap.dcMotor.get("leftRear");
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // right front
-        rightFront = hwMap.dcMotor.get("rightFront");
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // right rear
-        rightRear = hwMap.dcMotor.get("rightRear");
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setDirection(DcMotor.Direction.REVERSE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            // left front
+            leftFront = hwMap.dcMotor.get("leftFront");
+            // Motors don't have encoders on them because we're using odometry
+            leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // When motors aren't receiving power, they will attempt to hold their position
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            // left rear
+            leftRear = hwMap.dcMotor.get("leftRear");
+            leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            // right front
+            rightFront = hwMap.dcMotor.get("rightFront");
+            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFront.setDirection(DcMotor.Direction.REVERSE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            // right rear
+            rightRear = hwMap.dcMotor.get("rightRear");
+            rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightRear.setDirection(DcMotor.Direction.REVERSE);
+            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        intakeLeft = hwMap.dcMotor.get("intakeLeft");
-        intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // Intake motor setup
+            // Left intake
+            intakeLeft = hwMap.dcMotor.get("intakeLeft");
+            intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // Right intake
+            intakeRight = hwMap.dcMotor.get("intakeRight");
+            intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            intakeRight.setDirection(DcMotor.Direction.REVERSE);
 
-        intakeRight = hwMap.dcMotor.get("intakeRight");
-        intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intakeRight.setDirection(DcMotor.Direction.REVERSE);
-
+        // Stone guide motor setup
         stoneGuide = hwMap.servo.get("stoneGuide");
 
+        // Tower arm setup
+            // arm motor
+            armMotor = hwMap.dcMotor.get("armMotor");
+            armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            // left claw servo
+            leftClaw = hwMap.servo.get("leftClaw");
+            // right claw servo
+            rightClaw = hwMap.servo.get("rightClaw");
 
+        // Capstone arm motor setup
+            // Capstone place
+            capstonePlacer = hwMap.servo.get("capstonePlacer");
+            // Capstone slides
+            capstoneStoneSlides = hwMap.dcMotor.get("capstoneStoneSlides");
+            capstoneStoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            capstoneStoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //
     }
 
 }
