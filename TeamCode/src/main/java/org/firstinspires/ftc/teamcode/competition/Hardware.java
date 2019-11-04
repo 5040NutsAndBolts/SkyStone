@@ -38,7 +38,7 @@ public class Hardware {
 
     // Capstone arm
     public Servo capstonePlacer;
-    public DcMotor capstoneStoneSlides;
+    public DcMotor capstoneSlides;
 
 
     /**
@@ -104,9 +104,9 @@ public class Hardware {
             // Capstone place
             capstonePlacer = hwMap.servo.get("capstonePlacer");
             // Capstone slides
-            capstoneStoneSlides = hwMap.dcMotor.get("capstoneStoneSlides");
-            capstoneStoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            capstoneStoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            capstoneSlides = hwMap.dcMotor.get("capstoneStoneSlides");
+            capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //
     }

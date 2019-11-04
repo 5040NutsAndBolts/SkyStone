@@ -17,6 +17,7 @@ public class Teleop extends OpMode {
     private Hardware robot;
     private MecanumDrive driveTrain;
     IntakeMech intake;
+    CapStoneMech capstone;
 
     /**
      * Instantiates objects
@@ -25,6 +26,7 @@ public class Teleop extends OpMode {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
         intake = new IntakeMech(robot);
+        capstone = new CapStoneMech(robot);
     }
 
     /**
@@ -62,6 +64,11 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
+
+        if(gamepad2.right_trigger>.01)
+            capstone.moveSlides(gamepad2.right_trigger);
+        else
+            capstone.moveSlides(-gamepad2.left_trigger);
 
         if(gamepad1.right_trigger>.01)
             intake.intakePower(gamepad1.right_trigger);

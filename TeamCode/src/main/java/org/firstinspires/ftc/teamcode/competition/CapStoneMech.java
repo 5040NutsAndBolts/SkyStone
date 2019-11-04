@@ -14,6 +14,11 @@ public class CapStoneMech {
 
     public void placeCpstone(){}
 
-    public void moveSlides(){}
+    public void moveSlides(double power)
+    {
+
+        robot.capstoneSlides.setPower(power);
+
+    }
 
 }
