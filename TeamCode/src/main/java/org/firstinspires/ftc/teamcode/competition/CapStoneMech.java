@@ -23,6 +23,6 @@ public class CapStoneMech
 
     public void placeCpstone(){}
 
-    public void moveArm(){}
+    public void moveSlides(){}
 
 }
