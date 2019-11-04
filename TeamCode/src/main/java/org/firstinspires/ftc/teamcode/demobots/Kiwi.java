@@ -26,6 +26,9 @@ public class Kiwi extends OpMode
         motorOne.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorTwo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorThree.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorTwo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorThree.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
@@ -99,10 +102,20 @@ public class Kiwi extends OpMode
             motorThree.setPower(1);
 
         }
-        else {
+        else if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0 || gamepad2.right_stick_x != 0)
+        {
             motorOne.setPower(motor1Power / speed);
             motorTwo.setPower(motor2Power / speed);
             motorThree.setPower(motor3Power / speed);
+
+        }
+        else
+        {
+
+            motorOne.setPower(0);
+            motorTwo.setPower(0);
+            motorThree.setPower(0);
+
         }
 
         if(leftBumper && !pressed)
@@ -125,7 +138,7 @@ public class Kiwi extends OpMode
         }
 
         telemetry.addData("speed",1/speed);
-        telemetry.addData("overridde",override);
+        telemetry.addData("override",override);
 
     }
 
