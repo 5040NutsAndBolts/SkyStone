@@ -16,7 +16,7 @@ public class Teleop extends OpMode {
 
     private Hardware robot;
     private MecanumDrive driveTrain;
-
+    IntakeMech intake;
 
     /**
      * Instantiates objects
@@ -24,6 +24,7 @@ public class Teleop extends OpMode {
     public Teleop() {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
+        intake = new IntakeMech(robot);
     }
 
     /**
@@ -62,7 +63,10 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
 
-
+        if(gamepad1.right_trigger>.01)
+            intake.intakePower(gamepad1.right_trigger);
+        else
+            intake.intakePower(-gamepad1.left_trigger);
         if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
             driveTrain.brakeMotors();
         } else {
