@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.competition.hardware.*;
 
 /**
  * It's teleop... yeah
@@ -16,7 +18,8 @@ public class Teleop extends OpMode {
 
     private Hardware robot;
     private MecanumDrive driveTrain;
-    IntakeMech intake;
+    private IntakeMech intake;
+    private TowerArm towerArm;
 
     /**
      * Instantiates objects
@@ -25,6 +28,7 @@ public class Teleop extends OpMode {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
         intake = new IntakeMech(robot);
+        towerArm = new TowerArm(robot);
     }
 
     /**
@@ -63,10 +67,25 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
 
-        if(gamepad1.right_trigger>.01)
-            intake.intakePower(gamepad1.right_trigger);
+        // Raising/lowering the tower arm
+        if(gamepad2.right_bumper)
+            towerArm.raiseLower(Hardware.TowerHeight.RAISE);
+        else if (gamepad2.left_bumper)
+            towerArm.raiseLower(Hardware.TowerHeight.LOWER);
         else
+            towerArm.raiseLower(Hardware.TowerHeight.STOP);
+
+        // Opening/closing the tower arm
+        if(gamepad2.a)
+            towerArm.openClose();
+
+        // Intake/Outtake
+        if(gamepad1.right_trigger > .01)
+            intake.intakePower(gamepad1.right_trigger);
+        else if (gamepad1.left_trigger > .01)
             intake.intakePower(-gamepad1.left_trigger);
+
+        // Drive Train
         if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
             driveTrain.brakeMotors();
         } else {

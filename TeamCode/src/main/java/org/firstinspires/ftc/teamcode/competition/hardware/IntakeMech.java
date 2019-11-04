@@ -1,8 +1,4 @@
-package org.firstinspires.ftc.teamcode.competition;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
+package org.firstinspires.ftc.teamcode.competition.hardware;
 
 public class IntakeMech {
 

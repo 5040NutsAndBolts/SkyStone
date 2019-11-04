@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.competition;
+package org.firstinspires.ftc.teamcode.competition.hardware;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;

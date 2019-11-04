@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.competition;
+package org.firstinspires.ftc.teamcode.competition.hardware;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -21,10 +21,10 @@ public class Hardware {
     public BNO055IMU imu;
 
     // Drive train
-    public DcMotor leftFront = null;
-    public DcMotor rightFront = null;
-    public DcMotor leftRear = null;
-    public DcMotor rightRear = null;
+    public DcMotor leftFront;
+    public DcMotor rightFront;
+    public DcMotor leftRear;
+    public DcMotor rightRear;
 
     // Intake
     public DcMotor intakeLeft;
@@ -32,9 +32,14 @@ public class Hardware {
     public Servo stoneGuide;
 
     // Tower arm
-    public DcMotor armMotor;
+    public DcMotor towerArmMotor;
     public Servo leftClaw;
     public Servo rightClaw;
+    public enum TowerHeight {
+        RAISE,
+        LOWER,
+        STOP
+    }
 
     // Capstone arm
     public Servo capstonePlacer;
@@ -88,13 +93,13 @@ public class Hardware {
             intakeRight.setDirection(DcMotor.Direction.REVERSE);
 
         // Stone guide motor setup
-        stoneGuide = hwMap.servo.get("stoneGuide");
+            stoneGuide = hwMap.servo.get("stoneGuide");
 
         // Tower arm setup
             // arm motor
-            armMotor = hwMap.dcMotor.get("armMotor");
-            armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            towerArmMotor = hwMap.dcMotor.get("towerArm");
+            towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // left claw servo
             leftClaw = hwMap.servo.get("leftClaw");
             // right claw servo
@@ -104,11 +109,9 @@ public class Hardware {
             // Capstone place
             capstonePlacer = hwMap.servo.get("capstonePlacer");
             // Capstone slides
-            capstoneStoneSlides = hwMap.dcMotor.get("capstoneStoneSlides");
+            capstoneStoneSlides = hwMap.dcMotor.get("capstoneSlides");
             capstoneStoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             capstoneStoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //
     }
 
 }
