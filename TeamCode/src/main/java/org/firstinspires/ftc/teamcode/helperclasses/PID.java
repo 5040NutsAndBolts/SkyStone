@@ -82,5 +82,12 @@ public class PID
      */
     public double getPID()
         {return pComponent+iComponent+dComponent;}
+    public void resetPid()
+    {
+
+        lastDistanceFromGoal=0;
+        integral=0;
+
+    }
 
 }
