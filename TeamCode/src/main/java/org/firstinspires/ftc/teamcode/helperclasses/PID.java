@@ -6,8 +6,9 @@ public class PID
 {
 
     private double distanceFromGoal;
-    private double lastDistanceFromGoal;
+    private double lastDistanceFromGoal=0;
     private double integral;
+    double derivative;
     private double kP;
     private double kI;
     private double kD;
@@ -49,6 +50,7 @@ public class PID
         setDistanceFromGoal(goal-position);
         elapsedTime=e.time();
         integral+=distanceFromGoal*elapsedTime;
+        derivative=(distanceFromGoal-lastDistanceFromGoal)/elapsedTime;
         pComponent=p();
         iComponent=i();
         dComponent=d();
@@ -75,7 +77,7 @@ public class PID
 
     //calculates the derivative component
     public double d()
-        {return (distanceFromGoal-lastDistanceFromGoal)/elapsedTime*kD;}
+        {return derivative*kD;}
 
     /**
      *@return Returns the output of the PID controller

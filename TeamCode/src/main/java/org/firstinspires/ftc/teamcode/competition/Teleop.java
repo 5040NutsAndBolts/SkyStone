@@ -99,5 +99,13 @@ public class Teleop extends OpMode {
         } else {
             driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
         }
+        telemetry.addData("A: ", gamepad2.a);
+        telemetry.addData("Pressed: ", aPressed);
+        telemetry.addData("Toggle: ", toggle);
+        telemetry.addData("Power: ", Arm.up.getPID());
+        telemetry.addData("p: ", Arm.up.p());
+        telemetry.addData("i: ", Arm.up.i());
+        telemetry.addData("d: ", Arm.up.d());
+        telemetry.update();
     }
 }

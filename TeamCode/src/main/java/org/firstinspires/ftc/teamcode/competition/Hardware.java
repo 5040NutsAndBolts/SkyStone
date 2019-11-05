@@ -92,8 +92,8 @@ public class Hardware {
 
         // Tower arm setup
             // arm motor
-            armMotor = hwMap.dcMotor.get("armMotor");
-            armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            armMotor = hwMap.dcMotor.get("towerArm");
+            armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // left claw servo
             leftClaw = hwMap.servo.get("leftClaw");
@@ -104,7 +104,7 @@ public class Hardware {
             // Capstone place
             capstonePlacer = hwMap.servo.get("capstonePlacer");
             // Capstone slides
-            capstoneSlides = hwMap.dcMotor.get("capstoneStoneSlides");
+            capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
             capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
