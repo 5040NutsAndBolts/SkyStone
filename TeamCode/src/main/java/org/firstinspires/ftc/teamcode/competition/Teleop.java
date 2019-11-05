@@ -80,6 +80,7 @@ public class Teleop extends OpMode {
         }
         else if(!gamepad2.a)
         {
+
             aPressed=false;
         }
 
@@ -106,6 +107,7 @@ public class Teleop extends OpMode {
         telemetry.addData("p: ", Arm.up.p());
         telemetry.addData("i: ", Arm.up.i());
         telemetry.addData("d: ", Arm.up.d());
+        telemetry.addData("Arm: ", robot.armMotor.getCurrentPosition());
         telemetry.update();
     }
 }
