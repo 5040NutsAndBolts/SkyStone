@@ -4,19 +4,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class IntakeMech {
+public class CapstoneMech {
 
     private Hardware robot;
 
-    public IntakeMech(Hardware r) {
-        robot = r;
+    public CapstoneMech(Hardware hwMap) {
+        robot = hwMap;
     }
 
-    public void intakePower(double power) {
-        robot.intakeLeft.setPower(power);
-        robot.intakeRight.setPower(power);
-    }
+    public void placeCpstone(){}
 
-    public void placeStone(){}
+    public void moveSlides(double power) {
+        robot.capstoneSlides.setPower(power);
+    }
 
 }

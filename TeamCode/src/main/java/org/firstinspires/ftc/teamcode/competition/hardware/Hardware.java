@@ -35,15 +35,20 @@ public class Hardware {
     public DcMotor towerArmMotor;
     public Servo leftClaw;
     public Servo rightClaw;
-    public enum TowerHeight {
+    public enum TowerArmPos {
         RAISE,
         LOWER,
+        STOP
+    }
+    public enum ClawPos {
+        OPEN,
+        CLOSE,
         STOP
     }
 
     // Capstone arm
     public Servo capstonePlacer;
-    public DcMotor capstoneStoneSlides;
+    public DcMotor capstoneSlides;
 
 
     /**
@@ -109,9 +114,9 @@ public class Hardware {
             // Capstone place
             capstonePlacer = hwMap.servo.get("capstonePlacer");
             // Capstone slides
-            capstoneStoneSlides = hwMap.dcMotor.get("capstoneSlides");
-            capstoneStoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            capstoneStoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
+            capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 }

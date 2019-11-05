@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.*;
 
 /**
@@ -20,6 +19,7 @@ public class Teleop extends OpMode {
     private MecanumDrive driveTrain;
     private IntakeMech intake;
     private TowerArm towerArm;
+    private CapstoneMech capstoneMech;
 
     /**
      * Instantiates objects
@@ -29,6 +29,7 @@ public class Teleop extends OpMode {
         driveTrain = new MecanumDrive(robot);
         intake = new IntakeMech(robot);
         towerArm = new TowerArm(robot);
+        capstoneMech = new CapstoneMech(robot);
     }
 
     /**
@@ -49,7 +50,6 @@ public class Teleop extends OpMode {
         robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
     }
 
     /**
@@ -59,6 +59,7 @@ public class Teleop extends OpMode {
     @Override
     public void init_loop() {
         telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
+
     }
 
     /**
@@ -66,30 +67,43 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
+        telemetry.addData("Arm position", robot.towerArmMotor.getCurrentPosition());
 
-        // Raising/lowering the tower arm
-        if(gamepad2.right_bumper)
-            towerArm.raiseLower(Hardware.TowerHeight.RAISE);
-        else if (gamepad2.left_bumper)
-            towerArm.raiseLower(Hardware.TowerHeight.LOWER);
-        else
-            towerArm.raiseLower(Hardware.TowerHeight.STOP);
+        // Top Half (Gamepad 2)
+            // Raising/lowering the tower arm
+                if(gamepad2.right_bumper)
+                    towerArm.raiseLower(Hardware.TowerArmPos.RAISE);
+                else if (gamepad2.left_bumper)
+                    towerArm.raiseLower(Hardware.TowerArmPos.LOWER);
+                else
+                    towerArm.raiseLower(Hardware.TowerArmPos.STOP);
 
-        // Opening/closing the tower arm
-        if(gamepad2.a)
-            towerArm.openClose();
+            // Opening/closing the tower arm
+                if(gamepad2.right_trigger > .01)
+                    towerArm.openClose(Hardware.ClawPos.OPEN);
+                else if (gamepad2.left_trigger > .01)
+                    towerArm.openClose(Hardware.ClawPos.CLOSE);
+                else
+                    towerArm.openClose(Hardware.ClawPos.STOP);
 
-        // Intake/Outtake
-        if(gamepad1.right_trigger > .01)
-            intake.intakePower(gamepad1.right_trigger);
-        else if (gamepad1.left_trigger > .01)
-            intake.intakePower(-gamepad1.left_trigger);
+            // Placing the capstone
+            if(gamepad2.right_trigger > .01)
+                capstoneMech.moveSlides(gamepad2.right_trigger);
+            else
+                capstoneMech.moveSlides(-gamepad2.left_trigger);
 
-        // Drive Train
-        if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
-            driveTrain.brakeMotors();
-        } else {
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
-        }
+        // Bottom Half (Gamepad 1)
+            // Intake/Outtake
+                if(gamepad1.right_trigger > .01)
+                    intake.intakePower(gamepad1.right_trigger);
+                else if (gamepad1.left_trigger > .01)
+                    intake.intakePower(-gamepad1.left_trigger);
+
+            // Drive Train
+                if(gamepad1.left_stick_x >= .1 && gamepad1.left_stick_y >= .1 && gamepad1.right_stick_x >= .1)
+                    driveTrain.brakeMotors();
+                else
+                    driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+
     }
 }
