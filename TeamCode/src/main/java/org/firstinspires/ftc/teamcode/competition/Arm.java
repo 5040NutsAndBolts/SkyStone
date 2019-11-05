@@ -16,8 +16,8 @@ public class Arm {
     public Arm(Hardware hwMap)
     {
         robot = hwMap;
-        up = new PID(100,0,.1,.1,.1);
-        down=new PID(0,0,.05,.1,.1);
+        up = new PID(100,0,.2,.05,.1);
+        down=new PID(0,0,.1,.05,.1);
     }
     public void moveWithPid(boolean position)
     {

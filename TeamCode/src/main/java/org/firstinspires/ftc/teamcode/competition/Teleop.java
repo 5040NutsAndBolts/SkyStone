@@ -19,6 +19,11 @@ public class Teleop extends OpMode {
     IntakeMech intake;
     CapStoneMech capstone;
 
+    Arm arm;
+
+    boolean toggle = false;
+    boolean aPressed=false;
+
     /**
      * Instantiates objects
      */
@@ -27,6 +32,7 @@ public class Teleop extends OpMode {
         driveTrain = new MecanumDrive(robot);
         intake = new IntakeMech(robot);
         capstone = new CapStoneMech(robot);
+        arm = new Arm(robot);
     }
 
     /**
@@ -64,6 +70,20 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
+
+        if(gamepad2.a&&!aPressed)
+        {
+
+            aPressed=true;
+            toggle=!toggle;
+
+        }
+        else if(!gamepad2.a)
+        {
+            aPressed=false;
+        }
+
+        arm.moveWithPid(toggle);
 
         if(gamepad2.right_trigger>.01)
             capstone.moveSlides(gamepad2.right_trigger);
