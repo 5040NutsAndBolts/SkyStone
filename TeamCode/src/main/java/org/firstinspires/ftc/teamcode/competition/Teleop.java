@@ -57,18 +57,13 @@ public class Teleop extends OpMode {
      * Tells you if the gyro is calibrated
      */
     @Override
-    public void init_loop() {
-        telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
-
-    }
+    public void init_loop() { telemetry.addData("imu calabration", robot.imu.isGyroCalibrated()); }
 
     /**
      * The loop played during the game
      */
     @Override
     public void loop() {
-        telemetry.addData("Arm position", robot.towerArmMotor.getCurrentPosition());
-
         // Top Half (Gamepad 2)
             // Raising/lowering the tower arm
                 if(gamepad2.right_bumper)
@@ -87,20 +82,24 @@ public class Teleop extends OpMode {
                     towerArm.openClose(Hardware.ClawPos.STOP);
 
             // Placing the capstone
-            if(gamepad2.right_trigger > .01)
-                capstoneMech.moveSlides(gamepad2.right_trigger);
-            else
-                capstoneMech.moveSlides(-gamepad2.left_trigger);
+                if(gamepad2.y)
+                    capstoneMech.moveSlidesUp();
+                else if (gamepad2.a)
+                    capstoneMech.moveSlidesDown();
+                else
+                    capstoneMech.holdSlides();
 
         // Bottom Half (Gamepad 1)
             // Intake/Outtake
                 if(gamepad1.right_trigger > .01)
-                    intake.intakePower(gamepad1.right_trigger);
+                    intake.spinIn();
                 else if (gamepad1.left_trigger > .01)
-                    intake.intakePower(-gamepad1.left_trigger);
+                    intake.spinOut();
+                else
+                    intake.hold();
 
             // Drive Train
-                if(gamepad1.left_stick_x >= .1 && gamepad1.left_stick_y >= .1 && gamepad1.right_stick_x >= .1)
+                if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
                     driveTrain.brakeMotors();
                 else
                     driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);

@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.competition.hardware;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
 public class CapstoneMech {
 
     private Hardware robot;
@@ -12,10 +8,14 @@ public class CapstoneMech {
         robot = hwMap;
     }
 
-    public void placeCpstone(){}
-
-    public void moveSlides(double power) {
-        robot.capstoneSlides.setPower(power);
+    public void moveSlidesUp() {
+        robot.capstoneSlides.setPower(1);
     }
+
+    public void moveSlidesDown() {
+        robot.capstoneSlides.setPower(-1);
+    }
+
+    public void holdSlides() { robot.capstoneSlides.setPower(0); }
 
 }

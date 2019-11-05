@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.competition.hardware;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
 public class IntakeMech {
 
     private Hardware robot;
@@ -12,11 +8,19 @@ public class IntakeMech {
         robot = r;
     }
 
-    public void intakePower(double power) {
-        robot.intakeLeft.setPower(power);
-        robot.intakeRight.setPower(power);
+    public void spinIn() {
+        robot.intakeLeft.setPower(1);
+        robot.intakeRight.setPower(1);
     }
 
-    public void placeStone(){}
+    public void spinOut() {
+        robot.intakeLeft.setPower(-1);
+        robot.intakeRight.setPower(-1);
+    }
+
+    public void hold() {
+        robot.intakeLeft.setPower(0);
+        robot.intakeRight.setPower(0);
+    }
 
 }

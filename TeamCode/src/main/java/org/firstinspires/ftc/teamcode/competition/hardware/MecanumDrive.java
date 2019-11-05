@@ -71,15 +71,11 @@ public class MecanumDrive {
         double v7 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
         double v8 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
 
-        robot.leftFront.setPower(v5);
-        robot.rightFront.setPower(v6);
-        robot.leftRear.setPower(v7);
-        robot.rightRear.setPower(v8);
+        powerSet(v5, v6, v7, v8);
     }
 
     /**
-     * Sets power of motors
-     *
+     * Sets single power to all motors
      * @param power The power the robot is set to 0-1
      */
     public void powerSet(double power) {
@@ -87,6 +83,20 @@ public class MecanumDrive {
         robot.rightFront.setPower(power);
         robot.leftRear.setPower(power);
         robot.rightRear.setPower(power);
+    }
+
+    /**
+     * Sets specific powers of motors
+     * @param v1 Left front power value
+     * @param v2 Right front power value
+     * @param v3 Left rear power value
+     * @param v4 Right rear power value
+     */
+    public void powerSet(double v1, double v2, double v3, double v4) {
+        robot.leftFront.setPower(v1);
+        robot.rightFront.setPower(v2);
+        robot.leftRear.setPower(v3);
+        robot.rightRear.setPower(v4);
     }
 
     /**
