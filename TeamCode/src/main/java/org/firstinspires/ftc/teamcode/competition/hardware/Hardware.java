@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -21,10 +23,10 @@ public class Hardware {
     public BNO055IMU imu;
 
     // Drive train
-    public DcMotor leftFront;
-    public DcMotor rightFront;
-    public DcMotor leftRear;
-    public DcMotor rightRear;
+    public DcMotorEx leftFront;
+    public DcMotorEx rightFront;
+    public DcMotorEx leftRear;
+    public DcMotorEx rightRear;
 
     // Intake
     public DcMotor intakeLeft;
@@ -33,8 +35,8 @@ public class Hardware {
 
     // Tower arm
     public DcMotor towerArmMotor;
-    public Servo leftClaw;
-    public Servo rightClaw;
+    public CRServo leftClaw;
+    public CRServo rightClaw;
     public enum TowerArmPos {
         RAISE,
         LOWER,
@@ -68,22 +70,20 @@ public class Hardware {
 
         // Drive train motor setup
             // left front
-            leftFront = hwMap.dcMotor.get("leftFront");
-            // Motors don't have encoders on them because we're using odometry
+            leftFront = hwMap.get(DcMotorEx.class, "leftFront");
             leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            // When motors aren't receiving power, they will attempt to hold their position
             leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // left rear
-            leftRear = hwMap.dcMotor.get("leftRear");
+            leftRear = hwMap.get(DcMotorEx.class, "leftRear");
             leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // right front
-            rightFront = hwMap.dcMotor.get("rightFront");
+            rightFront = hwMap.get(DcMotorEx.class, "rightFront");
             rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightFront.setDirection(DcMotor.Direction.REVERSE);
             rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // right rear
-            rightRear = hwMap.dcMotor.get("rightRear");
+            rightRear = hwMap.get(DcMotorEx.class, "rightRear");
             rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightRear.setDirection(DcMotor.Direction.REVERSE);
             rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -110,9 +110,9 @@ public class Hardware {
             towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // left claw servo
-            leftClaw = hwMap.servo.get("leftClaw");
+            leftClaw = hwMap.crservo.get("leftClaw");
             // right claw servo
-            rightClaw = hwMap.servo.get("rightClaw");
+            rightClaw = hwMap.crservo.get("rightClaw");
 
         // Capstone arm motor setup
             // Capstone place

@@ -34,19 +34,19 @@ public class TowerArm {
 
         if (clawPos == Hardware.ClawPos.OPEN) {
             // Left claw
-            robot.leftClaw.setPosition(0);
+            robot.leftClaw.setPower(0);
             // Right claw
-            robot.rightClaw.setPosition(1);
+            robot.rightClaw.setPower(1);
         }
         else if (clawPos == Hardware.ClawPos.CLOSE) {
             // Left claw
-            robot.leftClaw.setPosition(1);
+            robot.leftClaw.setPower(1);
             // Right claw
-            robot.rightClaw.setPosition(0);
+            robot.rightClaw.setPower(0);
         }
         else if (clawPos == Hardware.ClawPos.STOP){
-            robot.leftClaw.setPosition(0.5);
-            robot.rightClaw.setPosition(0.5);
+            robot.leftClaw.setPower(0.5);
+            robot.rightClaw.setPower(0.5);
         }
     }
 
