@@ -28,23 +28,20 @@ public class TowerArm {
     public void openClose(Hardware.ClawPos clawPos) {
 
         // Uses VEX 393 Servo Motors (360 degree servo)
-        // setPosition(0) --> Turns
+        // setPosition(0) --> Turns counter clockwise
+        // setPosition(1) --> Turns clockwise
         // setPosition(.5) --> Stops
 
         if (clawPos == Hardware.ClawPos.OPEN) {
             // Left claw
-            robot.leftClaw.setDirection(Servo.Direction.REVERSE);
             robot.leftClaw.setPosition(0);
             // Right claw
-            robot.rightClaw.setDirection(Servo.Direction.FORWARD);
-            robot.rightClaw.setPosition(0);
+            robot.rightClaw.setPosition(1);
         }
         else if (clawPos == Hardware.ClawPos.CLOSE) {
             // Left claw
-            robot.leftClaw.setDirection(Servo.Direction.FORWARD);
-            robot.leftClaw.setPosition(0);
+            robot.leftClaw.setPosition(1);
             // Right claw
-            robot.rightClaw.setDirection(Servo.Direction.REVERSE);
             robot.rightClaw.setPosition(0);
         }
         else if (clawPos == Hardware.ClawPos.STOP){

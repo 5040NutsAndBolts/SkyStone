@@ -92,10 +92,12 @@ public class Hardware {
             // Left intake
             intakeLeft = hwMap.dcMotor.get("intakeLeft");
             intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // Right intake
             intakeRight = hwMap.dcMotor.get("intakeRight");
             intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             intakeRight.setDirection(DcMotor.Direction.REVERSE);
+            intakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Stone guide motor setup
             stoneGuide = hwMap.servo.get("stoneGuide");
@@ -103,6 +105,8 @@ public class Hardware {
         // Tower arm setup
             // arm motor
             towerArmMotor = hwMap.dcMotor.get("towerArm");
+            towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // left claw servo
