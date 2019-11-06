@@ -7,6 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.competition.hardware.CapstoneMech;
+import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.competition.hardware.IntakeMech;
+import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.competition.hardware.TowerArm;
 
 /**
  * It's teleop... yeah
@@ -17,9 +22,9 @@ public class Teleop extends OpMode {
     private Hardware robot;
     private MecanumDrive driveTrain;
     IntakeMech intake;
-    CapStoneMech capstone;
+    CapstoneMech capstone;
 
-    Arm arm;
+    TowerArm arm;
 
     boolean toggle = false;
     boolean aPressed=false;
@@ -31,8 +36,8 @@ public class Teleop extends OpMode {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
         intake = new IntakeMech(robot);
-        capstone = new CapStoneMech(robot);
-        arm = new Arm(robot);
+        capstone = new CapstoneMech(robot);
+        arm = new TowerArm(robot);
     }
 
     /**
@@ -86,28 +91,14 @@ public class Teleop extends OpMode {
 
         arm.moveWithPid(toggle);
 
-        if(gamepad2.right_trigger>.01)
-            capstone.moveSlides(gamepad2.right_trigger);
-        else
-            capstone.moveSlides(-gamepad2.left_trigger);
-
-        if(gamepad1.right_trigger>.01)
-            intake.intakePower(gamepad1.right_trigger);
-        else
-            intake.intakePower(-gamepad1.left_trigger);
-        if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
-            driveTrain.brakeMotors();
-        } else {
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
-        }
         telemetry.addData("A: ", gamepad2.a);
         telemetry.addData("Pressed: ", aPressed);
         telemetry.addData("Toggle: ", toggle);
-        telemetry.addData("Power: ", Arm.up.getPID());
-        telemetry.addData("p: ", Arm.up.p());
-        telemetry.addData("i: ", Arm.up.i());
-        telemetry.addData("d: ", Arm.up.d());
-        telemetry.addData("Arm: ", robot.armMotor.getCurrentPosition());
+        telemetry.addData("Power: ", TowerArm.up.getPID());
+        telemetry.addData("p: ", TowerArm.up.p());
+        telemetry.addData("i: ", TowerArm.up.i());
+        telemetry.addData("d: ", TowerArm.up.d());
+        telemetry.addData("Arm: ", robot.towerArmMotor.getCurrentPosition());
         telemetry.update();
     }
 }
