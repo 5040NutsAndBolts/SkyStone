@@ -17,19 +17,19 @@ public class Arm {
     public Arm(Hardware hwMap)
     {
         robot = hwMap;
-        up = new PID(800,0,RobotConstants.p,RobotConstants.i,RobotConstants.d);
+        up = new PID(300,0,RobotConstants.p,RobotConstants.i,RobotConstants.d);
 
     }
     public void moveWithPid(boolean position)
     {
 
-        if(robot.armMotor.getCurrentPosition()>=1000)
+        if(robot.armMotor.getCurrentPosition()>=600)
             {robot.armMotor.setPower(0);}
         else if(position)
         {
 
             robot.armMotor.setPower(up.getPID());
-            up.update(800,robot.armMotor.getCurrentPosition());
+            up.update(300,robot.armMotor.getCurrentPosition());
 
         }
 

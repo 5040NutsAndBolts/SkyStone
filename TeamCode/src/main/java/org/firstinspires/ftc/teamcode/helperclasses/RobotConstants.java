@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class RobotConstants
 {
 
-    public static double p=.1;
+    public static double p=.002;
     public static double i=0;
     public static double d=0;
 

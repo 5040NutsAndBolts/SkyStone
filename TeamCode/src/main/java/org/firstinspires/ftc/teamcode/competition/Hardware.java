@@ -93,12 +93,11 @@ public class Hardware {
         // Tower arm setup
             // arm motor
             armMotor = hwMap.dcMotor.get("towerArm");
+            armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // left claw servo
-            leftClaw = hwMap.servo.get("leftClaw");
-            // right claw servo
-            rightClaw = hwMap.servo.get("rightClaw");
+
 
         // Capstone arm motor setup
             // Capstone place
