@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.openftc.revextensions2.ExpansionHubEx;
+import org.openftc.revextensions2.ExpansionHubMotor;
+
 
 /**
  * This class is for setting up all the hardware components of the robot.
@@ -27,6 +30,17 @@ public class Hardware {
     public DcMotorEx rightFront;
     public DcMotorEx leftRear;
     public DcMotorEx rightRear;
+
+    // Odometry
+    public DcMotorEx leftEncoder;
+    public DcMotorEx rightEncoder;
+    public DcMotorEx centerEncoder;
+
+    // Bulk Data
+    public ExpansionHubEx expansionHub;
+    public ExpansionHubMotor leftOdom;
+    public ExpansionHubMotor rightOdom;
+    public ExpansionHubMotor centerOdom;
 
     // Intake
     public DcMotor intakeLeft;
@@ -88,6 +102,18 @@ public class Hardware {
             rightRear.setDirection(DcMotor.Direction.REVERSE);
             rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // Odometry encoder setup
+            leftEncoder = hwMap.get(DcMotorEx.class, "leftFront");
+            rightEncoder = hwMap.get(DcMotorEx.class, "rightFront");
+            centerEncoder = hwMap.get(DcMotorEx.class, "rightRear");
+
+
+        // Rev ExpansionHub Bulk Data
+            expansionHub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 3");
+            leftOdom = (ExpansionHubMotor) hwMap.dcMotor.get("leftFront");
+            rightOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightFront");
+            centerOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightRear");
+
         // Intake motor setup
             // Left intake
             intakeLeft = hwMap.dcMotor.get("intakeLeft");
@@ -122,5 +148,4 @@ public class Hardware {
             capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
 }
