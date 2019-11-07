@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -65,15 +64,6 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        robot.expansionHub.getBulkInputData().getMotorCurrentPosition(robot.leftOdom);
-        robot.expansionHub.getBulkInputData().getMotorCurrentPosition(robot.rightOdom);
-        robot.expansionHub.getBulkInputData().getMotorCurrentPosition(robot.centerOdom);
-        robot.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.centerEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.centerEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Top Half (Gamepad 2)
             // Raising/lowering the tower arm

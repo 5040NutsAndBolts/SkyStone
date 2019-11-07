@@ -31,17 +31,6 @@ public class Hardware {
     public DcMotorEx leftRear;
     public DcMotorEx rightRear;
 
-    // Odometry
-    public DcMotorEx leftEncoder;
-    public DcMotorEx rightEncoder;
-    public DcMotorEx centerEncoder;
-
-    // Bulk Data
-    public ExpansionHubEx expansionHub;
-    public ExpansionHubMotor leftOdom;
-    public ExpansionHubMotor rightOdom;
-    public ExpansionHubMotor centerOdom;
-
     // Intake
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
@@ -101,18 +90,6 @@ public class Hardware {
             rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightRear.setDirection(DcMotor.Direction.REVERSE);
             rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Odometry encoder setup
-            leftEncoder = hwMap.get(DcMotorEx.class, "leftFront");
-            rightEncoder = hwMap.get(DcMotorEx.class, "rightFront");
-            centerEncoder = hwMap.get(DcMotorEx.class, "rightRear");
-
-
-        // Rev ExpansionHub Bulk Data
-            expansionHub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 3");
-            leftOdom = (ExpansionHubMotor) hwMap.dcMotor.get("leftFront");
-            rightOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightFront");
-            centerOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightRear");
 
         // Intake motor setup
             // Left intake

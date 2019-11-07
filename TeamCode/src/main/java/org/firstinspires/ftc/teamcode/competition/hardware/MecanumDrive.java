@@ -15,7 +15,6 @@ public class MecanumDrive {
     private Hardware robot;
 
     public double adjust = 0;
-
     /**
      * sets up the hardware refernce so you don't have to pass it as a parameter and sets the adjust
      * @param r The hardware reference from the code
@@ -75,7 +74,7 @@ public class MecanumDrive {
     }
 
     /**
-     * Sets single power to all motors
+     * Sets power of all motors to a single value
      * @param power The power the robot is set to 0-1
      */
     public void powerSet(double power) {
@@ -86,17 +85,17 @@ public class MecanumDrive {
     }
 
     /**
-     * Sets specific powers of motors
-     * @param v1 Left front power value
-     * @param v2 Right front power value
-     * @param v3 Left rear power value
-     * @param v4 Right rear power value
+     * Sets individual powers of the motors
+     * @param v Left front motor power
+     * @param v1 Right front motor power
+     * @param v2 Left rear motor power
+     * @param v3 Right rear motor power
      */
-    public void powerSet(double v1, double v2, double v3, double v4) {
-        robot.leftFront.setPower(v1);
-        robot.rightFront.setPower(v2);
-        robot.leftRear.setPower(v3);
-        robot.rightRear.setPower(v4);
+    public void powerSet(double v, double v1, double v2, double v3) {
+        robot.leftFront.setPower(v);
+        robot.rightFront.setPower(v1);
+        robot.leftRear.setPower(v2);
+        robot.rightRear.setPower(v3);
     }
 
     /**
