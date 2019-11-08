@@ -50,6 +50,9 @@ public class Teleop extends OpMode {
         robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+        // Odometry setup
+        robot.resetEncoders();
     }
 
     /**
@@ -103,7 +106,6 @@ public class Teleop extends OpMode {
                 if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
                     driveTrain.brakeMotors();
                 else
-                    driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
-
+                    driveTrain.drive(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
     }
 }

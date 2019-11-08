@@ -18,19 +18,6 @@ import org.openftc.revextensions2.ExpansionHubMotor;
  * It will also be used to initialize everything for autonomous
  */
 public class Hardware {
-
-    // Hardware mapping
-    private HardwareMap hwMap;
-
-    // Gyro
-    public BNO055IMU imu;
-
-    // Drive train
-    public DcMotorEx leftFront;
-    public DcMotorEx rightFront;
-    public DcMotorEx leftRear;
-    public DcMotorEx rightRear;
-
     // Intake
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
@@ -55,74 +42,127 @@ public class Hardware {
     public Servo capstonePlacer;
     public DcMotor capstoneSlides;
 
+    // Hardware mapping
+    private HardwareMap hwMap;
+
+    // Gyro
+    public BNO055IMU imu;
+
+    // Drive train
+    public DcMotorEx leftFront = null;
+    public DcMotorEx rightFront = null;
+    public DcMotorEx leftRear = null;
+    public DcMotorEx rightRear = null;
+
+    // Odometry hardware
+    private DcMotorEx leftEncoder = null;
+    private DcMotorEx rightEncoder = null;
+    private DcMotorEx centerEncoder = null;
+
+    // Rev Expansion Hub Data
+    public ExpansionHubEx expansionHub;
+    public ExpansionHubMotor leftOdom, rightOdom, centerOdom;
+
+    // Odometry encoder positions
+    public int leftEncoderPos = 0;
+    public int centerEncoderPos = 0;
+    public int rightEncoderPos = 0;
+
 
     /**
      * Simple constructor to set hardware mapping to null
      */
-    public Hardware() {
-        hwMap = null;
-    }
+    public Hardware() { hwMap = null; }
 
     /**
      * Initialization of hardware
-     *
      * @param mapping hardware map passed into class
      */
-    public void init(HardwareMap mapping) {
+    public void init(HardwareMap mapping){
         hwMap = mapping;
 
         // Drive train motor setup
-            // left front
-            leftFront = hwMap.get(DcMotorEx.class, "leftFront");
-            leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            // left rear
-            leftRear = hwMap.get(DcMotorEx.class, "leftRear");
-            leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            // right front
-            rightFront = hwMap.get(DcMotorEx.class, "rightFront");
-            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightFront.setDirection(DcMotor.Direction.REVERSE);
-            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            // right rear
-            rightRear = hwMap.get(DcMotorEx.class, "rightRear");
-            rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightRear.setDirection(DcMotor.Direction.REVERSE);
-            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // left front
+        leftFront = hwMap.get(DcMotorEx.class, "leftFront");
+        // Motors don't have encoders on them because we're using odometry
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // When motors aren't receiving power, they will attempt to hold their position
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // left rear
+        leftRear = hwMap.get(DcMotorEx.class, "leftRear");
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // right front
+        rightFront = hwMap.get(DcMotorEx.class, "rightFront");
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // right rear
+        rightRear = hwMap.get(DcMotorEx.class, "rightRear");
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Odometry encoder setup
+        leftEncoder = hwMap.get(DcMotorEx.class, "leftFront");
+        rightEncoder = hwMap.get(DcMotorEx.class, "rightFront");
+        centerEncoder = hwMap.get(DcMotorEx.class, "rightRear");
+
+        // Rev ExpansionHub Bulk Data
+        expansionHub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 3");
+        leftOdom = (ExpansionHubMotor) hwMap.dcMotor.get("leftFront");
+        rightOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightFront");
+        centerOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightRear");
 
         // Intake motor setup
-            // Left intake
-            intakeLeft = hwMap.dcMotor.get("intakeLeft");
-            intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            // Right intake
-            intakeRight = hwMap.dcMotor.get("intakeRight");
-            intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            intakeRight.setDirection(DcMotor.Direction.REVERSE);
-            intakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Left intake
+        intakeLeft = hwMap.dcMotor.get("intakeLeft");
+        intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Right intake
+        intakeRight = hwMap.dcMotor.get("intakeRight");
+        intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeRight.setDirection(DcMotor.Direction.REVERSE);
+        intakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Stone guide motor setup
-            stoneGuide = hwMap.servo.get("stoneGuide");
+        stoneGuide = hwMap.servo.get("stoneGuide");
 
         // Tower arm setup
-            // arm motor
-            towerArmMotor = hwMap.dcMotor.get("towerArm");
-            towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            // left claw servo
-            leftClaw = hwMap.crservo.get("leftClaw");
-            // right claw servo
-            rightClaw = hwMap.crservo.get("rightClaw");
+        // arm motor
+        towerArmMotor = hwMap.dcMotor.get("towerArm");
+        towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // left claw servo
+        leftClaw = hwMap.crservo.get("leftClaw");
+        // right claw servo
+        rightClaw = hwMap.crservo.get("rightClaw");
 
         // Capstone arm motor setup
-            // Capstone place
-            capstonePlacer = hwMap.servo.get("capstonePlacer");
-            // Capstone slides
-            capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
-            capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Capstone place
+        capstonePlacer = hwMap.servo.get("capstonePlacer");
+        // Capstone slides
+        capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
+        capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    /**
+     * Resets the encoder values to zero
+     */
+    public void resetEncoders(){
+        leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        centerEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftEncoderPos = 0;
+        rightEncoderPos = 0;
+        centerEncoderPos = 0;
+
+        // Run mode needs to be reset because encoders and wheels are pointing to the same location
+        leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        centerEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }
