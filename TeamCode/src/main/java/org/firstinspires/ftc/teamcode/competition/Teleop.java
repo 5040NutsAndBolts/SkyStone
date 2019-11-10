@@ -50,9 +50,6 @@ public class Teleop extends OpMode {
         robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
-        // Odometry setup
-        robot.resetEncoders();
     }
 
     /**
@@ -67,6 +64,9 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
+        telemetry.addData("Left side intaking", intake.leftInward);
+        telemetry.addData("Right side intaking", intake.rightInward);
+        telemetry.update();
 
         // Top Half (Gamepad 2)
             // Raising/lowering the tower arm
@@ -95,12 +95,14 @@ public class Teleop extends OpMode {
 
         // Bottom Half (Gamepad 1)
             // Intake/Outtake
-                if(gamepad1.right_trigger > .01)
-                    intake.spinIn();
-                else if (gamepad1.left_trigger > .01)
-                    intake.spinOut();
-                else
-                    intake.hold();
+                // Left side
+                    if (gamepad1.left_bumper)
+                        intake.leftInward = !intake.leftInward;
+                    intake.spinLeft(gamepad1.right_trigger);
+                // Right side
+                    if (gamepad1.right_bumper)
+                        intake.rightInward = !intake.rightInward;
+                    intake.spinRight(gamepad1.right_trigger);
 
             // Drive Train
                 if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)

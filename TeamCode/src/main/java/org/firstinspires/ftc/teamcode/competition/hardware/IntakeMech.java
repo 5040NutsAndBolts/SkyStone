@@ -4,23 +4,25 @@ public class IntakeMech {
 
     private Hardware robot;
 
+    public boolean leftInward = true;
+    public boolean rightInward = true;
+
     public IntakeMech(Hardware r) {
         robot = r;
     }
 
-    public void spinIn() {
-        robot.intakeLeft.setPower(1);
-        robot.intakeRight.setPower(1);
+    public void spinRight(double power){
+        if (rightInward)
+            robot.intakeRight.setPower(power);
+        else
+            robot.intakeRight.setPower(-power);
     }
 
-    public void spinOut() {
-        robot.intakeLeft.setPower(-1);
-        robot.intakeRight.setPower(-1);
-    }
-
-    public void hold() {
-        robot.intakeLeft.setPower(0);
-        robot.intakeRight.setPower(0);
+    public void spinLeft(double power){
+        if (leftInward)
+            robot.intakeLeft.setPower(power);
+        else
+            robot.intakeLeft.setPower(-power);
     }
 
 }
