@@ -198,28 +198,29 @@ public class Hardware {
         bulkData = expansionHub.getBulkInputData();
 
         // Get encoder values and previous heading
-        double l = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM);
+        double l = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM*1.025);
         double r = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM);
         double heading = prevHeading;
 
         // Calculate encoder deltas
         double lDelta = l - prevL;
-        double rDelta = r- prevR;
+        double rDelta = r - prevR;
 
         // Calculate change in angle
+        //ld=-2 rd=-3
         double hDelta = (rDelta - lDelta) / axisWidth;
 
         // Approximate if straight line or to calculate arc
-        if (Math.abs(lDelta - rDelta) < 1e-5){
-            x += lDelta * cos(heading);
-            y += rDelta * sin(heading);
+        if (Math.abs(lDelta - rDelta) < 1e-20){
+            x += (rDelta+lDelta)/2 * cos(heading);
+            y += (rDelta+lDelta)/2 * sin(heading);
         } else {
             // Calculate radius of ICC
-            double R = (axisWidth / 2.0) * (rDelta + lDelta) / (rDelta - lDelta);
-
+            double R =(axisWidth / 2.0) * (rDelta + lDelta) / (rDelta - lDelta);
             // Calculate position by finding point that is rotated around ICC by heading delta
-            x -= R * sin(hDelta + heading) - R * sin(heading);
-            y += R * cos(hDelta + heading) - R * cos(heading);
+            x += R * (-sin(heading) + sin(hDelta)*cos(heading)+sin(heading)*cos(hDelta));
+            y += R * (cos(heading) -  cos(hDelta)*cos(heading)+sin(heading)*sin(hDelta));
+
         }
 
         prevL = l;
