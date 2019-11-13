@@ -153,6 +153,14 @@ public class Hardware {
     // Location info for line approximation odometry
     public double prevHeading = 0, prevL = 0, prevR = 0, prevC=0;
     public double axisWidth = TRACK_WIDTH;
+
+    public void roadRunnerUpdate()
+    {
+
+
+
+    }
+
     /**
      * Updates global position of robot using line approximation math
      * (i.e. driving in straight lines or anywhere there is a very small delta angle)
