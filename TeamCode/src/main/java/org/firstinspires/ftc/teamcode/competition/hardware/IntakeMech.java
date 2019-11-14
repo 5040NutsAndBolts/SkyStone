@@ -11,18 +11,13 @@ public class IntakeMech {
         robot = r;
     }
 
-    public void spinRight(double power){
-        if (rightInward)
-            robot.intakeRight.setPower(power);
-        else
-            robot.intakeRight.setPower(-power);
+    public void setPower(double power)
+    {
+
+        robot.intakeLeft.setPower(power);
+        robot.intakeRight.setPower(power);
+
     }
 
-    public void spinLeft(double power){
-        if (leftInward)
-            robot.intakeLeft.setPower(power);
-        else
-            robot.intakeLeft.setPower(-power);
-    }
 
 }

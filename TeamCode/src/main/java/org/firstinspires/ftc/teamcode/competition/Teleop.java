@@ -96,13 +96,10 @@ public class Teleop extends OpMode {
         // Bottom Half (Gamepad 1)
             // Intake/Outtake
                 // Left side
-                    if (gamepad1.left_bumper)
-                        intake.leftInward = !intake.leftInward;
-                    intake.spinLeft(gamepad1.right_trigger);
-                // Right side
-                    if (gamepad1.right_bumper)
-                        intake.rightInward = !intake.rightInward;
-                    intake.spinRight(gamepad1.right_trigger);
+                    if(gamepad1.right_trigger>.01)
+                        intake.setPower(-gamepad1.right_trigger);
+                    else
+                        intake.setPower(gamepad1.left_trigger);
 
             // Drive Train
                 if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
