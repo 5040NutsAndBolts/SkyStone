@@ -19,6 +19,8 @@ public class ParkingOnlyAuto extends LinearOpMode {
     private MecanumDrive driveTrain;
     private StartLoc startLoc = StartLoc.Bridge;
 
+    private int driveToBridgeTime = 500; // Time to drive from
+
     private int waitTimeMS = 0;
     private boolean endTouchingWall = true;
     private boolean pressedDPad = false;
@@ -62,5 +64,32 @@ public class ParkingOnlyAuto extends LinearOpMode {
         long endTime = System.currentTimeMillis() + waitTimeMS;
         while (System.currentTimeMillis() < endTime);
 
+        // Drives the robot forwards barely forward
+        if (startLoc == StartLoc.Bridge) {
+            // Robot needs to start facing the bridge
+            if (endTouchingWall) {
+                endTime = System.currentTimeMillis() + 500;
+                while (System.currentTimeMillis() < endTime)
+                    driveTrain.drive(-.25, 0, 0);
+            }
+            else {
+                endTime = System.currentTimeMillis() + 1000;
+                while (System.currentTimeMillis() < endTime)
+                    driveTrain.drive(-.25, 0, 0);
+                endTime = System.currentTimeMillis() + 500;
+                while (System.currentTimeMillis() < endTime)
+                    driveTrain.drive(0, -.25, 0);
+            }
+        }
+        // Robot needs to start facing away from the wall
+        // Drives the robot forward and then sideways
+        else if (startLoc == StartLoc.Middle) {
+
+        }
+        // Robot needs to start facing away from the wall
+        // Drives the robot forward and then sideways
+        else if (startLoc == StartLoc.Depot) {
+
+        }
     }
 }
