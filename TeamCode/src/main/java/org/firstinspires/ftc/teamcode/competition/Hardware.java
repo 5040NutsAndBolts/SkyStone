@@ -1,15 +1,21 @@
 package org.firstinspires.ftc.teamcode.competition;
 
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -21,6 +27,18 @@ import static java.lang.Math.sin;
  */
 public class Hardware {
 
+
+    ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(-7.5,0,Math.PI/2),new Pose2d(0,7.5,0),new Pose2d(0,-7.5,0)))) {
+        @Override
+        public List<Double> getWheelPositions() {
+            ArrayList<Double> wheelPositions = new ArrayList<Double>(3);
+            wheelPositions.add(centerOdomTraveled/ODOM_TICKS_PER_CM);
+            wheelPositions.add(leftOdomTraveled/ODOM_TICKS_PER_CM);
+            wheelPositions.add(rightOdomTraveled/ODOM_TICKS_PER_CM);
+            return wheelPositions;
+        }
+    };
+
     // Measurements and such kept as variables for ease of use
         // Ticks Per Rotation of an odometry wheel
     private static final double ODOM_TICKS_PER_ROTATION = 1440;
@@ -31,7 +49,7 @@ public class Hardware {
         // Circumference of an odometry wheel in cm
     private static final double WHEEL_CIRCUM = 2.0 * Math.PI * ODOM_WHEEL_RADIUS;
         // Number of ticks in a centimeter using dimensional analysis
-    private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION /( WHEEL_CIRCUM*1.17);
+    private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION /( WHEEL_CIRCUM*2.54);
 
     // Robot physical location
     public double x = 0;
@@ -96,12 +114,12 @@ public class Hardware {
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
           // right front
         rightFront = hwMap.get(DcMotorEx.class, "rightFront");
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
           // right rear
         rightRear = hwMap.get(DcMotorEx.class, "rightRear");
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -115,6 +133,29 @@ public class Hardware {
         leftOdom = (ExpansionHubMotor) hwMap.dcMotor.get("leftFront");
         rightOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightFront");
         centerOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightRear");
+    }
+
+    public void updatePositionRoadRunner()
+    {
+
+        bulkData = expansionHub.getBulkInputData();
+
+        // Change in the distance (centimeters) since the last update for each odometer
+        double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM);
+        double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM);
+        double deltaCenterDist = getDeltaCenterTicks() / ODOM_TICKS_PER_CM;
+
+        // Update real world distance traveled by the odometry wheels, regardless of orientation
+        leftOdomTraveled += deltaLeftDist;
+        rightOdomTraveled += deltaRightDist;
+        centerOdomTraveled += deltaCenterDist;
+
+        odom.update();
+        prevHeading=odom.getPoseEstimate().getHeading();
+        x=odom.getPoseEstimate().getX();
+        y=odom.getPoseEstimate().getY();
+        resetDeltaTicks();
+
     }
 
     /**
@@ -251,7 +292,7 @@ public class Hardware {
         centerEncoderPos = bulkData.getMotorCurrentPosition(centerOdom);
     }
 
-    private int getDeltaLeftTicks() { return (int)(leftEncoderPos - bulkData.getMotorCurrentPosition(leftOdom)*1.01041884); }
+    private int getDeltaLeftTicks() { return leftEncoderPos - bulkData.getMotorCurrentPosition(leftOdom); }
 
     private int getDeltaRightTicks() { return rightEncoderPos - bulkData.getMotorCurrentPosition(rightOdom); }
 
