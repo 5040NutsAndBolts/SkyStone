@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.openftc.revextensions2.ExpansionHubEx;
-import org.openftc.revextensions2.ExpansionHubMotor;
 
 
 /**
@@ -25,12 +21,13 @@ public class Hardware {
 
     // Tower arm
     public DcMotor towerArmMotor;
-    public CRServo leftClaw;
-    public CRServo rightClaw;
+    public Servo clawRight;
+    public Servo clawLeft;
     public enum TowerArmPos {
         RAISE,
         LOWER,
-        STOP
+        STOP,
+        RESET
     }
     public enum ClawPos {
         OPEN,
@@ -106,14 +103,11 @@ public class Hardware {
         // Tower arm setup
         // arm motor
         towerArmMotor = hwMap.dcMotor.get("towerArm");
-        towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        towerArmMotor.setTargetPosition(towerArmMotor.getCurrentPosition());
-        towerArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // left claw servo
-        leftClaw = hwMap.crservo.get("leftClaw");
-        // right claw servo
-        rightClaw = hwMap.crservo.get("rightClaw");
+        // claw servos
+        clawLeft = hwMap.servo.get("clawLeft");
+        clawRight = hwMap.servo.get("clawRight");
 
         // Capstone arm motor setup
         // Capstone place

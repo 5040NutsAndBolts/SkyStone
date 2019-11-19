@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -20,6 +21,8 @@ public class Teleop extends OpMode {
     private IntakeMech intake;
     private TowerArm towerArm;
     private CapstoneMech capstoneMech;
+
+    private double intakePower = 1;
 
     /**
      * Instantiates objects
@@ -57,33 +60,39 @@ public class Teleop extends OpMode {
      * Tells you if the gyro is calibrated
      */
     @Override
-    public void init_loop() { telemetry.addData("imu calibration", robot.imu.isGyroCalibrated()); }
+    public void init_loop() {
+        telemetry.addData("imu calibration", robot.imu.isGyroCalibrated());
+        robot.towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
     /**
      * The loop played during the game
      */
     @Override
     public void loop() {
+        telemetry.addData("Tower Arm Encoder Pos", robot.towerArmMotor.getCurrentPosition());
         telemetry.update();
 
         // Top Half (Gamepad 2)
             // Raising/lowering the tower arm
-                if(gamepad2.right_bumper)
+                if(gamepad2.right_trigger > .01)
                     towerArm.raiseLower(Hardware.TowerArmPos.RAISE);
-                else if (gamepad2.left_bumper)
+                else if (gamepad2.left_trigger > .01)
                     towerArm.raiseLower(Hardware.TowerArmPos.LOWER);
                 else
                     towerArm.raiseLower(Hardware.TowerArmPos.STOP);
 
-            // Opening/closing the tower arm
-                if(gamepad2.right_trigger > .01)
-                    towerArm.openClose(Hardware.ClawPos.OPEN);
-                else if (gamepad2.left_trigger > .01)
-                    towerArm.openClose(Hardware.ClawPos.CLOSE);
-                else
-                    towerArm.openClose(Hardware.ClawPos.STOP);
+            // Reset the motor encoder for the tower arm
+                if(gamepad2.a)
+                    towerArm.raiseLower(Hardware.TowerArmPos.RESET);
 
-            // Placing the capstone
+            // Opening/closing the tower grabber claw
+                if(gamepad2.right_bumper)
+                    towerArm.openClose(true);
+                else if (gamepad2.left_bumper)
+                    towerArm.openClose(false);
+
+            // Raising the capstone placing mechanism
                 if(gamepad2.y)
                     capstoneMech.moveSlidesUp();
                 else if (gamepad2.a)
@@ -93,11 +102,18 @@ public class Teleop extends OpMode {
 
         // Bottom Half (Gamepad 1)
             // Intake/Outtake
-                // Left side
-                    if(gamepad1.right_trigger>.01)
-                        intake.setPower(-gamepad1.right_trigger);
-                    else
-                        intake.setPower(gamepad1.left_trigger);
+                if(gamepad1.right_trigger>.01)
+                    intake.setPower(-intakePower);
+                else if(gamepad1.left_trigger>.01)
+                    intake.setPower(intakePower);
+                else
+                    intake.setPower(0);
+                if(gamepad1.y)
+                    intakePower = 1;
+                if(gamepad1.b)
+                    intakePower = .75;
+                if(gamepad1.a)
+                    intakePower = .5;
 
             // Drive Train
                 if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
