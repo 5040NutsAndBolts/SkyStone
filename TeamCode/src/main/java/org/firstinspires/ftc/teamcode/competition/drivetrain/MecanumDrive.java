@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.competition.drivetrain;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -46,6 +48,7 @@ public class MecanumDrive {
         robot.rightRear.setPower(forward+rotation-sideways);
         //Left Front = +Speed + Turn - Strafe      Right Front = +Speed - Turn + Strafe
         //Left Rear  = +Speed + Turn + Strafe      Right Rear  = +Speed - Turn - Strafe
+        
     }
 
     /**
@@ -97,6 +100,7 @@ public class MecanumDrive {
         robot.rightFront.setPower(v1);
         robot.leftRear.setPower(v2);
         robot.rightRear.setPower(v3);
+
     }
 
     /**

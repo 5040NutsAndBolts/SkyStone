@@ -32,9 +32,9 @@ public class Hardware {
         @Override
         public List<Double> getWheelPositions() {
             ArrayList<Double> wheelPositions = new ArrayList<Double>(3);
-            wheelPositions.add(centerOdomTraveled/ODOM_TICKS_PER_CM);
-            wheelPositions.add(leftOdomTraveled/ODOM_TICKS_PER_CM);
-            wheelPositions.add(rightOdomTraveled/ODOM_TICKS_PER_CM);
+            wheelPositions.add(centerOdomTraveled);
+            wheelPositions.add(leftOdomTraveled);
+            wheelPositions.add(rightOdomTraveled);
             return wheelPositions;
         }
     };
@@ -43,13 +43,13 @@ public class Hardware {
         // Ticks Per Rotation of an odometry wheel
     private static final double ODOM_TICKS_PER_ROTATION = 1440;
         // Radius of an odometry wheel in cm
-    private static final double ODOM_WHEEL_RADIUS = 3.6;
+    private static final double ODOM_WHEEL_RADIUS = 3.6/2.54;
         // Distance from left odometry wheel to the right odometry wheel in cm
     private static final double TRACK_WIDTH = 40.194/0.893856554;
         // Circumference of an odometry wheel in cm
     private static final double WHEEL_CIRCUM = 2.0 * Math.PI * ODOM_WHEEL_RADIUS;
         // Number of ticks in a centimeter using dimensional analysis
-    private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION /( WHEEL_CIRCUM*2.54);
+    private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION /( WHEEL_CIRCUM);
 
     // Robot physical location
     public double x = 0;
@@ -143,7 +143,7 @@ public class Hardware {
         // Change in the distance (centimeters) since the last update for each odometer
         double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM);
         double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM);
-        double deltaCenterDist = getDeltaCenterTicks() / ODOM_TICKS_PER_CM;
+        double deltaCenterDist = -getDeltaCenterTicks() / ODOM_TICKS_PER_CM;
 
         // Update real world distance traveled by the odometry wheels, regardless of orientation
         leftOdomTraveled += deltaLeftDist;
@@ -151,9 +151,10 @@ public class Hardware {
         centerOdomTraveled += deltaCenterDist;
 
         odom.update();
-        prevHeading=odom.getPoseEstimate().getHeading();
-        x=odom.getPoseEstimate().getX();
-        y=odom.getPoseEstimate().getY();
+        prevHeading=odom.getPoseEstimate().component3();
+        x=odom.getPoseEstimate().component1();
+        y=odom.getPoseEstimate().component2();
+
         resetDeltaTicks();
 
     }

@@ -105,11 +105,11 @@ public class Teleop extends OpMode {
         if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
             driveTrain.brakeMotors();
         } else if (!onlyForward && !onlySideways){
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x );
+            driveTrain.drive(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x );
         } else if (onlyForward) {
             driveTrain.drive(gamepad1.left_stick_y, 0, -gamepad1.right_stick_x);
         } else if (onlySideways) {
-            driveTrain.drive(0, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+            driveTrain.drive(0, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
         }
     }
 }
