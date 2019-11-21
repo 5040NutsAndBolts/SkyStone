@@ -28,7 +28,7 @@ import static java.lang.Math.sin;
 public class Hardware {
 
 
-    ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(-7.5,0,Math.PI/2),new Pose2d(0,7.5,0),new Pose2d(0,-7.5,0)))) {
+    ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(8.27,0,Math.PI/2),new Pose2d(0,8.25,0),new Pose2d(0,-8.25,0)))) {
         @Override
         public List<Double> getWheelPositions() {
             ArrayList<Double> wheelPositions = new ArrayList<Double>(3);
@@ -141,9 +141,9 @@ public class Hardware {
         bulkData = expansionHub.getBulkInputData();
 
         // Change in the distance (centimeters) since the last update for each odometer
-        double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM);
-        double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM);
-        double deltaCenterDist = -getDeltaCenterTicks() / ODOM_TICKS_PER_CM;
+        double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM)*1.07;
+        double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM)*1.07;
+        double deltaCenterDist = -getDeltaCenterTicks() / ODOM_TICKS_PER_CM*1.07;
 
         // Update real world distance traveled by the odometry wheels, regardless of orientation
         leftOdomTraveled += deltaLeftDist;
