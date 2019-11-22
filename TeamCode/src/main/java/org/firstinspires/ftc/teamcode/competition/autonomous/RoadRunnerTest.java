@@ -58,7 +58,9 @@ public class RoadRunnerTest extends LinearOpMode
         HolonomicPIDVAFollower follower = new HolonomicPIDVAFollower(translationalPid, translationalPid, headingPid);
 
         DriveConstraints constraints = new DriveConstraints(20, 40, 80, 1, 2, 4);
-        Trajectory traj =  TrajectoryGenerator.generateTrajectory(path, constraints);
+
+
+        Trajectory traj =  TrajectoryGenerator.INSTANCE.generateTrajectory(path, constraints);
 
         follower.followTrajectory(traj);
         // call in loop
