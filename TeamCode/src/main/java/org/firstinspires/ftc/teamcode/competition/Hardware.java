@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode.competition;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.SyncdDevice;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
+import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
+
 import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
@@ -27,8 +30,7 @@ import static java.lang.Math.sin;
  */
 public class Hardware {
 
-
-    ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(8.27,0,Math.PI/2),new Pose2d(0,8.25,0),new Pose2d(0,-8.25,0)))) {
+    public ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(8,0,Math.PI/2),new Pose2d(0,8.504,0),new Pose2d(0,-8.504,0)))) {
         @Override
         public List<Double> getWheelPositions() {
             ArrayList<Double> wheelPositions = new ArrayList<Double>(3);
