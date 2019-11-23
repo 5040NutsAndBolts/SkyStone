@@ -45,26 +45,36 @@ public class RoadRunnerTest extends LinearOpMode
             telemetry.update();
         }
         LineSegment line = new LineSegment(
-                new Vector2d(0, 0),
-                new Vector2d(56, 24)
+                new Vector2d(2, 2),
+                new Vector2d(14, 14)
         );
         LinearInterpolator interp = new LinearInterpolator(
                 Math.toRadians(30), Math.toRadians(45)
         );
         PathSegment segment = new PathSegment(line, interp);
         Path path = new Path(segment);
-        PIDCoefficients translationalPid = new PIDCoefficients(5, 0, 0);
-        PIDCoefficients headingPid = new PIDCoefficients(2, 0, 0);
+        PIDCoefficients translationalPid = new PIDCoefficients(7, 0, 0);
+        PIDCoefficients headingPid = new PIDCoefficients(4, 0, 0);
         HolonomicPIDVAFollower follower = new HolonomicPIDVAFollower(translationalPid, translationalPid, headingPid);
 
         DriveConstraints constraints = new DriveConstraints(20, 40, 80, 1, 2, 4);
 
 
-        Trajectory traj =  TrajectoryGenerator.INSTANCE.generateTrajectory(path, constraints);
+        while(opModeIsActive())
+        {
+            Trajectory traj = TrajectoryGenerator.INSTANCE.generateTrajectory(path, constraints);
 
-        follower.followTrajectory(traj);
-        // call in loop
-        DriveSignal signal = follower.update(new Pose2d(robot.x,robot.y));
+            follower.followTrajectory(traj);
+            // call in loop
+            DriveSignal signal = follower.update(new Pose2d(robot.x, robot.y,robot.prevHeading));
+            telemetry.addData("forward",signal.component1().component1());
+            telemetry.addData("sideways",signal.component1().component2());
+            telemetry.addData("angle",signal.component1().component3());
+            telemetry.addData("x: ", robot.x);
+            telemetry.addData("y: ", robot.y);
+            telemetry.update();
+
+        }
     }
 
 }

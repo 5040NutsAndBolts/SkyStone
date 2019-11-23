@@ -30,7 +30,7 @@ import static java.lang.Math.sin;
  */
 public class Hardware {
 
-    public ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(8,0,Math.PI/2),new Pose2d(0,8.504,0),new Pose2d(0,-8.504,0)))) {
+    public ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(8,0,Math.PI/2),new Pose2d(0,8.5,0),new Pose2d(0,-8.5,0)))) {
         @Override
         public List<Double> getWheelPositions() {
             ArrayList<Double> wheelPositions = new ArrayList<Double>(3);
