@@ -91,6 +91,10 @@ public class Teleop extends OpMode {
                     towerArm.openClose(true);
                 else if (gamepad2.left_bumper)
                     towerArm.openClose(false);
+                if(gamepad2.x)
+                    towerArm.openLeft();
+                if(gamepad2.b)
+                    towerArm.openRight();
 
             // Raising the capstone placing mechanism
                 if(gamepad2.y)

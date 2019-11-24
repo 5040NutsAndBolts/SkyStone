@@ -11,7 +11,7 @@ public class TowerArm {
     public TowerArm(Hardware hwMap) { robot = hwMap; }
 
     public void raiseLower(Hardware.TowerArmPos height){
-        if(height == Hardware.TowerArmPos.RAISE && robot.towerArmMotor.getCurrentPosition() > towerArmHeight) {
+        if(height == Hardware.TowerArmPos.RAISE ){//&& robot.towerArmMotor.getCurrentPosition() > towerArmHeight) {
             robot.towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.towerArmMotor.setPower(.5);
         }
@@ -30,13 +30,23 @@ public class TowerArm {
     }
 
     public void openClose(boolean openClaw) {
+        // HiTec servos can be programmed to a position within [.1, .9]
+        // GoBuilda servos are programmed to a position within [0, 1]
         if (openClaw) {
-            robot.clawRight.setPosition(.8);
-            robot.clawLeft.setPosition(.8);
+            robot.clawRight.setPosition(0);
+            robot.clawLeft.setPosition(1);
         }
         else {
-            robot.clawRight.setPosition(.25);
-            robot.clawLeft.setPosition(.15);
+            robot.clawRight.setPosition(1);
+            robot.clawLeft.setPosition(0);
         }
+    }
+
+    public void openLeft() {
+        robot.clawLeft.setPosition(1);
+    }
+
+    public void openRight() {
+        robot.clawRight.setPosition(0);
     }
 }
