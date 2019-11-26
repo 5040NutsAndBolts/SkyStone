@@ -4,12 +4,11 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Engagable;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.competition.Hardware;
-import org.firstinspires.ftc.teamcode.competition.drivetrain.MecanumDrive;
+import org.firstinspires.ftc.teamcode.competition.hardware.*;
 
 /**
  * It's teleop... yeah
@@ -19,8 +18,11 @@ public class Teleop extends OpMode {
 
     private Hardware robot;
     private MecanumDrive driveTrain;
+    private IntakeMech intake;
+    private TowerArm towerArm;
+    private CapstoneMech capstoneMech;
 
-    private boolean onlyForward = false, onlySideways = false;
+    private double intakePower = 1;
 
     /**
      * Instantiates objects
@@ -28,6 +30,9 @@ public class Teleop extends OpMode {
     public Teleop() {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
+        intake = new IntakeMech(robot);
+        towerArm = new TowerArm(robot);
+        capstoneMech = new CapstoneMech(robot);
     }
 
     /**
@@ -48,10 +53,6 @@ public class Teleop extends OpMode {
         robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
-        // Odometry setup
-        robot.resetEncoders();
-
     }
 
     /**
@@ -60,7 +61,8 @@ public class Teleop extends OpMode {
      */
     @Override
     public void init_loop() {
-        telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
+        telemetry.addData("imu calibration", robot.imu.isGyroCalibrated());
+        robot.towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     /**
@@ -68,49 +70,59 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        robot.updatePositionRoadRunner();
-        telemetry.addData("onlyForward", onlyForward);
-        telemetry.addData("onlySideways", onlySideways);
-        telemetry.addLine("==========");
-        telemetry.addData("xPos", robot.x);
-        telemetry.addData("yPos", robot.y);
-        telemetry.addData("theta", robot.prevHeading);
-        telemetry.addLine("==========");
-        telemetry.addData("total left traveled(cm)", robot.rightOdomTraveled);
-        telemetry.addData("total right traveled(cm)", robot.leftOdomTraveled);
-        telemetry.addData("total center traveled(cm)", robot.centerOdomTraveled);
-        telemetry.addLine("==========");
-        telemetry.addData("leftEncoder value", robot.prevL);
-        telemetry.addData("rightEncoder value", robot.prevR);
-        telemetry.addData("centerEncoder value", robot.prevC);
+        telemetry.addData("Tower Arm Encoder Pos", robot.towerArmMotor.getCurrentPosition());
         telemetry.update();
 
-        // Reset robot position = X
-        if(gamepad1.x){
-            robot.resetPosition();
-            robot.resetEncoders();
-        }
-        if(gamepad1.y){
-            onlyForward = true;
-            onlySideways = false;
-        }
-        if(gamepad1.b) {
-            onlyForward = false;
-            onlySideways = true;
-        }
-        if(gamepad1.a) {
-            onlyForward = false;
-            onlySideways = false;
-        }
+        // Top Half (Gamepad 2)
+            // Raising/lowering the tower arm
+                if(gamepad2.right_trigger > .01)
+                    towerArm.raiseLower(Hardware.TowerArmPos.RAISE);
+                else if (gamepad2.left_trigger > .01)
+                    towerArm.raiseLower(Hardware.TowerArmPos.LOWER);
+                else
+                    towerArm.raiseLower(Hardware.TowerArmPos.STOP);
 
-        if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0) {
-            driveTrain.brakeMotors();
-        } else if (!onlyForward && !onlySideways){
-            driveTrain.drive(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x );
-        } else if (onlyForward) {
-            driveTrain.drive(gamepad1.left_stick_y, 0, -gamepad1.right_stick_x);
-        } else if (onlySideways) {
-            driveTrain.drive(0, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
-        }
+            // Reset the motor encoder for the tower arm
+                if(gamepad2.a)
+                    towerArm.raiseLower(Hardware.TowerArmPos.RESET);
+
+            // Opening/closing the tower grabber claw
+                if(gamepad2.right_bumper)
+                    towerArm.openClose(true);
+                else if (gamepad2.left_bumper)
+                    towerArm.openClose(false);
+                if(gamepad2.x)
+                    towerArm.openLeft();
+                if(gamepad2.b)
+                    towerArm.openRight();
+
+            // Raising the capstone placing mechanism
+                if(gamepad2.y)
+                    capstoneMech.moveSlidesUp();
+                else if (gamepad2.a)
+                    capstoneMech.moveSlidesDown();
+                else
+                    capstoneMech.holdSlides();
+
+        // Bottom Half (Gamepad 1)
+            // Intake/Outtake
+                if(gamepad1.right_trigger>.01)
+                    intake.setPower(-intakePower);
+                else if(gamepad1.left_trigger>.01)
+                    intake.setPower(intakePower);
+                else
+                    intake.setPower(0);
+                if(gamepad1.y)
+                    intakePower = 1;
+                if(gamepad1.b)
+                    intakePower = .6;
+                if(gamepad1.a)
+                    intakePower = .35;
+
+            // Drive Train
+                if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
+                    driveTrain.brakeMotors();
+                else
+                    driveTrain.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
     }
 }
