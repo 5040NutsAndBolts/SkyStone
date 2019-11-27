@@ -6,7 +6,7 @@ public class TowerArm {
 
     private Hardware robot;
 
-    private int towerArmHeight = -450;
+    private boolean armOpen = true;
 
     public TowerArm(Hardware hwMap) { robot = hwMap; }
 
@@ -29,12 +29,13 @@ public class TowerArm {
         }
     }
 
-    public void openClose(boolean openClaw) {
+    public void openClose() {
         // HiTec servos can be programmed to a position within [.1, .9]
         // GoBuilda servos are programmed to a position within [0, 1]
-        if (openClaw) {
-            robot.clawRight.setPosition(0);
-            robot.clawLeft.setPosition(1);
+        armOpen = !armOpen;
+        if (armOpen) {
+            robot.clawRight.setPosition(.5);
+            robot.clawLeft.setPosition(.5);
         }
         else {
             robot.clawRight.setPosition(1);

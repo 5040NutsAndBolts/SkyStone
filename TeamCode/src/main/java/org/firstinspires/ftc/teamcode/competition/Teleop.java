@@ -23,6 +23,7 @@ public class Teleop extends OpMode {
     private CapstoneMech capstoneMech;
 
     private double intakePower = 1;
+    private boolean leftBumperPressed = false;
 
     /**
      * Instantiates objects
@@ -75,9 +76,9 @@ public class Teleop extends OpMode {
 
         // Top Half (Gamepad 2)
             // Raising/lowering the tower arm
-                if(gamepad2.right_trigger > .01)
+                if(gamepad2.right_stick_y > .01)
                     towerArm.raiseLower(Hardware.TowerArmPos.RAISE);
-                else if (gamepad2.left_trigger > .01)
+                else if (gamepad2.right_stick_y < -.01)
                     towerArm.raiseLower(Hardware.TowerArmPos.LOWER);
                 else
                     towerArm.raiseLower(Hardware.TowerArmPos.STOP);
@@ -87,13 +88,15 @@ public class Teleop extends OpMode {
                     towerArm.raiseLower(Hardware.TowerArmPos.RESET);
 
             // Opening/closing the tower grabber claw
-                if(gamepad2.right_bumper)
-                    towerArm.openClose(true);
-                else if (gamepad2.left_bumper)
-                    towerArm.openClose(false);
-                if(gamepad2.x)
+                if (gamepad2.left_bumper && !leftBumperPressed) {
+                    leftBumperPressed = true;
+                    towerArm.openClose();
+                }
+                if (!gamepad2.left_bumper && leftBumperPressed)
+                    leftBumperPressed = false;
+                if (gamepad2.x)
                     towerArm.openLeft();
-                if(gamepad2.b)
+                if (gamepad2.b)
                     towerArm.openRight();
 
             // Raising the capstone placing mechanism
@@ -115,9 +118,11 @@ public class Teleop extends OpMode {
                 if(gamepad1.y)
                     intakePower = 1;
                 if(gamepad1.b)
-                    intakePower = .75;
+                    intakePower = .35;
                 if(gamepad1.a)
-                    intakePower = .5;
+                    intakePower = .33;
+                if(gamepad1.x)
+                    intakePower = .3;
 
             // Drive Train
                 if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
