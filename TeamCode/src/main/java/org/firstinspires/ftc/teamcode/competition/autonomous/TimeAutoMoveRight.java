@@ -9,16 +9,15 @@ import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
 
 @Autonomous(group="Auto",name = "RightAuto")
 public class TimeAutoMoveRight extends LinearOpMode {
+
     Hardware robot = new Hardware();
     ElapsedTime e = new ElapsedTime();
     MecanumDrive drive = new MecanumDrive(robot);
-    @Override
-    public void runOpMode() throws InterruptedException
-    {
 
+    @Override
+    public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
         waitForStart();
-        //e.startTime();
 
         long endTime = System.currentTimeMillis() + 270;
         long dropTime = System.currentTimeMillis() + 200;

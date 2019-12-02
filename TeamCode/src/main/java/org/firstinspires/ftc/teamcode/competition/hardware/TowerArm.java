@@ -6,8 +6,6 @@ public class TowerArm {
 
     private Hardware robot;
 
-    private int towerArmHeight = -450;
-
     public TowerArm(Hardware hwMap) { robot = hwMap; }
 
     public void raiseLower(Hardware.TowerArmPos height){
