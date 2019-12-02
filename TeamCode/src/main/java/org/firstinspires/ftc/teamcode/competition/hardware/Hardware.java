@@ -25,10 +25,13 @@ import java.util.List;
  */
 public class Hardware {
 
-    public ThreeTrackingWheelLocalizer odom=new ThreeTrackingWheelLocalizer(new ArrayList<Pose2d>(Arrays.asList(new Pose2d(8,0,Math.PI/2),new Pose2d(0,8.5,0),new Pose2d(0,-8.5,0)))) {
+    public ThreeTrackingWheelLocalizer odom = new ThreeTrackingWheelLocalizer(
+            new ArrayList<>(Arrays.asList(new Pose2d(8,0,Math.PI/2),
+                    new Pose2d(0,8.5,0),
+                    new Pose2d(0,-8.5,0)))) {
         @Override
         public List<Double> getWheelPositions() {
-            ArrayList<Double> wheelPositions = new ArrayList<Double>(3);
+            ArrayList<Double> wheelPositions = new ArrayList<>(3);
             wheelPositions.add(centerOdomTraveled);
             wheelPositions.add(leftOdomTraveled);
             wheelPositions.add(rightOdomTraveled);
@@ -41,8 +44,6 @@ public class Hardware {
     private static final double ODOM_TICKS_PER_ROTATION = 1440;
     // Radius of an odometry wheel in cm
     private static final double ODOM_WHEEL_RADIUS = 3.6/2.54;
-    // Distance from left odometry wheel to the right odometry wheel in cm
-    private static final double TRACK_WIDTH = 40.194/0.893856554;
     // Circumference of an odometry wheel in cm
     private static final double WHEEL_CIRCUM = 2.0 * Math.PI * ODOM_WHEEL_RADIUS;
     // Number of ticks in a centimeter using dimensional analysis
@@ -85,38 +86,6 @@ public class Hardware {
     public double rightOdomTraveled = 0;
     public double centerOdomTraveled = 0;
 
-    public double prevHeading;
-    public double prevL;
-    public double prevR;
-
-    /**
-     * Simple constructor to set hardware mapping to null
-     */
-
-
-    public void updatePositionRoadRunner()
-    {
-
-        bulkData = expansionHub.getBulkInputData();
-
-        // Change in the distance (centimeters) since the last update for each odometer
-        double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM)*1.07;
-        double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM)*1.07;
-        double deltaCenterDist = -getDeltaCenterTicks() / ODOM_TICKS_PER_CM*1.07;
-
-        // Update real world distance traveled by the odometry wheels, regardless of orientation
-        leftOdomTraveled += deltaLeftDist;
-        rightOdomTraveled += deltaRightDist;
-        centerOdomTraveled += deltaCenterDist;
-
-        odom.update();
-        prevHeading=odom.getPoseEstimate().component3();
-        x=odom.getPoseEstimate().component1();
-        y=odom.getPoseEstimate().component2();
-
-        resetDeltaTicks();
-
-    }
     // Intake
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
@@ -132,17 +101,10 @@ public class Hardware {
         STOP,
         RESET
     }
-    public enum ClawPos {
-        OPEN,
-        CLOSE,
-        STOP
-    }
 
     // Capstone arm
     public Servo capstonePlacer;
     public DcMotor capstoneSlides;
-
-
 
     /**
      * Simple constructor to set hardware mapping to null
@@ -216,6 +178,29 @@ public class Hardware {
         capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public void updatePositionRoadRunner() {
+
+        bulkData = expansionHub.getBulkInputData();
+
+        // Change in the distance (centimeters) since the last update for each odometer
+        double deltaLeftDist = -(getDeltaLeftTicks() / ODOM_TICKS_PER_CM) * 1.07;
+        double deltaRightDist = -(getDeltaRightTicks() / ODOM_TICKS_PER_CM)* 1.07;
+        double deltaCenterDist = -getDeltaCenterTicks() / ODOM_TICKS_PER_CM * 1.07;
+
+        // Update real world distance traveled by the odometry wheels, regardless of orientation
+        leftOdomTraveled += deltaLeftDist;
+        rightOdomTraveled += deltaRightDist;
+        centerOdomTraveled += deltaCenterDist;
+
+        odom.update();
+        theta = odom.getPoseEstimate().component3();
+        x = odom.getPoseEstimate().component1();
+        y = odom.getPoseEstimate().component2();
+
+        resetDeltaTicks();
+
+    }
+
     private void resetDeltaTicks() {
         leftEncoderPos = bulkData.getMotorCurrentPosition(leftOdom);
         rightEncoderPos = bulkData.getMotorCurrentPosition(rightOdom);
@@ -232,10 +217,6 @@ public class Hardware {
      * Resets position of the robot to x=0, y=0, theta=0
      */
     public void resetPosition(){
-        prevHeading = 0;
-        prevL = 0;
-        prevR = 0;
-
         x = 0;
         y = 0;
         theta = 0;

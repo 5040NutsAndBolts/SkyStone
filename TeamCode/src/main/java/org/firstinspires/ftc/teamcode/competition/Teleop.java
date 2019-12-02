@@ -70,7 +70,10 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        telemetry.addData("Tower Arm Encoder Pos", robot.towerArmMotor.getCurrentPosition());
+        robot.updatePositionRoadRunner();
+        telemetry.addData("X Position", robot.x);
+        telemetry.addData("Y Position", robot.y);
+        telemetry.addData("Rotation", robot.theta);
         telemetry.update();
 
         // Top Half (Gamepad 2)
