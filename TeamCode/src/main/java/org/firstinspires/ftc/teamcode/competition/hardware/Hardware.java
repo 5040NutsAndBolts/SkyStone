@@ -27,8 +27,8 @@ public class Hardware {
 
     public ThreeTrackingWheelLocalizer odom = new ThreeTrackingWheelLocalizer(
             new ArrayList<>(Arrays.asList(new Pose2d(8,0,Math.PI/2),
-                    new Pose2d(0,8.5,0),
-                    new Pose2d(0,-8.5,0)))) {
+                    new Pose2d(0,8.49,0),
+                    new Pose2d(0,-8.49,0)))) {
         @Override
         public List<Double> getWheelPositions() {
             ArrayList<Double> wheelPositions = new ArrayList<>(3);
@@ -142,6 +142,12 @@ public class Hardware {
         leftEncoder = hwMap.get(DcMotorEx.class, "leftFront");
         rightEncoder = hwMap.get(DcMotorEx.class, "rightFront");
         centerEncoder = hwMap.get(DcMotorEx.class, "rightRear");
+
+        // Rev ExpansionHub Bulk Data
+        expansionHub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 2");
+        leftOdom = (ExpansionHubMotor) hwMap.dcMotor.get("leftFront");
+        rightOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightFront");
+        centerOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightRear");
 
         // Intake motor setup
         // Left intake

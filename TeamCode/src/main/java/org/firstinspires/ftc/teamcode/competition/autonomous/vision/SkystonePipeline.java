@@ -138,7 +138,7 @@ public class SkystonePipeline extends OpenCvPipeline {
             Imgproc.rectangle(selectionMask, rect.tl(), rect.br(), new Scalar(0,0,255),2);
 
             // If the result is better then the previously tracked one, set this rect as the new best
-            if(score < lowestScore && rect.tl().y >= 120&&rect.tl().x>70){
+            if(score < lowestScore && rect.tl().y >= 120 && rect.tl().x > 70){
                 lowestScore = score;
                 bestRect = rect;
             }
