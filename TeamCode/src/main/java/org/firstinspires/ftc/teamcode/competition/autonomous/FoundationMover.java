@@ -4,15 +4,15 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.competition.hardware.*;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 
-@Autonomous(group="Auto",name = "Parking Auto")
-public class ParkingOnly extends LinearOpMode {
+@Autonomous(group="Auto",name = "Move the foundation")
+public class FoundationMover extends LinearOpMode {
 
     private Hardware robot = new Hardware();
     private MecanumDrive drive = new MecanumDrive(robot);
+    private GrabbingMech grabbingMech = new GrabbingMech(robot);
 
     private boolean movingRight = false;
     private boolean parkOnWall = true;
@@ -67,14 +67,10 @@ public class ParkingOnly extends LinearOpMode {
             }
             if (!(gamepad1.dpad_down || gamepad1.dpad_up))
                 dPadPressed = false;
-            if (gamepad1.dpad_left) {
+            if (gamepad1.dpad_left)
                 onBlueAlliance = true;
-                //robot.theta = 0;
-            }
-            if (gamepad1.dpad_right) {
+            if (gamepad1.dpad_right)
                 onBlueAlliance = false;
-                //robot.theta = Math.toRadians(180);
-            }
 
             // Updating robot position
             if (gamepad1.back) {
@@ -116,49 +112,62 @@ public class ParkingOnly extends LinearOpMode {
             telemetry.update();
         }
 
-        // While the robot is not within roughly 3 inches of the destination, drive either left or right
-        if (onBlueAlliance) {
-            if (movingRight)
-                while (robot.x > 69 && opModeIsActive()) {
-                    robot.updatePositionRoadRunner();
-                    telemetry.addData("X Position", robot.x);
-                    telemetry.addData("Y Position", robot.y);
-                    telemetry.addData("Rotation", robot.theta);
-                    telemetry.update();
+        // Move the robot to be vertically aligned with the foundation
+        while (robot.x < 100 && opModeIsActive()) {
+            robot.updatePositionRoadRunner();
+            telemetry.addData("X Position", robot.x);
+            telemetry.addData("Y Position", robot.y);
+            telemetry.addData("Rotation", robot.theta);
+            telemetry.update();
 
-                    drive.drive(.6, 0, 0);
-                }
-            else
-                while (robot.x < 56 && opModeIsActive()) {
-                    robot.updatePositionRoadRunner();
-                    telemetry.addData("X Position", robot.x);
-                    telemetry.addData("Y Position", robot.y);
-                    telemetry.addData("Rotation", robot.theta);
-                    telemetry.update();
+            drive.drive(-.5,0,0);
+        }
 
-                    drive.drive(-.6, 0, 0);
-                }
-        } else {
-            if (!movingRight)
-                while (robot.x > 69 && opModeIsActive()) {
-                    robot.updatePositionRoadRunner();
-                    telemetry.addData("X Position", robot.x);
-                    telemetry.addData("Y Position", robot.y);
-                    telemetry.addData("Rotation", robot.theta);
-                    telemetry.update();
+        // Move the robot to be next to the foundation
+        while (robot.y < 27.5 && opModeIsActive()) {
+            robot.updatePositionRoadRunner();
+            telemetry.addData("X Position", robot.x);
+            telemetry.addData("Y Position", robot.y);
+            telemetry.addData("Rotation", robot.theta);
+            telemetry.update();
 
-                    drive.drive(.6, 0, 0);
-                }
-            else
-                while (robot.x < 56 && opModeIsActive()) {
-                    robot.updatePositionRoadRunner();
-                    telemetry.addData("X Position", robot.x);
-                    telemetry.addData("Y Position", robot.y);
-                    telemetry.addData("Rotation", robot.theta);
-                    telemetry.update();
+            drive.drive(0,-.4,0);
+        }
 
-                    drive.drive(-.6, 0, 0);
-                }
+        // Grab the foundation
+        endTime = System.currentTimeMillis() + 1000;
+        while (System.currentTimeMillis() < endTime && opModeIsActive()) {
+            drive.drive(0,0,0);
+            grabbingMech.grab();
+        }
+
+        // Pull the foundation backwards
+        while (robot.y > 0 && opModeIsActive()) {
+            robot.updatePositionRoadRunner();
+            telemetry.addData("X Position", robot.x);
+            telemetry.addData("Y Position", robot.y);
+            telemetry.addData("Rotation", robot.theta);
+            telemetry.update();
+
+            drive.drive(0,.5,0);
+        }
+
+        // Release the foundation
+        endTime = System.currentTimeMillis() + 1000;
+        while (System.currentTimeMillis() < endTime && opModeIsActive()) {
+            drive.drive(0,0,0);
+            grabbingMech.reset();
+        }
+
+        // Move the robot to the parking position
+        while (robot.x > 69 && opModeIsActive()) {
+            robot.updatePositionRoadRunner();
+            telemetry.addData("X Position", robot.x);
+            telemetry.addData("Y Position", robot.y);
+            telemetry.addData("Rotation", robot.theta);
+            telemetry.update();
+
+            drive.drive(.6,0,0);
         }
 
         // Move to park against the sky bridge
@@ -213,6 +222,25 @@ public class ParkingOnly extends LinearOpMode {
                 drive.drive(-.5,0,0);
             else if (robot.x < endPosX)
                 drive.drive(.5,0,0);
+        }
+    }
+
+    /**
+     * Rotates the robot a specified number of degrees (relative to its current position)
+     * @param degrees Degrees to rotate the robot
+     * @param thresholdPercent How close the robot will get to the target position
+     */
+    private void rotate(double degrees, double thresholdPercent) {
+        double endTheta = robot.theta + Math.toRadians(degrees);
+        while (opModeIsActive()) {
+            if (HelperMethods.inThreshhold(robot.theta, endTheta, thresholdPercent)) {
+                drive.drive(0,0,0);
+                break;
+            }
+            else if (robot.theta > endTheta)
+                drive.drive(0,0,.25);
+            else if (robot.theta < endTheta)
+                drive.drive(0,0,-.25);
         }
     }
 }

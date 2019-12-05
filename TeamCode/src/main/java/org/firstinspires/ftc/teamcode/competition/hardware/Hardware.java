@@ -106,6 +106,9 @@ public class Hardware {
     public Servo capstonePlacer;
     public DcMotor capstoneSlides;
 
+    // Foundation/Stone grabber
+    public Servo grabber;
+
     /**
      * Simple constructor to set hardware mapping to null
      */
@@ -169,7 +172,6 @@ public class Hardware {
         towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         // claw servos
         clawLeft = hwMap.servo.get("clawLeft");
         clawRight = hwMap.servo.get("clawRight");
@@ -182,6 +184,9 @@ public class Hardware {
         capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
         capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Foundation/Stone grabber setup
+        grabber = hwMap.servo.get("grabber");
     }
 
     public void updatePositionRoadRunner() {

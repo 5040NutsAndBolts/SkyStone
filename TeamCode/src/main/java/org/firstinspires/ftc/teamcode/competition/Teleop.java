@@ -21,6 +21,7 @@ public class Teleop extends OpMode {
     private IntakeMech intake;
     private TowerArm towerArm;
     private CapstoneMech capstoneMech;
+    private GrabbingMech grabbingMech;
 
     private double intakePower = 1;
 
@@ -33,6 +34,7 @@ public class Teleop extends OpMode {
         intake = new IntakeMech(robot);
         towerArm = new TowerArm(robot);
         capstoneMech = new CapstoneMech(robot);
+        grabbingMech = new GrabbingMech(robot);
     }
 
     /**
@@ -122,9 +124,15 @@ public class Teleop extends OpMode {
                 if(gamepad1.a)
                     intakePower = .35;
 
+            // Grabbing mechanism
+                if(gamepad1.back)
+                    grabbingMech.reset();
+                if(gamepad1.start)
+                    grabbingMech.grab();
+
             // Drive Train
                 if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
-                    driveTrain.brakeMotors();
+                    driveTrain.hardBrakeMotors();
                 else
                     driveTrain.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
     }
