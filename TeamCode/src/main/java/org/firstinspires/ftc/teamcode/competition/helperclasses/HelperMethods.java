@@ -17,10 +17,10 @@ public class HelperMethods {
     public static boolean inThreshhold(double value1, double value2, double thresholdPercent){
         double ratio = value1 / value2;
 
-        boolean withinUpperThreshold = ratio >= 1 + thresholdPercent * .01;
-        boolean withinLowerThreshold = ratio <= 1 - thresholdPercent * .01;
+        boolean withinUpperThreshold = ratio <= 1 + thresholdPercent * .01;
+        boolean withinLowerThreshold = ratio >= 1 - thresholdPercent * .01;
 
-        return  withinUpperThreshold || withinLowerThreshold;
+        return  withinUpperThreshold && withinLowerThreshold;
     }
 
     /**
@@ -78,6 +78,6 @@ public class HelperMethods {
     }
 
     public static void main(String[] args){
-        System.out.println(convertUnits("12in to ft"));
+        System.out.println(inThreshhold(12,11.5,3));
     }
 }

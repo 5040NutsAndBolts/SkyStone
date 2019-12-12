@@ -8,6 +8,10 @@ public class TowerArm {
 
     public TowerArm(Hardware hwMap) { robot = hwMap; }
 
+    /**
+     * Raising and lowering the tower arm at a pre-specified speed
+     * @param height Which mode the function will run in
+     */
     public void raiseLower(Hardware.TowerArmPos height){
         if(height == Hardware.TowerArmPos.RAISE ){//&& robot.towerArmMotor.getCurrentPosition() > towerArmHeight) {
             robot.towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -27,24 +31,38 @@ public class TowerArm {
         }
     }
 
+    /**
+     * Raising and lowering the tower arm at a user-specified speed
+     * @param power Power at which to raise the tower arm
+     */
+    public void raiseLower(double power){
+        robot.towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.towerArmMotor.setPower(power);
+    }
+
+    /**
+     * Opening or closing the tower-grabbing claws
+     * @param openClaw Whether or not to open the claw
+     */
     public void openClose(boolean openClaw) {
         // HiTec servos can be programmed to a position within [.1, .9]
         // GoBuilda servos are programmed to a position within [0, 1]
         if (openClaw) {
-            robot.clawRight.setPosition(.25);
-            robot.clawLeft.setPosition(.25);
+            robot.clawRight.setPosition(.5);
+            robot.clawLeft.setPosition(.5);
         }
         else {
             robot.clawRight.setPosition(1);
             robot.clawLeft.setPosition(1);
         }
+        // TODO: Make it so I can almostClose() in this method, WHILE STILL HAVING 1 BOOLEAN ARGUMENT
     }
 
-    public void openLeft() {
-        robot.clawLeft.setPosition(1);
-    }
-
-    public void openRight() {
-        robot.clawRight.setPosition(0);
+    /**
+     * Set the claw to ALMOST close, used for grabbing the lowest position stone
+     */
+    public void almostClose() {
+        robot.clawRight.setPosition(.8);
+        robot.clawLeft.setPosition(.8);
     }
 }

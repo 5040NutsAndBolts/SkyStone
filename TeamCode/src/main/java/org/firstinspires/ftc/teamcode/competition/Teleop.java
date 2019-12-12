@@ -23,7 +23,7 @@ public class Teleop extends OpMode {
     private CapstoneMech capstoneMech;
     private GrabbingMech grabbingMech;
 
-    private double intakePower = 1;
+    private boolean g2BumperPressed = false;
 
     /**
      * Instantiates objects
@@ -80,26 +80,23 @@ public class Teleop extends OpMode {
 
         // Top Half (Gamepad 2)
             // Raising/lowering the tower arm
-                if(gamepad2.right_trigger > .01)
-                    towerArm.raiseLower(Hardware.TowerArmPos.RAISE);
-                else if (gamepad2.left_trigger > .01)
-                    towerArm.raiseLower(Hardware.TowerArmPos.LOWER);
+                if (gamepad2.right_stick_y > .01 || gamepad2.right_stick_y < .01)
+                    towerArm.raiseLower(gamepad2.right_stick_y);
                 else
-                    towerArm.raiseLower(Hardware.TowerArmPos.STOP);
-
-            // Reset the motor encoder for the tower arm
-                if(gamepad2.a)
-                    towerArm.raiseLower(Hardware.TowerArmPos.RESET);
+                    towerArm.raiseLower(0);
 
             // Opening/closing the tower grabber claw
                 if(gamepad2.right_bumper)
-                    towerArm.openClose(true);
-                else if (gamepad2.left_bumper)
                     towerArm.openClose(false);
-                if(gamepad2.x)
-                    towerArm.openLeft();
-                if(gamepad2.b)
-                    towerArm.openRight();
+                else if (gamepad2.left_bumper)
+                    towerArm.openClose(true);
+                else if (gamepad2.right_trigger > .1)
+                    towerArm.almostClose();
+
+//                if ((gamepad2.right_bumper || gamepad2.left_bumper) && !g2BumperPressed)
+//                    g2BumperPressed = true;
+//                if (!(gamepad2.right_bumper || gamepad2.left_bumper) && g2BumperPressed)
+//                    g2BumperPressed = false;
 
             // Raising the capstone placing mechanism
                 if(gamepad2.y)
@@ -112,23 +109,23 @@ public class Teleop extends OpMode {
         // Bottom Half (Gamepad 1)
             // Intake/Outtake
                 if(gamepad1.right_trigger>.01)
-                    intake.setPower(-intakePower);
+                    intake.setPower(-1);
                 else if(gamepad1.left_trigger>.01)
-                    intake.setPower(intakePower);
+                    intake.setPower(.5);
                 else
                     intake.setPower(0);
-                if(gamepad1.y)
-                    intakePower = 1;
-                if(gamepad1.b)
-                    intakePower = .6;
-                if(gamepad1.a)
-                    intakePower = .35;
 
             // Grabbing mechanism
-                if(gamepad1.back)
-                    grabbingMech.reset();
+                if(gamepad1.left_bumper)
+                    grabbingMech.resetFoundation();
+                if(gamepad1.right_bumper)
+                    grabbingMech.grabFoundation();
+
+            // Stone guide
                 if(gamepad1.start)
-                    grabbingMech.grab();
+                    intake.guideOut();
+                if(gamepad1.back)
+                    intake.guideIn();
 
             // Drive Train
                 if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)

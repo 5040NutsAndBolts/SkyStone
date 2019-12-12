@@ -13,4 +13,12 @@ public class IntakeMech {
         robot.intakeRight.setPower(power);
     }
 
+    public void guideOut() {
+        robot.stoneGuide.setPosition(0);
+    }
+
+    public void guideIn() {
+        robot.stoneGuide.setPosition(1);
+    }
+
 }

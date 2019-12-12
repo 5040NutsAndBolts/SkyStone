@@ -4,15 +4,16 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.competition.hardware.*;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.competition.hardware.GrabbingMech;
+import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
 
 @Autonomous(group="Auto",name = "Move the foundation")
 public class FoundationMover extends LinearOpMode {
 
-    private Hardware robot = new Hardware();
-    private MecanumDrive drive = new MecanumDrive(robot);
-    private GrabbingMech grabbingMech = new GrabbingMech(robot);
+    protected Hardware robot = new Hardware();
+    protected MecanumDrive drive = new MecanumDrive(robot);
+    protected GrabbingMech grabbingMech = new GrabbingMech(robot);
 
     private boolean movingRight = false;
     private boolean parkOnWall = true;
@@ -74,12 +75,13 @@ public class FoundationMover extends LinearOpMode {
 
             // Updating robot position
             if (gamepad1.back) {
-                robot.resetPosition();
-                robot.resetEncoders();
-                if (onBlueAlliance)
+                robot.resetOdometry();
+                if (onBlueAlliance) {
                     robot.theta = -3 * Math.PI / 2.0;
-                else
+                }
+                else {
                     robot.theta = 0;
+                }
             }
 
             if (waitTime > 25)
@@ -138,7 +140,7 @@ public class FoundationMover extends LinearOpMode {
         endTime = System.currentTimeMillis() + 1000;
         while (System.currentTimeMillis() < endTime && opModeIsActive()) {
             drive.drive(0,0,0);
-            grabbingMech.grab();
+            grabbingMech.grabFoundation();
         }
 
         // Pull the foundation backwards
@@ -156,7 +158,7 @@ public class FoundationMover extends LinearOpMode {
         endTime = System.currentTimeMillis() + 1000;
         while (System.currentTimeMillis() < endTime && opModeIsActive()) {
             drive.drive(0,0,0);
-            grabbingMech.reset();
+            grabbingMech.resetFoundation();
         }
 
         // Move the robot to the parking position
@@ -185,62 +187,5 @@ public class FoundationMover extends LinearOpMode {
 
         drive.drive(0,0,0);
 
-    }
-
-    /**
-     * Moves the robot sideways a number of inches (relative to its current position)
-     * @param inches Numbers of inches sideways the robot will move
-     * @param thresholdPercent How close the robot will get to the target position
-     */
-    private void sidewaysInch(double inches, double thresholdPercent) {
-        double endPosX = robot.x + inches;
-        while (opModeIsActive()) {
-            if (HelperMethods.inThreshhold(robot.x, endPosX, thresholdPercent)) {
-                drive.drive(0,0,0);
-                break;
-            }
-            else if (robot.x < endPosX)
-                drive.drive(0,-.5,0);
-            else if (robot.x > endPosX)
-                drive.drive(0,.5,0);
-        }
-    }
-
-    /**
-     * Moves the robot forwards a number of inches (relative to its current position)
-     * @param inches Numbers of inches sideways the robot will move
-     * @param thresholdPercent How close the robot will get to the target position
-     */
-    private void forwardsInch(double inches, double thresholdPercent) {
-        double endPosX = robot.y + inches;
-        while (opModeIsActive()) {
-            if (HelperMethods.inThreshhold(robot.y, endPosX, thresholdPercent)) {
-                drive.drive(0,0,0);
-                break;
-            }
-            else if (robot.x > endPosX)
-                drive.drive(-.5,0,0);
-            else if (robot.x < endPosX)
-                drive.drive(.5,0,0);
-        }
-    }
-
-    /**
-     * Rotates the robot a specified number of degrees (relative to its current position)
-     * @param degrees Degrees to rotate the robot
-     * @param thresholdPercent How close the robot will get to the target position
-     */
-    private void rotate(double degrees, double thresholdPercent) {
-        double endTheta = robot.theta + Math.toRadians(degrees);
-        while (opModeIsActive()) {
-            if (HelperMethods.inThreshhold(robot.theta, endTheta, thresholdPercent)) {
-                drive.drive(0,0,0);
-                break;
-            }
-            else if (robot.theta > endTheta)
-                drive.drive(0,0,.25);
-            else if (robot.theta < endTheta)
-                drive.drive(0,0,-.25);
-        }
     }
 }

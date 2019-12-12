@@ -2,17 +2,11 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 
 @Autonomous(group="Auto",name = "Parking Auto")
-public class ParkingOnly extends LinearOpMode {
-
-    private Hardware robot = new Hardware();
-    private MecanumDrive drive = new MecanumDrive(robot);
+public class ParkingOnly extends AutoMethods {
 
     private boolean movingRight = false;
     private boolean parkOnWall = true;
@@ -78,8 +72,7 @@ public class ParkingOnly extends LinearOpMode {
 
             // Updating robot position
             if (gamepad1.back) {
-                robot.resetPosition();
-                robot.resetEncoders();
+                robot.resetOdometry();
                 if (onBlueAlliance)
                     robot.theta = -3 * Math.PI / 2.0;
                 else
