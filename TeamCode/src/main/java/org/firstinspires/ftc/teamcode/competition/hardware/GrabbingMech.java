@@ -8,10 +8,19 @@ public class GrabbingMech {
         robot = hwMap;
     }
 
-    public void reset() {
-        robot.grabber.setPosition(.7);
+    public void resetStone() { robot.grabber.setPosition(.7); }
+
+    public void grabStone() { robot.grabber.setPosition(.7); }
+
+    public void resetFoundation() {
+        robot.foundationGrabber1.setPosition(.5);
+        robot.foundationGrabber2.setPosition(.5);
     }
 
-    public void grab() { robot.grabber.setPosition(.05); }
+    public void grabFoundation() {
+        robot.foundationGrabber1.setPosition(1);
+        robot.foundationGrabber2.setPosition(.1);
+    }
+
 
 }
