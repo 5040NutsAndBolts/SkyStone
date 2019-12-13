@@ -131,7 +131,7 @@ public class FoundationMover extends LinearOpMode {
             telemetry.addData("Rotation", robot.theta);
             telemetry.update();
 
-            drive.drive(0,-.4,0);
+            drive.driveSideWays(-.4,0);
         }
 
         // Grab the foundation

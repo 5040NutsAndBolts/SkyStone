@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 
 import static java.lang.Math.abs;
 
@@ -47,6 +48,33 @@ public class MecanumDrive {
         robot.rightRear.setPower(forward+rotation-sideways);
         //Left Front = +Speed + Turn - Strafe      Right Front = +Speed - Turn + Strafe
         //Left Rear  = +Speed + Turn + Strafe      Right Rear  = +Speed - Turn - Strafe
+    }
+
+    public void driveSideWays(double speed,double angle)
+    {
+
+
+
+        double rotation=0;
+
+        if(!HelperMethods.inThreshhold(angle,robot.theta,.01))
+        {
+
+            rotation=(angle-robot.theta)/2;
+
+        }
+        double scale = abs(rotation)  + abs(speed);
+
+        //scales the inputs when needed
+        if(scale > 1) {
+            rotation /= scale;
+            speed /= scale;
+        }
+        robot.leftFront.setPower(rotation-speed);
+        robot.leftRear.setPower(rotation-speed);
+        robot.rightFront.setPower(-rotation+speed);
+        robot.rightRear.setPower(-rotation-speed);
+
     }
 
     /**
