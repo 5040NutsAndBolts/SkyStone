@@ -28,17 +28,29 @@ public abstract class AutoMethods extends LinearOpMode {
         */
         while (opModeIsActive() && !HelperMethods.inThreshhold(robot.x, endPosition, thresholdPercent)) {
             updateOdometryTeleop();
-            if (robot.theta > Math.PI) {
+            if (robot.facing == Hardware.RobotHeading.BLUE_ALLIANCE) {
+                if (robot.x < endPosition)
+                    drive.drive(-.5, 0, 0);
+                else if (robot.x > endPosition)
+                    drive.drive(.5, 0, 0);
+            }
+            else if (robot.facing == Hardware.RobotHeading.AUDIENCE) {
+                if (robot.x < endPosition)
+                    drive.drive(0, -.5, 0);
+                else if (robot.x > endPosition)
+                    drive.drive(0, .5, 0);
+            }
+            else if (robot.facing == Hardware.RobotHeading.RED_ALLIANCE) {
                 if (robot.x < endPosition)
                     drive.drive(.5, 0, 0);
                 else if (robot.x > endPosition)
                     drive.drive(-.5, 0, 0);
             }
-            else {
+            else if (robot.facing == Hardware.RobotHeading.BUILD_ZONE) {
                 if (robot.x < endPosition)
-                    drive.drive(-.5, 0, 0);
+                    drive.drive(0, .5, 0);
                 else if (robot.x > endPosition)
-                    drive.drive(.5, 0, 0);
+                    drive.drive(0, -.5, 0);
             }
         }
         drive.hardBrakeMotors();
@@ -55,10 +67,30 @@ public abstract class AutoMethods extends LinearOpMode {
         */
         while (opModeIsActive() && !HelperMethods.inThreshhold(robot.y, endPosition, thresholdPercent)) {
             updateOdometryTeleop();
-            if (robot.y < endPosition)
-                drive.drive(0,-.5,0);
-            else if (robot.y > endPosition)
-                drive.drive(0,.5,0);
+            if (robot.facing == Hardware.RobotHeading.BLUE_ALLIANCE) {
+                if (robot.y < endPosition)
+                    drive.drive(0, .5, 0);
+                else if (robot.y > endPosition)
+                    drive.drive(0, -.5, 0);
+            }
+            else if (robot.facing == Hardware.RobotHeading.AUDIENCE) {
+                if (robot.y < endPosition)
+                    drive.drive(-.5, 0, 0);
+                else if (robot.y > endPosition)
+                    drive.drive(.5, 0, 0);
+            }
+            else if (robot.facing == Hardware.RobotHeading.RED_ALLIANCE) {
+                if (robot.y < endPosition)
+                    drive.drive(0, -.5, 0);
+                else if (robot.y > endPosition)
+                    drive.drive(0, .5, 0);
+            }
+            else if (robot.facing == Hardware.RobotHeading.BUILD_ZONE) {
+                if (robot.y < endPosition)
+                    drive.drive(.5, 0, 0);
+                else if (robot.y > endPosition)
+                    drive.drive(-.5, 0, 0);
+            }
         }
         drive.hardBrakeMotors();
     }
@@ -122,5 +154,11 @@ public abstract class AutoMethods extends LinearOpMode {
             telemetry.addData("imu calibration", robot.imu.isGyroCalibrated());
             telemetry.update();
         }
+    }
+
+    protected void waitTime(double seconds) {
+        long endTime = System.currentTimeMillis() + (int)(seconds*1000);
+        while (System.currentTimeMillis() < endTime && opModeIsActive())
+            drive.hardBrakeMotors();
     }
 }

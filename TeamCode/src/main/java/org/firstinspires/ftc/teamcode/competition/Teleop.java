@@ -23,7 +23,7 @@ public class Teleop extends OpMode {
     private CapstoneMech capstoneMech;
     private GrabbingMech grabbingMech;
 
-    private boolean g2BumperPressed = false;
+    private boolean pressingB = false;
 
     /**
      * Instantiates objects
@@ -73,6 +73,8 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         robot.updatePositionRoadRunner();
+        telemetry.addData("Intake speed", intake.intakeSpeed);
+        telemetry.addLine("=========");
         telemetry.addData("X Position", robot.x);
         telemetry.addData("Y Position", robot.y);
         telemetry.addData("Rotation", robot.theta);
@@ -109,11 +111,19 @@ public class Teleop extends OpMode {
         // Bottom Half (Gamepad 1)
             // Intake/Outtake
                 if(gamepad1.right_trigger>.01)
-                    intake.setPower(-1);
+                    intake.setPower(1);
                 else if(gamepad1.left_trigger>.01)
-                    intake.setPower(.5);
-                else
                     intake.setPower(0);
+                else
+                    intake.setPower(2);
+                if(gamepad1.b && !pressingB) {
+                    if (intake.intakeSpeed == .5)
+                        intake.intakeSpeed = 1;
+                    else
+                        intake.intakeSpeed = .5;
+                    pressingB = true;
+                }
+                pressingB = gamepad1.b;
 
             // Grabbing mechanism
                 if(gamepad1.left_bumper)

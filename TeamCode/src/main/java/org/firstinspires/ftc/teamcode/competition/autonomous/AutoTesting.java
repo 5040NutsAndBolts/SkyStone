@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class AutoTesting extends AutoMethods {
 
     private boolean startingOnBlue = true;
+    private boolean moveOnX = true;
 
     @Override
     public void runOpMode() {
@@ -14,29 +15,43 @@ public class AutoTesting extends AutoMethods {
         // Lets us move the robot during auto (disables brakes)
         drive.softBrakeMotors();
 
-        robot.resetOdometry(0,0,-Math.PI);
+        robot.resetOdometry(135,9,0);
 
         while (!isStarted()) {
-            telemetry.addLine("If resetting robot, please orient it with the front against the wall");
-            telemetry.addLine("==========");
+            telemetry.addData("Robot facing", robot.facing);
+            telemetry.addLine();
+            telemetry.addLine("If resetting pos, please orient it w/ the front against the wall");
+            telemetry.addLine();
+            if (moveOnX)
+                telemetry.addLine("Moving on X-Axis");
+            else
+                telemetry.addLine("Moving on Y-Axis");
+            telemetry.addLine();
             if (startingOnBlue)
                 telemetry.addLine("We are blue alliance");
             else
                 telemetry.addLine("We are red alliance");
             updateOdometryTeleop();
 
-            if (gamepad1.x) {
+            if (gamepad1.dpad_left) {
                 startingOnBlue = true;
-                robot.resetOdometry(126,0,0);
+                robot.resetOdometry(135,9,0);
             }
-            if (gamepad1.b) {
+            if (gamepad1.dpad_right) {
                 startingOnBlue = false;
-                robot.resetOdometry(0,0,-Math.PI);
+                robot.resetOdometry(9,9,Math.PI);
             }
+            if (gamepad1.y)
+                moveOnX = false;
+            if (gamepad1.x)
+                moveOnX = true;
 
         }
 
-        xAxisMoveTo(12,10);
+        if (moveOnX)
+            xAxisMoveTo(21,3);
+        else
+            yAxisMoveTo(21,3);
 
         while(opModeIsActive()) {
             telemetry.addLine("Auto has ended");
