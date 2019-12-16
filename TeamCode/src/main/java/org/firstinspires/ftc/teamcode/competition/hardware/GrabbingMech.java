@@ -19,7 +19,7 @@ public class GrabbingMech {
 
     public void grabFoundation() {
         robot.foundationGrabber1.setPosition(1);
-        robot.foundationGrabber2.setPosition(.1);
+        robot.foundationGrabber2.setPosition(0);
     }
 
 

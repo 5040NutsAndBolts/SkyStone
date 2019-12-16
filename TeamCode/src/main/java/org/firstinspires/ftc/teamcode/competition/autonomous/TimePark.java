@@ -64,6 +64,12 @@ public class TimePark extends AutoMethods {
         }        long endTime = System.currentTimeMillis() + (int)(waitTime * 1000);
         while (opModeIsActive() && System.currentTimeMillis() < endTime);
 
+        if (!parkingAgainstWall) {
+            endTime = System.currentTimeMillis() + 1250;
+            while (opModeIsActive() && System.currentTimeMillis() < endTime)
+                drive.drive(-.4, 0, 0);
+        }
+
         endTime = System.currentTimeMillis() + 1500;
         if (movingRight)
             while (opModeIsActive() && System.currentTimeMillis() < endTime)
@@ -73,11 +79,5 @@ public class TimePark extends AutoMethods {
                 drive.drive(0, .4, 0);
 
         drive.hardBrakeMotors();
-
-        if (!parkingAgainstWall) {
-            endTime = System.currentTimeMillis() + 2500;
-            while (opModeIsActive() && System.currentTimeMillis() < endTime)
-                drive.drive(-.4, 0, 0);
-        }
     }
 }

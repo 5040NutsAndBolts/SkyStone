@@ -49,61 +49,84 @@ public class FoundationAuto extends AutoMethods {
 
         // Run for blue alliance
         if (onBlueAlliance) {
-            // Move forward to grab foundation
-            while (robot.y < 16) {
-                updateOdometryTeleop();
-                drive.drive(.4,0,0);
-            }
-            waitTime(.2);
-            // Grab the foundation
-            grabbingMech.grabFoundation();
-            waitTime(1.5);
-            // Pull the foundation back
-            while (robot.y > .1) {
-                updateOdometryTeleop();
-                drive.drive(-.3, 0, 0);
-            }
-            waitTime(.2);
-            // Release the foundation
-            grabbingMech.resetFoundation();
-            waitTime(1.5);
-            // Drive horizontal to the foundation
-            while (robot.x > -16) {
-                updateOdometryTeleop();
-                drive.drive(0,.3,0);
-            }
-            waitTime(.2);
-            // Move in front of the foundation
-            while(robot.y < 12) {
-                updateOdometryTeleop();
-                drive.drive(.4,0,0);
-            }
-            waitTime(.2);
-            // Push the foundation against the wall
-            while(robot.x < -10) {
+            // Move to align with middle of foundation
+            while (robot.y < 11 && opModeIsActive()) {
                 updateOdometryTeleop();
                 drive.drive(0,-.3,0);
             }
-            waitTime(.2);
+            waitTime(.1);
+
+            // Move forward to grab foundation
+            while (robot.x > -30.5 && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(.5,0,0);
+            }
+            waitTime(.1);
+
+            // Grab the foundation
+            grabbingMech.grabFoundation();
+            waitTime(.75);
+
+            // Pull the foundation back
+            long endTime = System.currentTimeMillis() + 3500;
+            while(System.currentTimeMillis() < endTime && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(-.7,0,0);
+            }
+            waitTime(.1);
+
+            // Release the foundation
+            grabbingMech.resetFoundation();
+            waitTime(.75);
+
+            // Drive horizontal to the foundation
+            while (robot.y > -18 && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(.15,.4,0);
+            }
+            waitTime(.1);
+
+            // Move in front of the foundation
+            while(robot.x > -12 && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(.5,0,0);
+            }
+            waitTime(.1);
+
+            // Push the foundation against the wall
+            endTime = System.currentTimeMillis() + 2500;
+            while(System.currentTimeMillis() < endTime && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(0,-.5,0);
+            }
+            waitTime(.1);
+
             // If parking against wall
             if (parkAgainstWall) {
                 // Move back to touch wall
-                while(robot.y > .1) {
+                endTime = System.currentTimeMillis() + 4500;
+                while(System.currentTimeMillis() < endTime && opModeIsActive()) {
                     updateOdometryTeleop();
                     drive.drive(-.4,0,0);
                 }
             }
+
             // If parking against sky bridge
             else {
                 // Move forward slightly
-                while(robot.y < 14) {
+                while(robot.x > -30 && opModeIsActive()) {
                     updateOdometryTeleop();
-                    drive.drive(.4,0,0);
+                    drive.drive(.3,0,0);
                 }
             }
-            waitTime(.2);
+            waitTime(.1);
+
+            // Move the foundation moves back to inside the robot
+            grabbingMech.grabFoundation();
+            waitTime(.75);
+
             // Move under sky bridge
-            while(robot.x > -20) {
+            while(robot.y > -36 && opModeIsActive()) {
                 updateOdometryTeleop();
                 drive.drive(0,.3,0);
             }
@@ -111,61 +134,84 @@ public class FoundationAuto extends AutoMethods {
         }
         // Inverse for red alliance
         else {
-            // Move forward to grab foundation
-            while (robot.y < 16) {
-                updateOdometryTeleop();
-                drive.drive(.4,0,0);
-            }
-            waitTime(.2);
-            // Grab the foundation
-            grabbingMech.grabFoundation();
-            waitTime(1.5);
-            // Pull the foundation back
-            while (robot.y > .1) {
-                updateOdometryTeleop();
-                drive.drive(-.3, 0, 0);
-            }
-            waitTime(.2);
-            // Release the foundation
-            grabbingMech.resetFoundation();
-            waitTime(1.5);
-            // Drive horizontal to the foundation
-            while (robot.x < 16) {
-                updateOdometryTeleop();
-                drive.drive(0,-.3,0);
-            }
-            waitTime(.2);
-            // Move in front of the foundation
-            while(robot.y < 12) {
-                updateOdometryTeleop();
-                drive.drive(.4,0,0);
-            }
-            waitTime(.2);
-            // Push the foundation against the wall
-            while(robot.x > 10) {
+            // Move to align with middle of foundation
+            while (robot.y > -11 && opModeIsActive()) {
                 updateOdometryTeleop();
                 drive.drive(0,.3,0);
             }
-            waitTime(.2);
+            waitTime(.1);
+
+            // Move forward to grab foundation
+            while (robot.x > -30.5 && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(.5,0,0);
+            }
+            waitTime(.1);
+
+            // Grab the foundation
+            grabbingMech.grabFoundation();
+            waitTime(.75);
+
+            // Pull the foundation back
+            long endTime = System.currentTimeMillis() + 3500;
+            while(System.currentTimeMillis() < endTime && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(-.7,0,0);
+            }
+            waitTime(.1);
+
+            // Release the foundation
+            grabbingMech.resetFoundation();
+            waitTime(.75);
+
+            // Drive horizontal to the foundation
+            while (robot.y < 18 && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(.15,-.4,0);
+            }
+            waitTime(.1);
+
+            // Move in front of the foundation
+            while(robot.x > -12 && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(.5,0,0);
+            }
+            waitTime(.1);
+
+            // Push the foundation against the wall
+            endTime = System.currentTimeMillis() + 2500;
+            while(System.currentTimeMillis() < endTime && opModeIsActive()) {
+                updateOdometryTeleop();
+                drive.drive(0,.5,0);
+            }
+            waitTime(.1);
+
             // If parking against wall
             if (parkAgainstWall) {
                 // Move back to touch wall
-                while(robot.y > .1) {
+                endTime = System.currentTimeMillis() + 4500;
+                while(System.currentTimeMillis() < endTime && opModeIsActive()) {
                     updateOdometryTeleop();
                     drive.drive(-.4,0,0);
                 }
             }
+
             // If parking against sky bridge
             else {
                 // Move forward slightly
-                while(robot.y < 14) {
+                while(robot.x > -30 && opModeIsActive()) {
                     updateOdometryTeleop();
-                    drive.drive(.4,0,0);
+                    drive.drive(.3,0,0);
                 }
             }
-            waitTime(.2);
+            waitTime(.1);
+
+            // Move the foundation moves back to inside the robot
+            grabbingMech.grabFoundation();
+            waitTime(.75);
+
             // Move under sky bridge
-            while(robot.x < 20) {
+            while(robot.y < 36 && opModeIsActive()) {
                 updateOdometryTeleop();
                 drive.drive(0,-.3,0);
             }
