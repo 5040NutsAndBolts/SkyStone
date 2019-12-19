@@ -15,10 +15,10 @@ public class MotorRPMTest extends OpMode
     public void init() {
         motor = hardwareMap.dcMotor.get("motor");
         r=new RPMMeter(motor,1440);
-        r.run();
+        r.start();
     }
 
-    int speed=100;
+    int speed=10;
     boolean lb=false;
     boolean rb=false;
     boolean x = false;
