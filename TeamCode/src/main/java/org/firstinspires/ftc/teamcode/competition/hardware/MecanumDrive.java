@@ -48,23 +48,22 @@ public class MecanumDrive {
         //Left Front = +Speed + Turn - Strafe      Right Front = +Speed - Turn + Strafe
         //Left Rear  = +Speed + Turn + Strafe      Right Rear  = +Speed - Turn - Strafe
     }
-
+    double adjust;
     public void orientedDrive(double forward, double sideways, double rotation, boolean reset) {
 
         double P = Math.hypot(sideways, forward);
-        robot.bulkData = robot.expansionHub.getBulkInputData();
         Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
         double robotAngle = Math.atan2(forward, -sideways);
 
         if(reset) {
-            orientedAdjust = angles.firstAngle;
+            adjust = angles.firstAngle;
         }
 
-        double v5 = P * Math.sin(robotAngle - angles.firstAngle + orientedAdjust) + P * Math.cos(robotAngle - angles.firstAngle + orientedAdjust) - rotation;
-        double v6 = P * Math.sin(robotAngle - angles.firstAngle + orientedAdjust) - P * Math.cos(robotAngle - angles.firstAngle + orientedAdjust) + rotation;
-        double v7 = P * Math.sin(robotAngle - angles.firstAngle + orientedAdjust) - P * Math.cos(robotAngle - angles.firstAngle + orientedAdjust) - rotation;
-        double v8 = P * Math.sin(robotAngle - angles.firstAngle + orientedAdjust) + P * Math.cos(robotAngle - angles.firstAngle + orientedAdjust) + rotation;
+        double v5 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
+        double v6 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
+        double v7 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
+        double v8 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
 
         robot.leftFront.setPower(v5);
         robot.rightFront.setPower(v6);

@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 public class ThreadPool {
 
     private ArrayList<Thread> tasks = new ArrayList<>();
-    static ExecutorService pool = Executors.newFixedThreadPool(5);
+    public static ExecutorService pool = Executors.newFixedThreadPool(5);
 
 
 
