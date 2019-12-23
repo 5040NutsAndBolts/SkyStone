@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.helperclasses;
+package org.firstinspires.ftc.teamcode.competition.helperclasses;
 
 import android.graphics.Bitmap;
 
