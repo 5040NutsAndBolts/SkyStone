@@ -78,6 +78,6 @@ public class HelperMethods {
     }
 
     public static void main(String[] args){
-        System.out.println(inThreshhold(12,11.5,3));
+        System.out.println(inThreshhold(12,11.8,1));
     }
 }

@@ -56,6 +56,13 @@ public class Hardware {
     public double x = 0;
     public double y = 0;
     public double theta = 0;
+    public enum RobotHeading {
+        BUILD_ZONE,
+        BLUE_ALLIANCE,
+        RED_ALLIANCE,
+        AUDIENCE
+    }
+    public RobotHeading facing = RobotHeading.BUILD_ZONE;
 
     // Hardware mapping
     private HardwareMap hwMap;
@@ -204,7 +211,6 @@ public class Hardware {
      * Method for updating the position of the robot using roadrunner
      */
     public void updatePositionRoadRunner() {
-
         bulkData = expansionHub.getBulkInputData();
 
         // Change in the distance (centimeters) since the last update for each odometer
@@ -221,6 +227,7 @@ public class Hardware {
         theta = odom.getPoseEstimate().component3();
         x = odom.getPoseEstimate().component1();
         y = odom.getPoseEstimate().component2();
+        updateRobotFacing();
 
         resetDeltaTicks();
 
@@ -237,6 +244,24 @@ public class Hardware {
     private int getDeltaRightTicks() { return rightEncoderPos - bulkData.getMotorCurrentPosition(rightOdom); }
 
     private int getDeltaCenterTicks() { return centerEncoderPos - bulkData.getMotorCurrentPosition(centerOdom); }
+
+    private void updateRobotFacing() {
+        /* Viewing area for where the robot heading is
+        ======
+        |\  /|
+        |  x |
+        |/  \|
+        ======
+         */
+        if (theta<=Math.PI/4 && theta>7*Math.PI/4)
+            facing = RobotHeading.RED_ALLIANCE;
+        else if (theta<=3*Math.PI/4 && theta<Math.PI/4)
+            facing = RobotHeading.BUILD_ZONE;
+        else if (theta<=5*Math.PI/4 && theta>3*Math.PI/4)
+            facing = RobotHeading.BLUE_ALLIANCE;
+        else if (theta<=7*Math.PI/4 && theta>5*Math.PI/4)
+            facing = RobotHeading.AUDIENCE;
+    }
 
     /**
      * Resets odometry position and values back to default at 0, 0, 0

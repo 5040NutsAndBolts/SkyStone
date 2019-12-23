@@ -24,8 +24,7 @@ public class MecanumDrive {
     public MecanumDrive(Hardware r) { robot = r; }
 
     /**
-     * this method is for driving the mecanum with the three inputs
-     *
+     * Drives the robot with the front being a specific direction of the robot
      * @param forward  The forward value input (left stick y)
      * @param sideways The sideways value input (left stick x)
      * @param rotation The rotation value input (right stick x)
@@ -48,22 +47,29 @@ public class MecanumDrive {
         //Left Front = +Speed + Turn - Strafe      Right Front = +Speed - Turn + Strafe
         //Left Rear  = +Speed + Turn + Strafe      Right Rear  = +Speed - Turn - Strafe
     }
-    double adjust;
+
+    /**
+     * Drives the robot with the front being any section of the robot facing an angle
+     * @param forward  The forward value input (left stick y)
+     * @param sideways The sideways value input (left stick x)
+     * @param rotation The rotation value input (right stick x)
+     * @param reset Whether or not to reset the angle the robot is oriented to
+     */
     public void orientedDrive(double forward, double sideways, double rotation, boolean reset) {
 
         double P = Math.hypot(sideways, forward);
-        Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        double robotAngle = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
 
-        double robotAngle = Math.atan2(forward, -sideways);
+        double newRobotAngle = Math.atan2(forward, -sideways);
 
         if(reset) {
-            adjust = angles.firstAngle;
+            orientedAdjust = robotAngle;
         }
 
-        double v5 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
-        double v6 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
-        double v7 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
-        double v8 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
+        double v5 = P * Math.sin(newRobotAngle - robotAngle + orientedAdjust) + P * Math.cos(newRobotAngle - robotAngle + orientedAdjust) - rotation;
+        double v6 = P * Math.sin(newRobotAngle - robotAngle + orientedAdjust) - P * Math.cos(newRobotAngle - robotAngle + orientedAdjust) + rotation;
+        double v7 = P * Math.sin(newRobotAngle - robotAngle + orientedAdjust) - P * Math.cos(newRobotAngle - robotAngle + orientedAdjust) - rotation;
+        double v8 = P * Math.sin(newRobotAngle - robotAngle + orientedAdjust) + P * Math.cos(newRobotAngle - robotAngle + orientedAdjust) + rotation;
 
         robot.leftFront.setPower(v5);
         robot.rightFront.setPower(v6);
