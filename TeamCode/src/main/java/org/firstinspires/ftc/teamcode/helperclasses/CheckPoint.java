@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.helperclasses;
 
 
-import static org.firstinspires.ftc.teamcode.helperclasses.OdometryPosition.worldXPosition;
-import static org.firstinspires.ftc.teamcode.helperclasses.OdometryPosition.worldYPosition;
+import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 
 public class CheckPoint extends Thread
 {
@@ -11,12 +10,15 @@ public class CheckPoint extends Thread
     double y;
     double r;
 
-    public CheckPoint(double x, double y,double r)
+    Hardware robot;
+
+    public CheckPoint(double x, double y, double r, Hardware robot)
     {
 
         this.x=x;
         this.y=y;
         this.r=r;
+        this.robot=robot;
 
     }
 
@@ -24,7 +26,7 @@ public class CheckPoint extends Thread
     {
 
         System.out.println("test");
-        while(!(worldXPosition>x-r&&worldXPosition<x+r&&worldYPosition>y-r&&worldYPosition<y+r)) {
+        while(!(robot.x>x-r&&robot.x<x+r&&robot.y>y-r&&robot.y<y+r)) {
             try {
                 sleep(1);
             } catch (InterruptedException e) {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.competition.autonomous;
+package org.firstinspires.ftc.teamcode.competition.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool;
 
 import java.util.ArrayList;
 
-import static org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool.c1;
+
 
 @Autonomous(name="PP",group="Auto")
 public class PurePursuitTest extends LinearOpMode {
@@ -28,17 +28,22 @@ public class PurePursuitTest extends LinearOpMode {
     public static boolean point = true;
 
     Hardware robot = new Hardware();
-    PurePursuit purePursuit = new PurePursuit(robot);
-    MecanumDrive drive = new MecanumDrive(robot);
-    IntakeMech intake = new IntakeMech(robot);
+
     @Override
     public void runOpMode() throws InterruptedException
     {
 
-        ArrayList<WayPoint> p = new ArrayList();
-        p.add(new WayPoint(20,24,10,.1,10));
-        p.add(new WayPoint(23,0,10,.1,10));
         robot.init(hardwareMap);
+        PurePursuit purePursuit = new PurePursuit(robot);
+        MecanumDrive drive = new MecanumDrive(robot);
+        IntakeMech intake = new IntakeMech(robot);
+        ArrayList<WayPoint> p = new ArrayList();
+        p.add(new WayPoint(20,-14,10,.1,10));
+        p.add(new WayPoint(25,0,10,.1,10));
+        p.add(new WayPoint(50,15,10,.1,10));
+        p.add(new WayPoint(100,-20,10,.1,10));
+        purePursuit.lastGoal[0]=20;
+        purePursuit.lastGoal[1]=-14;
         int n = 0;
         waitForStart();
         /*long endTime = System.currentTimeMillis() + 250;
@@ -61,35 +66,14 @@ public class PurePursuitTest extends LinearOpMode {
         {
 
             robot.updatePositionRoadRunner();
-            if(point)
-            {
-                double[] move = purePursuit.followPath(p, 7);
-                drive.drive(move[0]*Math.cos(robot.prevHeading)+move[1]*Math.sin(robot.prevHeading), move[1]*Math.cos(robot.prevHeading)+move[0]*Math.sin(robot.prevHeading), move[2]);
-                ThreadPool.pool.submit(c1);
-                telemetry.addData("forward",move[0]*Math.cos(robot.prevHeading)+move[1]*Math.sin(robot.prevHeading));
-                telemetry.addData("sideways",move[0]*Math.cos(robot.prevHeading)+move[1]*Math.sin(robot.prevHeading));
-                telemetry.addData("sideways",move[2]);
-                telemetry.addData("x",robot.x);
-                telemetry.addData("y",robot.y);
-                telemetry.addData("heading",robot.prevHeading);
-                telemetry.update();
-            }else
-            {
 
-                if(robot.prevHeading<Math.PI/4)
-                    drive.drive(0,0,1);
-                else if(n<100)
-                {
+            purePursuit.followPath(p,4,Math.PI/2);
 
-                    intake.setPower(1);
-                    drive.drive(1,0,0);
-                    n++;
+            telemetry.addData("x",robot.x);
+            telemetry.addData("y",robot.y);
+            telemetry.addData("heading",robot.theta);
+            telemetry.update();
 
-                }else
-                    {intake.setPower(1);}
-
-
-            }
 
         }
 
