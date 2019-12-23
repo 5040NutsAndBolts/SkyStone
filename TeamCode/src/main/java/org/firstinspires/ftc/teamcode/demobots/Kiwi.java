@@ -26,6 +26,9 @@ public class Kiwi extends OpMode
         motorOne.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorTwo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorThree.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorTwo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorThree.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
@@ -37,8 +40,8 @@ public class Kiwi extends OpMode
     {
 
         // Controller values
-        double r=gamepad1.right_stick_x/3;
-        double r2=gamepad2.right_stick_x/3;
+        double r=-gamepad1.right_stick_x/3;
+        double r2=-gamepad2.right_stick_x/3;
         boolean leftBumper = gamepad2.left_bumper;
         boolean rightBumper = gamepad2.right_bumper;
         double leftStickX1 = gamepad1.left_stick_x;
@@ -47,13 +50,13 @@ public class Kiwi extends OpMode
         double leftStickY2 = gamepad2.left_stick_y;
 
 
-        if(gamepad1.a&&!aPressed)
+        if(gamepad2.a&&!aPressed)
         {
 
             aPressed=true;
             override=!override;
 
-        }else if(!gamepad1.a)
+        }else if(!gamepad2.a)
         {
 
             aPressed=false;
@@ -99,10 +102,20 @@ public class Kiwi extends OpMode
             motorThree.setPower(1);
 
         }
-        else {
+        else if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0 || gamepad2.right_stick_x != 0)
+        {
             motorOne.setPower(motor1Power / speed);
             motorTwo.setPower(motor2Power / speed);
             motorThree.setPower(motor3Power / speed);
+
+        }
+        else
+        {
+
+            motorOne.setPower(0);
+            motorTwo.setPower(0);
+            motorThree.setPower(0);
+
         }
 
         if(leftBumper && !pressed)
@@ -110,16 +123,12 @@ public class Kiwi extends OpMode
             speed += 0.1;
             pressed = true;
         }
-        else if(pressed && !leftBumper)
-        {
-            pressed = false;
-        }
         if(rightBumper && !pressed)
         {
             speed -= 0.1;
             pressed = true;
         }
-        else if(pressed && !rightBumper)
+        else if(pressed && !rightBumper&&!leftBumper)
         {
             pressed = false;
         }
@@ -129,7 +138,7 @@ public class Kiwi extends OpMode
         }
 
         telemetry.addData("speed",1/speed);
-        telemetry.addData("overridde",override);
+        telemetry.addData("override",override);
 
     }
 
