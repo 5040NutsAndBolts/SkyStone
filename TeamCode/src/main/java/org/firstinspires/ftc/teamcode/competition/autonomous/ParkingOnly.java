@@ -179,7 +179,7 @@ public class ParkingOnly extends AutoMethods {
     private void sidewaysInch(double inches, double thresholdPercent) {
         double endPosX = robot.x + inches;
         while (opModeIsActive()) {
-            if (HelperMethods.inThreshhold(robot.x, endPosX, thresholdPercent)) {
+            if (HelperMethods.inThreshold(robot.x, endPosX, thresholdPercent)) {
                 drive.drive(0,0,0);
                 break;
             }
@@ -198,7 +198,7 @@ public class ParkingOnly extends AutoMethods {
     private void forwardsInch(double inches, double thresholdPercent) {
         double endPosX = robot.y + inches;
         while (opModeIsActive()) {
-            if (HelperMethods.inThreshhold(robot.y, endPosX, thresholdPercent)) {
+            if (HelperMethods.inThreshold(robot.y, endPosX, thresholdPercent)) {
                 drive.drive(0,0,0);
                 break;
             }

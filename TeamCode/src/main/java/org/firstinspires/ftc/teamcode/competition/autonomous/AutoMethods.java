@@ -26,32 +26,12 @@ public abstract class AutoMethods extends LinearOpMode {
         /* TODO: Make it so the robot will move parallel to the x/y axis no matter rotation
             currently, it only works properly if the robot theta is 0
         */
-        while (opModeIsActive() && !HelperMethods.inThreshhold(robot.x, endPosition, thresholdPercent)) {
+        while (opModeIsActive() && !HelperMethods.inThreshold(robot.x, endPosition, thresholdPercent)) {
             updateOdometryTeleop();
-            if (robot.facing == Hardware.RobotHeading.BLUE_ALLIANCE) {
-                if (robot.x < endPosition)
-                    drive.drive(-.5, 0, 0);
-                else if (robot.x > endPosition)
-                    drive.drive(.5, 0, 0);
-            }
-            else if (robot.facing == Hardware.RobotHeading.AUDIENCE) {
-                if (robot.x < endPosition)
-                    drive.drive(0, -.5, 0);
-                else if (robot.x > endPosition)
-                    drive.drive(0, .5, 0);
-            }
-            else if (robot.facing == Hardware.RobotHeading.RED_ALLIANCE) {
-                if (robot.x < endPosition)
-                    drive.drive(.5, 0, 0);
-                else if (robot.x > endPosition)
-                    drive.drive(-.5, 0, 0);
-            }
-            else if (robot.facing == Hardware.RobotHeading.BUILD_ZONE) {
-                if (robot.x < endPosition)
-                    drive.drive(0, .5, 0);
-                else if (robot.x > endPosition)
-                    drive.drive(0, -.5, 0);
-            }
+            if (robot.x < endPosition)
+                drive.drive(-.5, 0, 0);
+            else if (robot.x > endPosition)
+                drive.drive(.5, 0, 0);
         }
         drive.hardBrakeMotors();
     }
@@ -65,32 +45,12 @@ public abstract class AutoMethods extends LinearOpMode {
         /* TODO: Make it so the robot will move parallel to the x/y axis no matter rotation
             currently, it only works properly if the robot theta is 0
         */
-        while (opModeIsActive() && !HelperMethods.inThreshhold(robot.y, endPosition, thresholdPercent)) {
+        while (opModeIsActive() && !HelperMethods.inThreshold(robot.y, endPosition, thresholdPercent)) {
             updateOdometryTeleop();
-            if (robot.facing == Hardware.RobotHeading.BLUE_ALLIANCE) {
-                if (robot.y < endPosition)
-                    drive.drive(0, .5, 0);
-                else if (robot.y > endPosition)
-                    drive.drive(0, -.5, 0);
-            }
-            else if (robot.facing == Hardware.RobotHeading.AUDIENCE) {
-                if (robot.y < endPosition)
-                    drive.drive(-.5, 0, 0);
-                else if (robot.y > endPosition)
-                    drive.drive(.5, 0, 0);
-            }
-            else if (robot.facing == Hardware.RobotHeading.RED_ALLIANCE) {
-                if (robot.y < endPosition)
-                    drive.drive(0, -.5, 0);
-                else if (robot.y > endPosition)
-                    drive.drive(0, .5, 0);
-            }
-            else if (robot.facing == Hardware.RobotHeading.BUILD_ZONE) {
-                if (robot.y < endPosition)
-                    drive.drive(.5, 0, 0);
-                else if (robot.y > endPosition)
-                    drive.drive(-.5, 0, 0);
-            }
+            if (robot.y < endPosition)
+                drive.drive(0, .5, 0);
+            else if (robot.y > endPosition)
+                drive.drive(0, -.5, 0);
         }
         drive.hardBrakeMotors();
     }
@@ -102,29 +62,27 @@ public abstract class AutoMethods extends LinearOpMode {
      */
     protected void rotateDeg(double degrees, double thresholdPercent) {
         double endTheta = robot.theta + Math.toRadians(degrees);
-        while (opModeIsActive() && !HelperMethods.inThreshhold(robot.theta, endTheta, thresholdPercent)) {
-            updateOdometryTeleop();
-            if (robot.theta > endTheta)
-                drive.drive(0,0,.25);
-            else if (robot.theta < endTheta)
-                drive.drive(0,0,-.25);
-        }
-        drive.hardBrakeMotors();
+        rotateToDeg(endTheta, thresholdPercent);
     }
 
     /**
      * Rotates the robot to a specified angle (in degrees)
-     * @param angle Angle the robot will rotate to
+     * @param endAngle Angle the robot will rotate to
      * @param thresholdPercent How close the robot will get to the target position
      */
-    protected void rotateToDeg(double angle, double thresholdPercent) {
-        angle = Math.toRadians(angle);
-        while (opModeIsActive() && !HelperMethods.inThreshhold(robot.theta, angle, thresholdPercent)) {
-            updateOdometryTeleop();
-            if (robot.theta > angle)
-                drive.drive(0,0,.25);
-            else if (robot.theta < angle)
-                drive.drive(0,0,-.25);
+    protected void rotateToDeg(double endAngle, double thresholdPercent) {
+        endAngle = Math.toRadians(endAngle)%(2*Math.PI);
+        if (robot.theta > endAngle) {
+            while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, endAngle, thresholdPercent)) {
+                updateOdometryTeleop();
+                drive.drive(0, 0, .3);
+            }
+        }
+        else {
+            while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, endAngle, thresholdPercent)) {
+                updateOdometryTeleop();
+                drive.drive(0, 0, -.3);
+            }
         }
         drive.hardBrakeMotors();
     }
@@ -160,5 +118,20 @@ public abstract class AutoMethods extends LinearOpMode {
         long endTime = System.currentTimeMillis() + (int)(seconds*1000);
         while (System.currentTimeMillis() < endTime && opModeIsActive())
             drive.hardBrakeMotors();
+    }
+
+    protected double powerRampAngle(double startPoint, double endPoint) {
+        if (startPoint > Math.PI)
+            return .13 + .87 * Math.sin(Math.PI * ((robot.theta - startPoint) / (endPoint - startPoint)));
+        else
+            return .13 + .87 * Math.sin(-Math.PI * ((robot.theta - startPoint) / (endPoint - startPoint)));
+    }
+
+    protected void endAuto() {
+        while(opModeIsActive()) {
+            telemetry.addLine("Auto has ended");
+            telemetry.addLine("==========");
+            updateOdometryTeleop();
+        }
     }
 }
