@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.competition.helperclasses.LineSegment;
+import org.firstinspires.ftc.teamcode.competition.helperclasses.MathFunctions;
+import org.opencv.core.Point;
 
 import static java.lang.Math.abs;
 
@@ -110,4 +112,26 @@ public class MecanumDrive {
         robot.rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         powerSet(0);
     }
+
+    public void goToPosition(Point goalPoint)
+    {
+
+        double distanceToTarget = Math.hypot(goalPoint.x-robot.x,goalPoint.y-robot.y);
+        double absoluteAngleToTarget = Math.atan2(goalPoint.y-robot.y,goalPoint.x-robot.x);
+        double relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta-Math.PI/2));
+        double relativeXToPoint = Math.cos(relativeAngleToPoint)*distanceToTarget;
+        double relativeYToPoint = Math.sin(relativeAngleToPoint)*distanceToTarget;
+        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint)+Math.abs(relativeYToPoint));
+        double movementYPower = relativeYToPoint / (Math.abs(relativeYToPoint)+Math.abs(relativeXToPoint));
+        double movementTurn;
+        relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta));
+
+
+        movementTurn = (relativeAngleToPoint) / Math.sqrt(Math.abs(relativeAngleToPoint )) ;
+
+
+        drive(-movementYPower,movementXPower,movementTurn/5);
+
+    }
+
 }
