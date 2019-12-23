@@ -124,10 +124,47 @@ public class Teleop extends OpMode {
                 if(gamepad1.x)
                     intakePower = .3;
 
-            // Drive Train
-                if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
-                    driveTrain.brakeMotors();
-                else
-                    driveTrain.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+        double y = -gamepad1.left_stick_y;
+        if(Math.abs(y)<.3&&Math.abs(y)>.01)
+        {
+            if (y > 0)
+            {
+
+                y*=2;
+                if(y>.3)
+                    y=.3;
+
+            }else
+            {
+
+                y*=2;
+                if(y<-.3)
+                    y=-.3;
+
+            }
+
+
+        }
+        double x = gamepad1.left_stick_x;
+        if(Math.abs(x)<.3&&Math.abs(y)>.01) {
+            if (x > 0) {
+
+                x *= 2;
+                if (x > .3)
+                    x = .3;
+
+            } else {
+
+                x *= 2;
+                if (x < -.3)
+                    x = -.3;
+
+            }
+        }
+        // Drive Train
+        if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
+            driveTrain.brakeMotors();
+        else
+            driveTrain.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
     }
 }
