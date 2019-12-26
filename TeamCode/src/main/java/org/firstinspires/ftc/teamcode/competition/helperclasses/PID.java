@@ -21,32 +21,30 @@ public class PID
 
     /**
      *
-     * @param goal The position the controller is headed towards.
-     * @param current The position the controller in at.
+     * @param error the error of the controller
      * @param p The proportional gain.
      * @param i The integral gain.
      * @param d The derivative gain.
      */
-    public PID(double goal, double current, double p, double i, double d)
+    public PID(double error, double p, double i, double d)
     {
 
         this.kP=p;
         this.kI=i;
         this.kD=d;
-        distanceFromGoal=goal-current;
+        distanceFromGoal=error;
         e.startTime();
 
     }
 
     /**
      * Updates the PID controller, this should be called every before the controller is used
-     * @param goal The position the PID controller heads to
-     * @param position The current position of the system
+     * @param error the error of the controller
      */
-    public void update(double goal,double position)
+    public void update(double error)
     {
 
-        setDistanceFromGoal(goal-position);
+        setDistanceFromGoal(error);
         elapsedTime=e.time();
         integral+=distanceFromGoal*elapsedTime;
         pComponent=p();
