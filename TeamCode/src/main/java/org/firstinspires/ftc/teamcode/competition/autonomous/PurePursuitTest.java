@@ -38,11 +38,13 @@ public class PurePursuitTest extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(robot);
         IntakeMech intake = new IntakeMech(robot);
         ArrayList<WayPoint> p = new ArrayList();
-        p.add(new WayPoint(20,-14,10,.1,10));
-        p.add(new WayPoint(25,0,10,.1,10));
-        p.add(new WayPoint(50,15,10,.1,10));
-        p.add(new WayPoint(100,-20,10,.1,10));
-        purePursuit.lastGoal[0]=20;
+        p.add(new WayPoint(10,-14,10,.1,10));
+        p.add(new WayPoint(20,0,10,.1,10));
+        p.add(new WayPoint(30,15,10,.1,10));
+
+        purePursuit.initPath(p);
+
+        purePursuit.lastGoal[0]=10;
         purePursuit.lastGoal[1]=-14;
         int n = 0;
         waitForStart();
@@ -67,8 +69,11 @@ public class PurePursuitTest extends LinearOpMode {
 
             robot.updatePositionRoadRunner();
 
+
             purePursuit.followPath(p,4,Math.PI/2);
 
+
+            telemetry.addData("s",p.size());
             telemetry.addData("x",robot.x);
             telemetry.addData("y",robot.y);
             telemetry.addData("heading",robot.theta);

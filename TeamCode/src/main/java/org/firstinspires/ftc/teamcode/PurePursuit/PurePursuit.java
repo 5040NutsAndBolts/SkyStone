@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.PurePursuit;
 import org.firstinspires.ftc.teamcode.Point;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.competition.helperclasses.PID;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class PurePursuit
 {
 
 
+    PID angle;
     public double[] lastGoal = new double[3];
     Hardware robot;
     MecanumDrive drive;
@@ -117,10 +119,11 @@ public class PurePursuit
     }
     
     //move the robot to to a specified point
-    private void goToPosition(Point goalPoint, ArrayList<WayPoint> p, int iRel,double goalTheta)
+    private void goToPosition(Point goalPoint, ArrayList<WayPoint> p, int iRel,double goalTheta,double lookAheadDistance)
     {
 
         double distanceToTarget = Math.hypot(goalPoint.x-robot.x,goalPoint.y-robot.y);
+        double distanceToFinal = Math.hypot(p.get(p.size()-1).x-robot.x,p.get(p.size()-1).y-robot.y);
         double absoluteAngleToTarget = Math.atan2(goalPoint.y-robot.y,goalPoint.x-robot.x);
         double relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta-Math.PI/2));
 
@@ -129,6 +132,14 @@ public class PurePursuit
         double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint)+Math.abs(relativeYToPoint));
         double movementYPower = relativeYToPoint / (Math.abs(relativeYToPoint)+Math.abs(relativeXToPoint));
         double movementTurn=0;
+        double speedPercentage=1;
+
+
+        if(distanceToFinal<lookAheadDistance)
+            speedPercentage=distanceToFinal/lookAheadDistance/1.75-.05;
+        if(speedPercentage<.01)
+            speedPercentage=0;
+
         relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta));
 
 
@@ -192,9 +203,7 @@ public class PurePursuit
             */} catch (Exception e)
             {
 
-                movementTurn = (robot.theta-goalTheta);
-                movementTurn = movementTurn >Math.PI ? Math.PI-movementTurn:movementTurn<-Math.PI ? Math.PI+movementTurn:movementTurn;
-                movementTurn*=5;
+                movementTurn = turnPowerToGoal;
 
             }
         }else
@@ -205,17 +214,24 @@ public class PurePursuit
             movementTurn*=5;
 
         }
-        drive.drive(-movementYPower,movementXPower,movementTurn/5);
+        drive.drive(-movementYPower*speedPercentage,movementXPower*speedPercentage,movementTurn/5);
 
     }
 
     //follow path with pure pursuit
 
 
-    public void followPath(ArrayList<WayPoint> p,double lookAheadDistance,double goalTheta)
+    public void initPath(ArrayList<WayPoint> p)
     {
 
         p.add(p.get(p.size() - 1));
+
+    }
+
+    public void followPath(ArrayList<WayPoint> p,double lookAheadDistance,double goalTheta)
+    {
+
+
 
         //add a point for calculations on the last segment
 
@@ -225,7 +241,7 @@ public class PurePursuit
             double[] d  = goalPoint(p.size() - 2, p, lookAheadDistance);
             lastGoal=d;
             Point g = new Point(d[0],d[1]);
-            goToPosition(g,p,(int) d[2],goalTheta);
+            goToPosition(g,p,(int) d[2],goalTheta,lookAheadDistance);
 
 
     }

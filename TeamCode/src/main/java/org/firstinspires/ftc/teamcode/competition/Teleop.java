@@ -71,7 +71,8 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
-        telemetry.addData("x", gamepad1.right_stick_x);
+        telemetry.addData("x", robot.x);
+        telemetry.addData("y", robot.y);
         telemetry.addData("theta",robot.theta);
         telemetry.update();
         robot.updatePositionRoadRunner();
