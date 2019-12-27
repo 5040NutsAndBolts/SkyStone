@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.PurePursuit;
 
 
-import org.firstinspires.ftc.teamcode.Point;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;

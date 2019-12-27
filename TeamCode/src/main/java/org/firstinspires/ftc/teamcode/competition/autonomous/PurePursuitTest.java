@@ -1,22 +1,14 @@
-package org.firstinspires.ftc.teamcode.competition.Autonomous;
+package org.firstinspires.ftc.teamcode.competition.autonomous;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuit;
 import org.firstinspires.ftc.teamcode.PurePursuit.WayPoint;
 
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.IntakeMech;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.CheckPoint;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool;
 
 import java.util.ArrayList;
 

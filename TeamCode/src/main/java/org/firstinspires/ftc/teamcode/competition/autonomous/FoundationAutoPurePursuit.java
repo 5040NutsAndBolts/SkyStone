@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.competition.Autonomous;
+package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.PurePursuit.WayPoint;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.IntakeMech;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.CheckPoint;
+import org.firstinspires.ftc.teamcode.PurePursuit.CheckPoint;
 
 import static org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool.*;
 
