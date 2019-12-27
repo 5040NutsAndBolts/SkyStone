@@ -43,9 +43,6 @@ public class HelperMethods {
     }
 
     public static void main(String[] args){
-        double angle = 360;
-        angle = Math.toRadians(angle);
-        System.out.println(angle);
-        System.out.println(inAngleThreshold(angle,2*Math.PI,1));
+        System.out.println(inThreshold(0,-24,4));
     }
 }

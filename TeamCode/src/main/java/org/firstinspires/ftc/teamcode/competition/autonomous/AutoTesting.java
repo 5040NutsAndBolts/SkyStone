@@ -42,7 +42,7 @@ public class AutoTesting extends AutoMethods {
 
 
 
-        endAuto();
+        displayEndAuto();
 
     }
 }

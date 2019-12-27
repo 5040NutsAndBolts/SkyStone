@@ -113,9 +113,7 @@ public class MecanumDrive {
         powerSet(0);
     }
 
-    public void goToPosition(Point goalPoint)
-    {
-
+    public void goToPosition(Point goalPoint) {
         double distanceToTarget = Math.hypot(goalPoint.x-robot.x,goalPoint.y-robot.y);
         double absoluteAngleToTarget = Math.atan2(goalPoint.y-robot.y,goalPoint.x-robot.x);
         double relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta-Math.PI/2));
@@ -126,12 +124,9 @@ public class MecanumDrive {
         double movementTurn;
         relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta));
 
-
         movementTurn = (relativeAngleToPoint) / Math.sqrt(Math.abs(relativeAngleToPoint )) ;
 
-
         drive(-movementYPower,movementXPower,movementTurn/5);
-
     }
 
 }

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(group="Auto",name = "Auto testing")
+@Autonomous(group="Auto",name = "Foundation Auto")
 public class FoundationAuto extends AutoMethods {
 
     private boolean startingOnBlue = true;
@@ -38,7 +38,7 @@ public class FoundationAuto extends AutoMethods {
 
 
 
-        endAuto();
+        displayEndAuto();
 
     }
 }

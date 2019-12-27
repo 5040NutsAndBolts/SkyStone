@@ -15,7 +15,6 @@ public abstract class AutoMethods extends LinearOpMode {
 
     protected Hardware robot = new Hardware();
     protected MecanumDrive drive = new MecanumDrive(robot);
-    protected GrabbingMech grabbingMech = new GrabbingMech(robot);
 
     /**
      * Moves the robot to a specific x-axis coordinate
@@ -87,6 +86,9 @@ public abstract class AutoMethods extends LinearOpMode {
         drive.hardBrakeMotors();
     }
 
+    /**
+     * Updates the robot position and displays it in the telemetry
+     */
     protected void updateOdometryTeleop() {
         robot.updatePositionRoadRunner();
         telemetry.addData("X Position", robot.x);
@@ -95,6 +97,9 @@ public abstract class AutoMethods extends LinearOpMode {
         telemetry.update();
     }
 
+    /**
+     * Does all the setting up for the gyro initialization and waits for opmode to start
+     */
     protected void initGyroscope() {
         // Gyro setup
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -110,10 +115,15 @@ public abstract class AutoMethods extends LinearOpMode {
 
         while(opModeIsActive() && !robot.imu.isGyroCalibrated()) {
             telemetry.addData("imu calibration", robot.imu.isGyroCalibrated());
-            telemetry.update();
+            telemetry.addLine();
+            updateOdometryTeleop();
         }
     }
 
+    /**
+     * Brakes the motors for a specified amount of time
+     * @param seconds Time in seconds to wait until the brakes release
+     */
     protected void waitTime(double seconds) {
         long endTime = System.currentTimeMillis() + (int)(seconds*1000);
         while (System.currentTimeMillis() < endTime && opModeIsActive())
@@ -127,11 +137,15 @@ public abstract class AutoMethods extends LinearOpMode {
             return .13 + .87 * Math.sin(-Math.PI * ((robot.theta - startPoint) / (endPoint - startPoint)));
     }
 
-    protected void endAuto() {
+    /**
+     * Displays position data for the end of autonomous
+     */
+    protected void displayEndAuto() {
         while(opModeIsActive()) {
             telemetry.addLine("Auto has ended");
             telemetry.addLine("==========");
             updateOdometryTeleop();
+            drive.hardBrakeMotors();
         }
     }
 }
