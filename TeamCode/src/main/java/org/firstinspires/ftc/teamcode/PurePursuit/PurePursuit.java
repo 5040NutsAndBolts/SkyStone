@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.PurePursuit;
 import org.firstinspires.ftc.teamcode.Point;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.PID;
 
 import java.util.ArrayList;
@@ -33,8 +34,9 @@ public class PurePursuit {
 
     /**
      * Determines how far a point is along the path
+     *
      * @param location Point on Pure Pursuit path
-     * @param p List of pure pursuit paths
+     * @param p        List of pure pursuit paths
      * @return Distance between points
      */
     private double distanceAlongPath(Point location, Point p) {
@@ -44,8 +46,9 @@ public class PurePursuit {
 
     /**
      * Looks at a line segment and finds the intersections of the look ahead circle
-     * @param iRel Index of the relevant segment
-     * @param p Path for Pure Pursuit to follow
+     *
+     * @param iRel              Index of the relevant segment
+     * @param p                 Path for Pure Pursuit to follow
      * @param lookAheadDistance Radius of the look ahead circle
      * @return The point the robot will move to
      */
@@ -108,18 +111,19 @@ public class PurePursuit {
 
     /**
      * Moves the robot to a specific point
-     * @param goalPoint Specific point the robot will move to
-     * @param p List of Pure Pursuit points
-     * @param iRel Index of the relevant segment
-     * @param goalTheta Rotational value the robot will end the path at
+     *
+     * @param goalPoint         Specific point the robot will move to
+     * @param p                 List of Pure Pursuit points
+     * @param iRel              Index of the relevant segment
+     * @param goalTheta         Rotational value the robot will end the path at
      * @param lookAheadDistance Radius of look ahead circle
-     * @param speed Max speed robot will move at
+     * @param speed             Max speed robot will move at
      */
     private void goToPosition(Point goalPoint, ArrayList<WayPoint> p, int iRel, double goalTheta, double lookAheadDistance, double speed) {
         double distanceToTarget = Math.hypot(goalPoint.x - robot.x, goalPoint.y - robot.y);
         double distanceToFinal = Math.hypot(p.get(p.size() - 1).x - robot.x, p.get(p.size() - 1).y - robot.y);
         double absoluteAngleToTarget = Math.atan2(goalPoint.y - robot.y, goalPoint.x - robot.x);
-        double relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta - Math.PI / 2));
+        double relativeAngleToPoint = absoluteAngleToTarget - (HelperMethods.angleWrap(robot.theta - Math.PI / 2));
 
         double relativeXToPoint = Math.cos(relativeAngleToPoint) * distanceToTarget;
         double relativeYToPoint = Math.sin(relativeAngleToPoint) * distanceToTarget;
@@ -135,13 +139,13 @@ public class PurePursuit {
         } else
             pos.resetPid();
 
-        relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta));
+        relativeAngleToPoint = absoluteAngleToTarget - (HelperMethods.angleWrap(robot.theta));
 
         double turnPowerToGoal = 0;
         if (iRel < p.size() - 2) {
             try {
                 double absoluteAngleToSegment = Math.atan2(p.get(iRel).y - robot.y, p.get(iRel).x - robot.x);
-                double relativeAngleToSegment = absoluteAngleToSegment - (MathFunctions.angleWrap(robot.theta));
+                double relativeAngleToSegment = absoluteAngleToSegment - (HelperMethods.angleWrap(robot.theta));
                 while (relativeAngleToSegment > Math.PI) {
                     relativeAngleToSegment -= 2 * Math.PI;
                 }
@@ -213,6 +217,7 @@ public class PurePursuit {
 
     /**
      * Initializes the Pure Pursuit path
+     *
      * @param path List of points for Pure Pursuit path
      */
     public void initPath(ArrayList<WayPoint> path) {
@@ -228,10 +233,11 @@ public class PurePursuit {
 
     /**
      * Initializes the Pure Pursuit path with specific P.I.D. values
+     *
      * @param path List of points for Pure Pursuit path
-     * @param P Proportional of PID
-     * @param I Integral of PID
-     * @param D Derivative of PID
+     * @param P    Proportional of PID
+     * @param I    Integral of PID
+     * @param D    Derivative of PID
      */
     public void initPath(ArrayList<WayPoint> path, double P, double I, double D) {
         // inits the current path
@@ -243,10 +249,11 @@ public class PurePursuit {
 
     /**
      * Makes the robot follow the Pure Pursuit path
-     * @param p List of points for Pure Pursuit path
+     *
+     * @param p                 List of points for Pure Pursuit path
      * @param lookAheadDistance Radius of look ahead circle
-     * @param goalTheta End rotational value the robot will be at
-     * @param speed Max speed the robot will move at
+     * @param goalTheta         End rotational value the robot will be at
+     * @param speed             Max speed the robot will move at
      */
     public void followPath(ArrayList<WayPoint> p, double lookAheadDistance, double goalTheta, double speed) {
         //add a point for calculations on the last segment

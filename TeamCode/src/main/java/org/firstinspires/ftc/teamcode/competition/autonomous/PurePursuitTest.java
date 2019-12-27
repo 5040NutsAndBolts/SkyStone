@@ -21,8 +21,7 @@ import org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool;
 import java.util.ArrayList;
 
 
-
-@Autonomous(name="PP",group="Auto")
+@Autonomous(name = "PP", group = "Auto")
 public class PurePursuitTest extends LinearOpMode {
 
     public static boolean point = true;
@@ -30,22 +29,21 @@ public class PurePursuitTest extends LinearOpMode {
     Hardware robot = new Hardware();
 
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
         PurePursuit purePursuit = new PurePursuit(robot);
         MecanumDrive drive = new MecanumDrive(robot);
         IntakeMech intake = new IntakeMech(robot);
         ArrayList<WayPoint> p = new ArrayList();
-        p.add(new WayPoint(10,-4,10,.1,10));
-        p.add(new WayPoint(25,10,10,.1,10));
-        p.add(new WayPoint(40,-10,10,.1,10));
+        p.add(new WayPoint(10, -4, 10, .1, 10));
+        p.add(new WayPoint(25, 10, 10, .1, 10));
+        p.add(new WayPoint(40, -10, 10, .1, 10));
 
         purePursuit.initPath(p);
 
-        purePursuit.lastGoal[0]=10;
-        purePursuit.lastGoal[1]=-4;
+        purePursuit.lastGoal[0] = 10;
+        purePursuit.lastGoal[1] = -4;
         int n = 0;
         waitForStart();
         /*long endTime = System.currentTimeMillis() + 250;
@@ -64,18 +62,17 @@ public class PurePursuitTest extends LinearOpMode {
         }
         robot.towerArmMotor.setPower(0.1);*/
 
-        while(opModeIsActive())
-        {
+        while (opModeIsActive()) {
 
             robot.updatePositionRoadRunner();
 
 
-            purePursuit.followPath(p,4,Math.PI/2, 1);
+            purePursuit.followPath(p, 4, Math.PI / 2, 1);
 
-            telemetry.addData("pid",purePursuit.pos.getPID());
-            telemetry.addData("x",robot.x);
-            telemetry.addData("y",robot.y);
-            telemetry.addData("heading",robot.theta);
+            telemetry.addData("pid", purePursuit.pos.getPID());
+            telemetry.addData("x", robot.x);
+            telemetry.addData("y", robot.y);
+            telemetry.addData("heading", robot.theta);
             telemetry.update();
 
 
