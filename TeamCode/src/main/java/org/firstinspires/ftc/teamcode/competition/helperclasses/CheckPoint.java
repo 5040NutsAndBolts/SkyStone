@@ -10,6 +10,8 @@ public class CheckPoint extends Thread
     double y;
     double r;
 
+    public boolean isHit=false;
+
     Hardware robot;
     public CheckPoint(double x, double y, double r, Hardware robot)
     {
@@ -24,13 +26,17 @@ public class CheckPoint extends Thread
     public void run()
     {
 
-        while(!(robot.y>x-r&&robot.x<x+r&&robot.y>y-r&&robot.y<y+r)) {
+        while(!(robot.x>x-r && robot.x<x+r && robot.y>y-r && robot.y<y+r)) {
+            robot.updatePositionRoadRunner();
+
             try {
-                sleep(1);
+                sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            robot.intakeLeft.setPower(.25);
         }
+        isHit=true;
         onHit();
         return;
 

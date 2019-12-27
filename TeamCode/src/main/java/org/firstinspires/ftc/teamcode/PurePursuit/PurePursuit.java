@@ -121,7 +121,7 @@ public class PurePursuit
     }
     
     //move the robot to to a specified point
-    private void goToPosition(Point goalPoint, ArrayList<WayPoint> p, int iRel,double goalTheta,double lookAheadDistance)
+    private void goToPosition(Point goalPoint, ArrayList<WayPoint> p, int iRel,double goalTheta,double lookAheadDistance,double speed)
     {
 
         double distanceToTarget = Math.hypot(goalPoint.x-robot.x,goalPoint.y-robot.y);
@@ -222,24 +222,24 @@ public class PurePursuit
 
         }
         //drive towards point
-        drive.drive(-movementYPower*speedPercentage,movementXPower*speedPercentage,movementTurn/5);
+        drive.drive(-movementYPower*speedPercentage/speed,movementXPower*speedPercentage/speed,movementTurn/5);
 
     }
 
     //follow path with pure pursuit
 
 
-    public void initPath(ArrayList<WayPoint> p)
+    public void initPath(ArrayList<WayPoint> p , double P, double I, double D)
     {
 
         toPID=false;
         p.add(p.get(p.size() - 1));
-        //create the PID controller
-        pos = new PID(Math.hypot(p.get(p.size()-1).x-robot.x,p.get(p.size()-1).y-robot.y),.06,.005,.05);
+        //create the PID controller good starting PID .06,.005,.05
+        pos = new PID(Math.hypot(p.get(p.size()-1).x-robot.x,p.get(p.size()-1).y-robot.y),P,I,D);
 
     }
 
-    public void followPath(ArrayList<WayPoint> p,double lookAheadDistance,double goalTheta)
+    public void followPath(ArrayList<WayPoint> p,double lookAheadDistance,double goalTheta,double speed)
     {
 
 
@@ -252,7 +252,7 @@ public class PurePursuit
             double[] d  = goalPoint(p.size() - 2, p, lookAheadDistance);
             lastGoal=d;
             Point g = new Point(d[0],d[1]);
-            goToPosition(g,p,(int) d[2],goalTheta,lookAheadDistance);
+            goToPosition(g,p,(int) d[2],goalTheta,lookAheadDistance,speed);
 
 
     }
