@@ -12,13 +12,10 @@ import java.util.ArrayList;
 public class PurePursuit {
 
     // Has PID been started
-    boolean toPID = false;
-
-    public double gX1, gY1, gX2, gY2;
+    private boolean toPID = false;
 
     public PID pos;
     public double[] lastGoal = new double[3];
-    public double[] pointToMoveTo;
     private Hardware robot;
     private MecanumDrive drive;
 
@@ -53,10 +50,10 @@ public class PurePursuit {
             double y1 = p.get(iRel - 1).y - robot.y;
             double x2 = p.get(iRel).x - robot.x;
             double y2 = p.get(iRel).y - robot.y;
-            if(x1 == x2)
-                x2+=.000001;
-            if(y1 == y2)
-                y2+=.000001;
+            if (x1 == x2)
+                x2 += .000001;
+            if (y1 == y2)
+                y2 += .000001;
             double dx = x2 - x1;
             double dy = y2 - y1;
             double dr = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -85,10 +82,6 @@ public class PurePursuit {
             double g2y = (-D * dx - Math.abs(dy) * sqrt) / Math.pow(dr, 2);
             double xLower = x1;
             double xUpper = x2;
-            gX1 = g1x;
-            gY1 = g1y;
-            gX2 = g2x;
-            gY2 = g2y;
             if (x2 < x1) {
                 xLower = x2;
                 xUpper = x1;
@@ -143,7 +136,7 @@ public class PurePursuit {
             pos.resetPid();
 
         // Turn with power proportional to angle of WayPoint
-        movementTurn = robot.theta- p.get(iRel).angle;
+        movementTurn = robot.theta - p.get(iRel).angle;
         movementTurn = movementTurn > Math.PI ?
                 Math.PI - movementTurn :
                 movementTurn < -Math.PI ?
@@ -212,7 +205,6 @@ public class PurePursuit {
 
         double[] pointToMoveTo = goalPoint(p.size() - 2, p, lookAheadDistance);
         lastGoal = pointToMoveTo;
-        this.pointToMoveTo = pointToMoveTo;
         Point g = new Point(pointToMoveTo[0], pointToMoveTo[1]);
         goToPosition(g, p, (int) pointToMoveTo[2], lookAheadDistance, speed);
     }

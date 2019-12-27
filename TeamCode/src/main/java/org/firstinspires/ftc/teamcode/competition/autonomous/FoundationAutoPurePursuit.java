@@ -33,8 +33,8 @@ public class FoundationAutoPurePursuit extends LinearOpMode {
         p1.add(new WayPoint(30.5, 13, 0));
 
         ArrayList<WayPoint> p2 = new ArrayList();
-        p2.add(new WayPoint(15, 13, Math.PI/2));
-        p2.add(new WayPoint(15, 7, Math.PI/2));
+        p2.add(new WayPoint(15, 13, Math.PI / 2));
+        p2.add(new WayPoint(15, 7, Math.PI / 2));
 
         waitForStart();
 
@@ -43,7 +43,7 @@ public class FoundationAutoPurePursuit extends LinearOpMode {
         while (opModeIsActive() && !c1.isHit) {
             robot.updatePositionRoadRunner();
 
-            purePursuit.followPath(p1, 4,1.5);
+            purePursuit.followPath(p1, 4, 1.5);
 
             telemetry.addData("pid", purePursuit.pos.getPID());
             telemetry.addData("x", robot.x);

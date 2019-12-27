@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.PurePursuit;
 
 
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class CheckPoint extends Thread {
@@ -39,7 +40,8 @@ public class CheckPoint extends Thread {
         }
     }
 
-    public void onHit(){}
+    public void onHit() {
+    }
 
     public void terminate() {
         terminate = false;
