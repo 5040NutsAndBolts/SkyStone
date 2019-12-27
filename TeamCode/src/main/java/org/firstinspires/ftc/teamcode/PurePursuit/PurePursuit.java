@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.PurePursuit;
 
 
-
-
 import org.firstinspires.ftc.teamcode.Point;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
@@ -11,26 +9,20 @@ import org.firstinspires.ftc.teamcode.competition.helperclasses.PID;
 import java.util.ArrayList;
 
 
+public class PurePursuit {
 
-
-public class PurePursuit
-{
-
-
-    boolean toPID=false;
+    boolean toPID = false;
 
     public PID pos;
     public double[] lastGoal = new double[3];
-    Hardware robot;
-    MecanumDrive drive;
-    public PurePursuit(Hardware r)
-    {
+    private Hardware robot;
+    private MecanumDrive drive;
 
-        robot=r;
-        drive= new MecanumDrive(robot);
-
+    public PurePursuit(Hardware r) {
+        robot = r;
+        drive = new MecanumDrive(robot);
     }
-    
+
     //will possibly center the search for goal point around project location in the future
     /*public Point projectedLocation()
     {
@@ -38,20 +30,29 @@ public class PurePursuit
 
     }
     */
-    //determine how far a point is along the path
-    private double distanceAlongPath(Point location, Point p)
-    {
 
-        return Math.sqrt(Math.pow(location.x-p.x,2)+Math.pow(location.y-p.y,2));
-
+    /**
+     * Determines how far a point is along the path
+     * @param location Point on Pure Pursuit path
+     * @param p List of pure pursuit paths
+     * @return Distance between points
+     */
+    private double distanceAlongPath(Point location, Point p) {
+        // Distance formula to determine total distance
+        return Math.sqrt(Math.pow(location.x - p.x, 2) + Math.pow(location.y - p.y, 2));
     }
-//returns the point that pure pursuit will move to by looking at the line segments and finding the intersections of a circle centered at the robot with radius of the look ahead distance
-    private double[] goalPoint(int iRel, ArrayList<WayPoint> p, double lookAheadDistance)
-    {
 
+    /**
+     * Looks at a line segment and finds the intersections of the look ahead circle
+     * @param iRel Index of the relevant segment
+     * @param p Path for Pure Pursuit to follow
+     * @param lookAheadDistance Radius of the look ahead circle
+     * @return The point the robot will move to
+     */
+    private double[] goalPoint(int iRel, ArrayList<WayPoint> p, double lookAheadDistance) {
         try {
-            double x1 = p.get(iRel-1).x - robot.x;
-            double y1 = p.get(iRel-1).y - robot.y;
+            double x1 = p.get(iRel - 1).x - robot.x;
+            double y1 = p.get(iRel - 1).y - robot.y;
             double x2 = p.get(iRel).x - robot.x;
             double y2 = p.get(iRel).y - robot.y;
             double dx = x2 - x1;
@@ -62,138 +63,121 @@ public class PurePursuit
             if (dy < 0) {
                 sgn = -1;
             }
+
             //if the last segment is selected and there is no goal on that segment go to the end of the path
-            if(iRel==p.size()-2&&Math.sqrt(Math.pow(y2,2)+Math.pow(x2,2))<=lookAheadDistance)
-                {return goalPoint(iRel,p,lookAheadDistance-1);}
+            if (iRel == p.size() - 2 && Math.sqrt(Math.pow(y2, 2) + Math.pow(x2, 2)) <= lookAheadDistance) {
+                return goalPoint(iRel, p, lookAheadDistance - 1);
+            }
             double radicand = Math.pow(lookAheadDistance, 2) * Math.pow(dr, 2) - Math.pow(D, 2);
             //if no points on the line intersect the circle where the robot is looking move to the next line 
-            if(radicand<0)
-                {
-
-                    return goalPoint(iRel-1,p,lookAheadDistance);
-                }
+            if (radicand < 0) {
+                return goalPoint(iRel - 1, p, lookAheadDistance);
+            }
 
             //finding the 2 intersections
             double sqrt = Math.sqrt(radicand);
             double g1x = (D * dy + sgn * dx * sqrt) / Math.pow(dr, 2);
             double g2x = (D * dy - sgn * dx * sqrt) / Math.pow(dr, 2);
-            double g1y = (-D * dx + Math.abs(dy) * sqrt )/ Math.pow(dr, 2);
-            double g2y = (-D * dx - Math.abs(dy) * sqrt )/ Math.pow(dr, 2);
-            double xLower=x1;
-            double xUpper=x2;
-            if(x2<x1)
-            {
-                xLower=x2;
-                xUpper=x1;
+            double g1y = (-D * dx + Math.abs(dy) * sqrt) / Math.pow(dr, 2);
+            double g2y = (-D * dx - Math.abs(dy) * sqrt) / Math.pow(dr, 2);
+            double xLower = x1;
+            double xUpper = x2;
+            if (x2 < x1) {
+                xLower = x2;
+                xUpper = x1;
             }
 
             //determines which of the points is further along the path then for that intersection if it falls on the line segment that is the goal point otherwise move to the next line segment
-            if (distanceAlongPath(new Point(g1x+robot.x, g1y+robot.y), new Point(p.get(iRel).x,p.get(iRel).y)) < distanceAlongPath(new Point(g2x+robot.x, g2y+robot.y), new Point(p.get(iRel).x,p.get(iRel).y))) {
-                
-                if(g1x>xLower&&g1x<xUpper)
-                {
-
-                    return new double[]{g1x + robot.x, g1y + robot.y,iRel};
-
+            if (distanceAlongPath(new Point(g1x + robot.x, g1y + robot.y), new Point(p.get(iRel).x, p.get(iRel).y)) < distanceAlongPath(new Point(g2x + robot.x, g2y + robot.y), new Point(p.get(iRel).x, p.get(iRel).y))) {
+                if (g1x > xLower && g1x < xUpper) {
+                    return new double[]{g1x + robot.x, g1y + robot.y, iRel};
                 }
-                return goalPoint(iRel-1,p,lookAheadDistance);
+                return goalPoint(iRel - 1, p, lookAheadDistance);
             } else {
-
-
-                if(g2x>xLower&&g2x<xUpper)
-                {
-
-                    return new double[]{g2x + robot.x, g2y + robot.y,iRel};
-
+                if (g2x > xLower && g2x < xUpper) {
+                    return new double[]{g2x + robot.x, g2y + robot.y, iRel};
                 }
-                
-                    return goalPoint(iRel-1,p,lookAheadDistance);}
-
+                return goalPoint(iRel - 1, p, lookAheadDistance);
+            }
         }
         //if there are no intersections on any line go to the first point on the path or if the last segment is reached move directly to the endpoint
-        catch(IndexOutOfBoundsException e) {
-
-                return lastGoal;
-
-               }
-
-
+        catch (IndexOutOfBoundsException e) {
+            return lastGoal;
+        }
     }
-    
-    //move the robot to to a specified point
-    private void goToPosition(Point goalPoint, ArrayList<WayPoint> p, int iRel,double goalTheta,double lookAheadDistance,double speed)
-    {
 
-        double distanceToTarget = Math.hypot(goalPoint.x-robot.x,goalPoint.y-robot.y);
-        double distanceToFinal = Math.hypot(p.get(p.size()-1).x-robot.x,p.get(p.size()-1).y-robot.y);
-        double absoluteAngleToTarget = Math.atan2(goalPoint.y-robot.y,goalPoint.x-robot.x);
-        double relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta-Math.PI/2));
+    /**
+     * Moves the robot to a specific point
+     * @param goalPoint Specific point the robot will move to
+     * @param p List of Pure Pursuit points
+     * @param iRel Index of the relevant segment
+     * @param goalTheta Rotational value the robot will end the path at
+     * @param lookAheadDistance Radius of look ahead circle
+     * @param speed Max speed robot will move at
+     */
+    private void goToPosition(Point goalPoint, ArrayList<WayPoint> p, int iRel, double goalTheta, double lookAheadDistance, double speed) {
+        double distanceToTarget = Math.hypot(goalPoint.x - robot.x, goalPoint.y - robot.y);
+        double distanceToFinal = Math.hypot(p.get(p.size() - 1).x - robot.x, p.get(p.size() - 1).y - robot.y);
+        double absoluteAngleToTarget = Math.atan2(goalPoint.y - robot.y, goalPoint.x - robot.x);
+        double relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta - Math.PI / 2));
 
-        double relativeXToPoint = Math.cos(relativeAngleToPoint)*distanceToTarget;
-        double relativeYToPoint = Math.sin(relativeAngleToPoint)*distanceToTarget;
-        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint)+Math.abs(relativeYToPoint));
-        double movementYPower = relativeYToPoint / (Math.abs(relativeYToPoint)+Math.abs(relativeXToPoint));
-        double movementTurn=0;
-        double turnSpeedPercentage=1;
+        double relativeXToPoint = Math.cos(relativeAngleToPoint) * distanceToTarget;
+        double relativeYToPoint = Math.sin(relativeAngleToPoint) * distanceToTarget;
+        double movementXPower = relativeXToPoint / (Math.abs(relativeXToPoint) + Math.abs(relativeYToPoint));
+        double movementYPower = relativeYToPoint / (Math.abs(relativeYToPoint) + Math.abs(relativeXToPoint));
+        double movementTurn = 0;
+        double turnSpeedPercentage = 1;
         double speedPercentage = 1;
 
-
-        if(distanceToFinal<lookAheadDistance||toPID)
-        {
-            speedPercentage=pos.getPID();
-            toPID=true;
-        }
-        else
+        if (distanceToFinal < lookAheadDistance || toPID) {
+            speedPercentage = pos.getPID();
+            toPID = true;
+        } else
             pos.resetPid();
-
 
         relativeAngleToPoint = absoluteAngleToTarget - (MathFunctions.angleWrap(robot.theta));
 
-
-
-        double turnPowerToGoal=0;
-        if(iRel<p.size()-2) {
+        double turnPowerToGoal = 0;
+        if (iRel < p.size() - 2) {
             try {
+                double absoluteAngleToSegment = Math.atan2(p.get(iRel).y - robot.y, p.get(iRel).x - robot.x);
+                double relativeAngleToSegment = absoluteAngleToSegment - (MathFunctions.angleWrap(robot.theta));
+                while (relativeAngleToSegment > Math.PI) {
+                    relativeAngleToSegment -= 2 * Math.PI;
+                }
+                while (relativeAngleToSegment < -Math.PI) {
+                    relativeAngleToSegment += 2 * Math.PI;
+                }
+                if (relativeAngleToSegment == 0) {
+                    relativeAngleToSegment = .00000001;
+                }
+                turnPowerToGoal = (relativeAngleToSegment) / Math.sqrt(Math.abs(relativeAngleToSegment));
 
 
-                    double absoluteAngleToSegment = Math.atan2(p.get(iRel).y-robot.y,p.get(iRel).x-robot.x);
-                    double relativeAngleToSegment = absoluteAngleToSegment - (MathFunctions.angleWrap(robot.theta));
-                    while(relativeAngleToSegment>Math.PI)
-                    {
-                        relativeAngleToSegment-=2*Math.PI;
-                    }
-                    while(relativeAngleToSegment<-Math.PI)
-                    {
-                        relativeAngleToSegment+=2*Math.PI;
-                    }
-                    if(relativeAngleToSegment==0)
-                        {relativeAngleToSegment=.00000001;}
-                    turnPowerToGoal = (relativeAngleToSegment ) / Math.sqrt(Math.abs(relativeAngleToSegment)) ;
-
-
-                LineSegment nextSegment = new LineSegment(p.get(iRel).x, p.get(iRel).y, p.get(iRel+1).x, p.get(iRel+1).y);
-                double distanceToPoint = distanceAlongPath(new Point(robot.x, robot.y), new Point(p.get(iRel).x,p.get(iRel).y));
-                LineSegment relevantSegment = new LineSegment(p.get(iRel -1).x, p.get(iRel-1).y, p.get(iRel).x, p.get(iRel).y);
+                LineSegment nextSegment = new LineSegment(p.get(iRel).x, p.get(iRel).y, p.get(iRel + 1).x, p.get(iRel + 1).y);
+                double distanceToPoint = distanceAlongPath(new Point(robot.x, robot.y), new Point(p.get(iRel).x, p.get(iRel).y));
+                LineSegment relevantSegment = new LineSegment(p.get(iRel - 1).x, p.get(iRel - 1).y, p.get(iRel).x, p.get(iRel).y);
                 double goalPercentage = distanceToPoint / (relevantSegment.getMagnitude()) + p.get(iRel).goalTurnPercentageBias;
-                if(goalPercentage>1)
-                    {goalPercentage=1;}
-                else if(goalPercentage<0)
-                    {goalPercentage=0;}
+                if (goalPercentage > 1) {
+                    goalPercentage = 1;
+                } else if (goalPercentage < 0) {
+                    goalPercentage = 0;
+                }
                 double turnPowerAbsolute;
-                if(iRel==p.size()-1)
-                {
+                if (iRel == p.size() - 1) {
 
-                    turnPowerAbsolute=turnPowerToGoal;
+                    turnPowerAbsolute = turnPowerToGoal;
 
-                }else
-                {
-                    double nextAngle=nextSegment.getAngle();
-                    while(nextAngle>Math.PI)
-                        {nextAngle-=Math.PI*2;}
-                    while(nextAngle<-Math.PI)
-                        {nextAngle+=Math.PI*2;}
+                } else {
+                    double nextAngle = nextSegment.getAngle();
+                    while (nextAngle > Math.PI) {
+                        nextAngle -= Math.PI * 2;
+                    }
+                    while (nextAngle < -Math.PI) {
+                        nextAngle += Math.PI * 2;
+                    }
 
-                    double turnPowerToNextPoint = (nextAngle  - robot.theta) / Math.sqrt(Math.abs(nextAngle  - robot.theta));
+                    double turnPowerToNextPoint = (nextAngle - robot.theta) / Math.sqrt(Math.abs(nextAngle - robot.theta));
                     turnPowerAbsolute = turnPowerToGoal * goalPercentage + turnPowerToNextPoint * (1 - goalPercentage);
                 }
                 /*if(MovementVars.movement_turn-turnPowerAbsolute>p.get(iRel).turnAccelerationCap)
@@ -207,54 +191,71 @@ public class PurePursuit
                 }
                 MovementVars.movement_turn = turnPowerAbsolute;
 
-            */} catch (Exception e)
-            {
+            */
+            } catch (Exception e) {
 
                 movementTurn = turnPowerToGoal;
 
             }
-        }else
-        {
+        } else {
 
-            movementTurn = (robot.theta-goalTheta);
-            movementTurn = movementTurn >Math.PI ? Math.PI-movementTurn:movementTurn<-Math.PI ? Math.PI+movementTurn:movementTurn;
-            movementTurn*=5;
+            movementTurn = (robot.theta - goalTheta);
+            movementTurn = movementTurn > Math.PI ? Math.PI - movementTurn : movementTurn < -Math.PI ? Math.PI + movementTurn : movementTurn;
+            movementTurn *= 5;
 
         }
         //drive towards point
-        drive.drive(-movementYPower*speedPercentage/speed,movementXPower*speedPercentage/speed,movementTurn/5);
+        drive.drive(-movementYPower * speedPercentage / speed, movementXPower * speedPercentage / speed, movementTurn / 5);
 
     }
 
     //follow path with pure pursuit
 
+    /**
+     * Initializes the Pure Pursuit path
+     * @param path List of points for Pure Pursuit path
+     */
+    public void initPath(ArrayList<WayPoint> path) {
+        toPID = false;
+        path.add(path.get(path.size() - 1));
+        //create the PID controller
+        pos = new PID(Math.hypot(path.get(path.size() - 1).x - robot.x, path.get(path.size() - 1).y - robot.y), .06, .005, .05);
 
-    public void initPath(ArrayList<WayPoint> p , double P, double I, double D)
-    {
-
-        toPID=false;
-        p.add(p.get(p.size() - 1));
-        //create the PID controller good starting PID .06,.005,.05
-        pos = new PID(Math.hypot(p.get(p.size()-1).x-robot.x,p.get(p.size()-1).y-robot.y),P,I,D);
-
+        // Sets the point where the robot moves to when the path moves outside its FOV
+        lastGoal[0] = path.get(0).x;
+        lastGoal[1] = path.get(0).y;
     }
 
-    public void followPath(ArrayList<WayPoint> p,double lookAheadDistance,double goalTheta,double speed)
-    {
+    /**
+     * Initializes the Pure Pursuit path with specific P.I.D. values
+     * @param path List of points for Pure Pursuit path
+     * @param P Proportional of PID
+     * @param I Integral of PID
+     * @param D Derivative of PID
+     */
+    public void initPath(ArrayList<WayPoint> path, double P, double I, double D) {
+        // inits the current path
+        initPath(path);
 
+        //create the PID controller
+        pos = new PID(Math.hypot(path.get(path.size() - 1).x - robot.x, path.get(path.size() - 1).y - robot.y), P, I, D);
+    }
 
-
+    /**
+     * Makes the robot follow the Pure Pursuit path
+     * @param p List of points for Pure Pursuit path
+     * @param lookAheadDistance Radius of look ahead circle
+     * @param goalTheta End rotational value the robot will be at
+     * @param speed Max speed the robot will move at
+     */
+    public void followPath(ArrayList<WayPoint> p, double lookAheadDistance, double goalTheta, double speed) {
         //add a point for calculations on the last segment
+        pos.update(Math.hypot(p.get(p.size() - 1).x - robot.x, p.get(p.size() - 1).y - robot.y));
 
-
-
-            pos.update(Math.hypot(p.get(p.size()-1).x-robot.x,p.get(p.size()-1).y-robot.y));
-            double[] d  = goalPoint(p.size() - 2, p, lookAheadDistance);
-            lastGoal=d;
-            Point g = new Point(d[0],d[1]);
-            goToPosition(g,p,(int) d[2],goalTheta,lookAheadDistance,speed);
-
-
+        double[] pointToMoveTo = goalPoint(p.size() - 2, p, lookAheadDistance);
+        lastGoal = pointToMoveTo;
+        Point g = new Point(pointToMoveTo[0], pointToMoveTo[1]);
+        goToPosition(g, p, (int) pointToMoveTo[2], goalTheta, lookAheadDistance, speed);
     }
 
 }

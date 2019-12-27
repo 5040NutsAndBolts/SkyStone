@@ -10,24 +10,25 @@ import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.IntakeMech;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.CheckPoint;
+
 import static org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool.*;
 
 import java.util.ArrayList;
 
-@Autonomous(name="Foundation",group="Auto")
-public class FoundationAutoPurePursuit extends LinearOpMode
-{
+@Autonomous(name = "Foundation", group = "Auto")
+public class FoundationAutoPurePursuit extends LinearOpMode {
     Hardware robot = new Hardware();
+    MecanumDrive drive = new MecanumDrive(robot);
+    IntakeMech intake = new IntakeMech(robot);
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         robot.init(hardwareMap);
-        CheckPoint c1 = new CheckPoint(30.5,13,2,robot);
-        CheckPoint c2 = new CheckPoint(15,7,2,robot);
+
         PurePursuit purePursuit = new PurePursuit(robot);
-        MecanumDrive drive = new MecanumDrive(robot);
-        IntakeMech intake = new IntakeMech(robot);
+        CheckPoint c1 = new CheckPoint(30.5, 13, 2, robot);
+        CheckPoint c2 = new CheckPoint(15, 7, 2, robot);
+
         ArrayList<WayPoint> p1 = new ArrayList();
         p1.add(new WayPoint(30.5, 13, 10, .1, 10));
 
@@ -37,20 +38,15 @@ public class FoundationAutoPurePursuit extends LinearOpMode
 
         purePursuit.initPath(p1);
 
-        purePursuit.lastGoal[0] = 30.5;
-        purePursuit.lastGoal[1] = 13;
-        int n = 0;
-
         waitForStart();
 
         pool.submit(c1);
-        while (opModeIsActive()&&!c1.isHit)
-        {
+        while (opModeIsActive() && !c1.isHit) {
 
             robot.updatePositionRoadRunner();
 
 
-            purePursuit.followPath(p1, 4, 0);
+            purePursuit.followPath(p1, 4, 0, 1);
 
             telemetry.addData("pid", purePursuit.pos.getPID());
             telemetry.addData("x", robot.x);
@@ -62,25 +58,22 @@ public class FoundationAutoPurePursuit extends LinearOpMode
         }
         robot.foundationGrabber1.setPosition(1);
         robot.foundationGrabber2.setPosition(1);
+
         ElapsedTime e = new ElapsedTime();
         e.startTime();
-        while(e.seconds()<2);
+        while (e.seconds() < 2) ;
 
 
         purePursuit.initPath(p2);
 
-        purePursuit.lastGoal[0] = 15;
-        purePursuit.lastGoal[1] = 13;
-
         pool.submit(c2);
 
-        while (opModeIsActive()&&!c2.isHit)
-        {
+        while (opModeIsActive() && !c2.isHit) {
 
             robot.updatePositionRoadRunner();
 
 
-            purePursuit.followPath(p2, 4, -Math.PI/2);
+            purePursuit.followPath(p2, 4, -Math.PI / 2, 1);
 
             telemetry.addData("pid", purePursuit.pos.getPID());
             telemetry.addData("x", robot.x);

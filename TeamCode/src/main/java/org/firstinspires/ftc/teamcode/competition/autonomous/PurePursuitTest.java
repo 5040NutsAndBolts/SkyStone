@@ -70,7 +70,7 @@ public class PurePursuitTest extends LinearOpMode {
             robot.updatePositionRoadRunner();
 
 
-            purePursuit.followPath(p,4,Math.PI/2);
+            purePursuit.followPath(p,4,Math.PI/2, 1);
 
             telemetry.addData("pid",purePursuit.pos.getPID());
             telemetry.addData("x",robot.x);
