@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode.competition.helperclasses;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 
 
 public class ThreadPool {
 
-    private ArrayList<Thread> tasks = new ArrayList<>();
-    public static ExecutorService pool = Executors.newFixedThreadPool(5);
+    public static Hardware robot = new Hardware();
 
-
+    public static ExecutorService pool = Executors.newCachedThreadPool();
 
 }

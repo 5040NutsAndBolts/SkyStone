@@ -58,14 +58,6 @@ public class Teleop extends OpMode {
                 else
                     towerArm.raiseLower(0);
 
-            // Opening/closing the tower grabber claw
-                if(gamepad2.right_bumper)
-                    towerArm.openClose(false);
-                else if (gamepad2.left_bumper)
-                    towerArm.openClose(true);
-                else if (gamepad2.right_trigger > .1)
-                    towerArm.almostClose();
-
             // Raising the capstone placing mechanism
                 if(gamepad2.y)
                     capstoneMech.moveSlidesUp();
