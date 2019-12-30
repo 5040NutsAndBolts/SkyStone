@@ -27,9 +27,10 @@ public class PurePursuitTest extends LinearOpMode {
         PurePursuit purePursuit = new PurePursuit(robot);
 
         ArrayList<WayPoint> p = new ArrayList();
-        p.add(new WayPoint(12, 0, 0));
-        p.add(new WayPoint(12, -24, 0));
-        p.add(new WayPoint(0, -24, 0));
+        p.add(new WayPoint(12, 0, Math.PI / 2));
+        p.add(new WayPoint(30, -14, 0));
+        p.add(new WayPoint(60, 15, -Math.PI / 2));
+        p.add(new WayPoint(80, -15, -Math.PI / 2));
 
         waitForStart();
 
@@ -37,7 +38,7 @@ public class PurePursuitTest extends LinearOpMode {
         while (opModeIsActive()) {
             robot.updatePositionRoadRunner();
 
-            purePursuit.followPath(p, 5, 1);
+            purePursuit.followPath(p, 4, 1, 1);
 
             telemetry.addData("Last Goal X", purePursuit.lastGoal[0]);
             telemetry.addData("Last Goal Y", purePursuit.lastGoal[1]);
