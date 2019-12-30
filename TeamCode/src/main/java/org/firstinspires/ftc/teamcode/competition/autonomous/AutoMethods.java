@@ -14,8 +14,7 @@ import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 public abstract class AutoMethods extends LinearOpMode {
 
     protected Hardware robot = new Hardware();
-    protected MecanumDrive drive = new MecanumDrive(robot);
-
+    protected MecanumDrive drive;
     /**
      * Moves the robot to a specific x-axis coordinate
      * @param endPosition X coordinate the robot will end at
