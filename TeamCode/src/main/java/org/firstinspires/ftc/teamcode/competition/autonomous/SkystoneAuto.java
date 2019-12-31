@@ -45,15 +45,15 @@ public class SkystoneAuto extends AutoMethods {
         }
         if (skystonePosition == 3) {
             runPurePursuitPath(
-                    cp_grabSkystone_pos2,
-                    wp_grabSkystone_pos2,
+                    cp_grabSkystone_pos3,
+                    wp_grabSkystone_pos3,
                     new double[]{
                             4, 1.5, 1.2
                     });
 
             runPurePursuitPath(
-                    cp_depositSkystone_pos2,
-                    wp_depositSkystone_pos2,
+                    cp_depositSkystone_pos3,
+                    wp_depositSkystone_pos3,
                     new double[]{
                             4, 1.5, 1.2
                     });
