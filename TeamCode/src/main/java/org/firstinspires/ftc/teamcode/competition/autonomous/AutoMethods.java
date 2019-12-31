@@ -10,14 +10,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.PurePursuit.CheckPoint;
 import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuit;
 import org.firstinspires.ftc.teamcode.PurePursuit.WayPoint;
+import org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline;
 import org.firstinspires.ftc.teamcode.competition.hardware.FoundationGrabbers;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.IntakeMech;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline.screenPosition;
 import static org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool.pool;
 
 public abstract class AutoMethods extends LinearOpMode {
@@ -27,9 +33,11 @@ public abstract class AutoMethods extends LinearOpMode {
     protected IntakeMech intake;
     protected FoundationGrabbers foundationGrabbers;
     protected PurePursuit purePursuit;
+    protected OpenCvCamera phoneCamera;
 
     protected boolean onRed = false;
     protected boolean parkAgainstBridge = false;
+    protected int skystonePosition;
 
     /**
      * Updates the robot position and displays it in the telemetry
@@ -46,13 +54,35 @@ public abstract class AutoMethods extends LinearOpMode {
      * Initializes all the hardware and pure pursuit for auto
      * Also has instructions for alliance and parking selection
      */
-    protected void initAuto() {
+    protected void initAuto(boolean visionAuto) {
         robot.init(hardwareMap);
         drive = new MecanumDrive(robot);
         drive.softBrakeMotors();
         intake = new IntakeMech(robot);
         foundationGrabbers = new FoundationGrabbers(robot);
         purePursuit = new PurePursuit(robot);
+
+        if (visionAuto) {
+            // Set the phone camera for OpenCV
+            phoneCamera = new OpenCvInternalCamera(
+                    // Sets if using front or back of camera
+                    OpenCvInternalCamera.CameraDirection.FRONT,
+                    // ID of the camera monitor relative to the app context
+                    hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
+                            "id", hardwareMap.appContext.getPackageName())
+            );
+
+            // Start connection to camera
+            phoneCamera.openCameraDevice();
+
+            // Sets the current image processing pipeline to detect the skystone
+            OpenCvPipeline detector = new SkystonePipeline();
+            phoneCamera.setPipeline(detector);
+
+            // Start the camera streaming and set the phones rotation
+            // In this case the phone is going to be upright (portrait)
+            phoneCamera.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+        }
 
 
         while (!isStarted() && !isStopRequested()) {
@@ -66,8 +96,6 @@ public abstract class AutoMethods extends LinearOpMode {
             if (gamepad1.a || gamepad2.a)
                 parkAgainstBridge = false;
 
-            telemetry.addLine("Use either controller for init process");
-            telemetry.addLine();
             telemetry.addLine("Press X for blue and B for red alliances");
             telemetry.addLine("Press Y for parking against bridge A for against wall");
             telemetry.addLine();
@@ -80,14 +108,26 @@ public abstract class AutoMethods extends LinearOpMode {
             else
                 telemetry.addLine("Park against wall");
             telemetry.addLine("==========");
+            if (visionAuto) {
+                if (screenPosition.x > 145)
+                    screenPosition.x =
+                            (screenPosition.x < 190) ? 2 : 1;
+                else
+                    skystonePosition = 3;
+                telemetry.addData("Block Selected", skystonePosition);
+            }
+            telemetry.addLine("==========");
             updateOdometryTelemetry();
         }
+
+        if (visionAuto)
+            phoneCamera.stopStreaming();
     }
 
     /**
      * Does all the setting up for the gyro initialization and waits for opmode to start
      */
-    protected void initGyroscope() {
+    protected void initGyroscope(boolean visionAuto) {
         robot.init(hardwareMap);
         // Gyro setup
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -101,11 +141,12 @@ public abstract class AutoMethods extends LinearOpMode {
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        while (opModeIsActive() && !robot.imu.isGyroCalibrated()) {
+        while (!robot.imu.isGyroCalibrated() && !isStopRequested()) {
             telemetry.addData("imu calibration", robot.imu.isGyroCalibrated());
-            telemetry.addLine();
-            initAuto();
+            telemetry.update();
         }
+
+        initAuto(visionAuto);
     }
 
     /**
@@ -233,4 +274,40 @@ public abstract class AutoMethods extends LinearOpMode {
     // SKYSTONE AUTO
     // ==========
 
+    public CheckPoint
+            cp_grabSkystone_pos1 = new CheckPoint(30, -10, 2, robot),
+            cp_depositSkystone_pos1 = new CheckPoint(16, -60, 2, robot),
+            cp_grabSkystone_pos2 = new CheckPoint(30, -12, 2, robot),
+            cp_depositSkystone_pos2 = new CheckPoint(15, -50, 2, robot),
+            cp_grabSkystone_pos3 = new CheckPoint(30, -21, 2, robot),
+            cp_depositSkystone_pos3 = new CheckPoint(15, -50, 2, robot);
+
+    public ArrayList<WayPoint>
+            wp_grabSkystone_pos1 = new ArrayList<>(
+            Arrays.asList(
+                    new WayPoint(30, -10, -Math.PI / 2)
+            )),
+            wp_depositSkystone_pos1 = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(15, -10, -Math.PI / 2),
+                            new WayPoint(15, -60, -Math.PI / 2)
+                    )),
+            wp_grabSkystone_pos2 = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(30, -12, -Math.PI / 2)
+                    )),
+            wp_depositSkystone_pos2 = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(15, 0, -Math.PI / 2),
+                            new WayPoint(15, -50, -Math.PI / 2)
+                    )),
+            wp_grabSkystone_pos3 = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(30, -21, -Math.PI / 2)
+                    )),
+            wp_depositSkystone_pos3 = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(15, 0, -Math.PI / 2),
+                            new WayPoint(15, -50, -Math.PI / 2)
+                    ));
 }

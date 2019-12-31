@@ -8,7 +8,7 @@ public class FoundationAuto extends AutoMethods {
 
     @Override
     public void runOpMode() {
-        initAuto();
+        initAuto(false);
 
         runPurePursuitPath(
                 cp_foundationGrab,
