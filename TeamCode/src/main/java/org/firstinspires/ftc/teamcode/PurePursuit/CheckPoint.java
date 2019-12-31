@@ -9,9 +9,9 @@ public class CheckPoint extends Thread {
 
     private Hardware robot;
 
-    private double x;
-    private double y;
-    private double r;
+    public double x;
+    public double y;
+    public double r;
     private boolean terminate = false;
 
     public boolean isHit = false;
@@ -40,8 +40,7 @@ public class CheckPoint extends Thread {
         }
     }
 
-    public void onHit() {
-    }
+    private void onHit() { }
 
     public void terminate() {
         terminate = true;
