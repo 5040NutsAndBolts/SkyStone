@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="MotorController", group="DemoBot")
+@TeleOp(name = "MotorController", group = "DemoBot")
 public class MotorController extends OpMode {
 
     private DcMotor motorOne;
@@ -27,28 +27,27 @@ public class MotorController extends OpMode {
         boolean leftBumper = gamepad1.left_bumper;
         boolean rightBumper = gamepad1.right_bumper;
 
-        if(gamepad1.x) {
-            motorOne.setPower(1/speed);
-            motorTwo.setPower(1/speed);
+        if (gamepad1.x) {
+            motorOne.setPower(1 / speed);
+            motorTwo.setPower(1 / speed);
         }
 
-        if(leftBumper && !pressed) {
+        if (leftBumper && !pressed) {
             speed += 0.1;
             pressed = true;
         }
 
-        if(rightBumper && !pressed) {
+        if (rightBumper && !pressed) {
             speed -= 0.1;
             pressed = true;
-        }
-        else if(pressed && !rightBumper&&!leftBumper) {
+        } else if (pressed && !rightBumper && !leftBumper) {
             pressed = false;
         }
 
-        if(speed < 1) {
+        if (speed < 1) {
             speed = 1;
         }
 
-        telemetry.addData("speed",1/speed);
+        telemetry.addData("speed", 1 / speed);
     }
 }

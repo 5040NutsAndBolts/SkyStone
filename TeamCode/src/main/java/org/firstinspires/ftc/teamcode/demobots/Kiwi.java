@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static java.lang.Math.abs;
 
-@TeleOp(name="Kiwi", group="DemoBot")
+@TeleOp(name = "Kiwi", group = "DemoBot")
 public class Kiwi extends OpMode {
 
     private DcMotor motorOne;
@@ -34,8 +34,8 @@ public class Kiwi extends OpMode {
     @Override
     public void loop() {
         // Controller values
-        double r = -gamepad1.right_stick_x/3;
-        double r2 = -gamepad2.right_stick_x/3;
+        double r = -gamepad1.right_stick_x / 3;
+        double r2 = -gamepad2.right_stick_x / 3;
         boolean leftBumper = gamepad2.left_bumper;
         boolean rightBumper = gamepad2.right_bumper;
         double leftStickX1 = gamepad1.left_stick_x;
@@ -44,21 +44,19 @@ public class Kiwi extends OpMode {
         double leftStickY2 = gamepad2.left_stick_y;
 
 
-        if(gamepad2.a&&!aPressed) {
-            aPressed=true;
-            override=!override;
-        }
-        else if(!gamepad2.a) {
-            aPressed=false;
+        if (gamepad2.a && !aPressed) {
+            aPressed = true;
+            override = !override;
+        } else if (!gamepad2.a) {
+            aPressed = false;
         }
 
         double x, y;
 
-        if(!override) {
+        if (!override) {
             x = leftStickX1;
             y = -leftStickY1;
-        }
-        else {
+        } else {
             x = leftStickX2;
             y = -leftStickY2;
             r = r2;
@@ -67,17 +65,17 @@ public class Kiwi extends OpMode {
         double scale = abs(r) + abs(y) + abs(x);
 
         //scales the inputs when needed
-        if(scale > 1) {
+        if (scale > 1) {
             y /= scale;
             x /= scale;
             r /= scale;
         }
 
-        double motor1Power = (-1.0/2.0)*x + (Math.sqrt(3)/2)*y + r;
-        double motor2Power = (-1.0/2.0)*x - (Math.sqrt(3)/2)*y + r;
+        double motor1Power = (-1.0 / 2.0) * x + (Math.sqrt(3) / 2) * y + r;
+        double motor2Power = (-1.0 / 2.0) * x - (Math.sqrt(3) / 2) * y + r;
         double motor3Power = x + r;
 
-        if(gamepad1.left_stick_x != 0 ||
+        if (gamepad1.left_stick_x != 0 ||
                 gamepad1.left_stick_y != 0 ||
                 gamepad1.right_stick_x != 0 ||
                 gamepad2.left_stick_x != 0 ||
@@ -87,31 +85,29 @@ public class Kiwi extends OpMode {
             motorTwo.setPower(motor2Power / speed);
             motorThree.setPower(motor3Power / speed);
 
-        }
-        else {
+        } else {
             motorOne.setPower(0);
             motorTwo.setPower(0);
             motorThree.setPower(0);
 
         }
 
-        if(leftBumper && !pressed) {
+        if (leftBumper && !pressed) {
             speed += 0.1;
             pressed = true;
         }
-        if(rightBumper && !pressed) {
+        if (rightBumper && !pressed) {
             speed -= 0.1;
             pressed = true;
-        }
-        else if(pressed && !rightBumper&&!leftBumper) {
+        } else if (pressed && !rightBumper && !leftBumper) {
             pressed = false;
         }
-        if(speed < 1) {
+        if (speed < 1) {
             speed = 1;
         }
 
-        telemetry.addData("speed",1/speed);
-        telemetry.addData("override",override);
+        telemetry.addData("speed", 1 / speed);
+        telemetry.addData("override", override);
 
     }
 }

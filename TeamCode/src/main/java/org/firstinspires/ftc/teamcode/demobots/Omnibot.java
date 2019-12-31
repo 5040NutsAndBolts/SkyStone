@@ -11,7 +11,7 @@ import static java.lang.Math.abs;
 /**
  * Demo Omnibot code for showing off the omnibot
  */
-@TeleOp(name="Omnibot", group="DemoBot")
+@TeleOp(name = "Omnibot", group = "DemoBot")
 public class Omnibot extends OpMode {
 
     //drive train motors
@@ -71,58 +71,56 @@ public class Omnibot extends OpMode {
         boolean a2 = gamepad2.a;
 
         //toggle to stop robot
-        if(a2 && !pressedA) {
+        if (a2 && !pressedA) {
             move = !move;
             pressedA = true;
-        }
-        else if(pressedA && !a2) {
+        } else if (pressedA && !a2) {
             pressedA = false;
         }
 
         //slows down robot with master bumper
-        if(leftBumper2 && !pressed) {
+        if (leftBumper2 && !pressed) {
             speed += 0.2;
             pressed = true;
         }
         // resets pressed for when it isnt pressed
-        else if(pressed && !leftBumper2) {
+        else if (pressed && !leftBumper2) {
             pressed = false;
         }
         //speeds up robot with master bumper
-        if(rightBumper2 && !pressed2) {
+        if (rightBumper2 && !pressed2) {
             speed -= 0.2;
             pressed2 = true;
         }
         // resets pressed for when it isnt pressed
-        else if(pressed2 && !rightBumper2) {
+        else if (pressed2 && !rightBumper2) {
             pressed2 = false;
         }
 
         //stops divide by 0 error, fastest the robot can go
-        if(speed < 1) {
+        if (speed < 1) {
             speed = 1;
         }
 
         //changing who is driving and move is for stopping kid driving
-        if(leftStickX2 == 0 && leftStickY2 == 0 && rightStickX2 == 0 && move) {
+        if (leftStickX2 == 0 && leftStickY2 == 0 && rightStickX2 == 0 && move) {
             leftStickX = leftStickX1;
             leftStickY = leftStickY1;
             rightStickX = rightStickX1;
-        }
-        else {
+        } else {
             leftStickX = leftStickX2;
             leftStickY = leftStickY2;
             rightStickX = rightStickX2;
         }
 
         //movement for robot method being run
-        drive(leftStickY/speed, leftStickX/speed, rightStickX/speed);
+        drive(leftStickY / speed, leftStickX / speed, rightStickX / speed);
 
-        telemetry.addData("Speed", 1/speed);
+        telemetry.addData("Speed", 1 / speed);
         telemetry.addData("override", !move);
         telemetry.update();
 
-        RobotLog.ii("5040MSGHW","Motors running");
+        RobotLog.ii("5040MSGHW", "Motors running");
     }
 
 
@@ -133,16 +131,16 @@ public class Omnibot extends OpMode {
         double scale = abs(rotation) + abs(forward) + abs(sideways);
 
         //scales the inputs when needed
-        if(scale > 1) {
+        if (scale > 1) {
             forward /= scale;
             rotation /= scale;
             sideways /= scale;
         }
         //setting the motor powers to move
-        frontLeft.setPower(forward-rotation+sideways);
-        backLeft.setPower(forward-rotation-sideways);
-        frontRight.setPower(forward+rotation-sideways);
-        backRight.setPower(forward+rotation+sideways);
+        frontLeft.setPower(forward - rotation + sideways);
+        backLeft.setPower(forward - rotation - sideways);
+        frontRight.setPower(forward + rotation - sideways);
+        backRight.setPower(forward + rotation + sideways);
         //Left Front = +Speed + Turn - Strafe      Right Front = +Speed - Turn + Strafe
         //Left Rear  = +Speed + Turn + Strafe      Right Rear  = +Speed - Turn - Strafe
     }

@@ -22,8 +22,7 @@ public class FoundationAuto extends AutoMethods {
                         1.2
                 });
 
-        robot.foundationGrabber1.setPosition(1);
-        robot.foundationGrabber2.setPosition(1);
+        foundationGrabbers.grab();
 
         waitTime(1.5);
 
@@ -39,8 +38,7 @@ public class FoundationAuto extends AutoMethods {
                         .5
                 });
 
-        robot.foundationGrabber1.setPosition(0);
-        robot.foundationGrabber2.setPosition(0);
+        foundationGrabbers.release();
 
         waitTime(1.5);
 
@@ -56,14 +54,17 @@ public class FoundationAuto extends AutoMethods {
                         1
                 });
 
-        runPurePursuitPath(
-                cp_foundationPark,
-                wp_foundationPark,
-                new double[]{
-                        4,
-                        1.7,
-                        1
-                });
+        foundationGrabbers.grab();
+
+        if (!parkAgainstBridge)
+            runPurePursuitPath(
+                    cp_foundationParkWall,
+                    wp_foundationParkWall,
+                    new double[]{
+                            4,
+                            1.7,
+                            1
+                    });
 
         displayEndAuto();
     }

@@ -10,7 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.PurePursuit.CheckPoint;
 import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuit;
 import org.firstinspires.ftc.teamcode.PurePursuit.WayPoint;
+import org.firstinspires.ftc.teamcode.competition.hardware.FoundationGrabbers;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.competition.hardware.IntakeMech;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
 
 import java.util.ArrayList;
@@ -22,10 +24,12 @@ public abstract class AutoMethods extends LinearOpMode {
 
     protected Hardware robot = new Hardware();
     protected MecanumDrive drive;
+    protected IntakeMech intake;
+    protected FoundationGrabbers foundationGrabbers;
     protected PurePursuit purePursuit;
 
-    private boolean onRed = false;
-    private boolean parkAgainstBridge = false;
+    protected boolean onRed = false;
+    protected boolean parkAgainstBridge = false;
 
     /**
      * Updates the robot position and displays it in the telemetry
@@ -46,6 +50,8 @@ public abstract class AutoMethods extends LinearOpMode {
         robot.init(hardwareMap);
         drive = new MecanumDrive(robot);
         drive.softBrakeMotors();
+        intake = new IntakeMech(robot);
+        foundationGrabbers = new FoundationGrabbers(robot);
         purePursuit = new PurePursuit(robot);
 
 
@@ -167,8 +173,7 @@ public abstract class AutoMethods extends LinearOpMode {
             lookAheadDistance = pathData[0];
             speed = pathData[1];
             turnSpeed = pathData[2];
-        }
-        else {
+        } else {
             purePursuit.initPath(path, pathData[0], pathData[1], pathData[2]);
             lookAheadDistance = pathData[3];
             speed = pathData[4];
@@ -201,7 +206,7 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_foundationGrab = new CheckPoint(31.5, 12, 2, robot),
             cp_foundationPull = new CheckPoint(0, 4, 4, robot),
             cp_foundationPush = new CheckPoint(20, 36, 1, robot),
-            cp_foundationPark = new CheckPoint(-1, 70, 2, robot);
+            cp_foundationParkWall = new CheckPoint(-1, 70, 2, robot);
 
     public ArrayList<WayPoint>
             wp_foundationGrab = new ArrayList<>(
@@ -218,7 +223,7 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(-1, 48, 0),
                             new WayPoint(20, 36, 0)
                     )),
-            wp_foundationPark = new ArrayList<>(
+            wp_foundationParkWall = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(1, 45, 0),
                             new WayPoint(-1, 70, 0)

@@ -51,28 +51,20 @@ public class Hardware {
     // Number of ticks in a centimeter using dimensional analysis
     private static final double ODOM_TICKS_PER_CM = ODOM_TICKS_PER_ROTATION / (WHEEL_CIRCUM);
 
-    // Robot physical location
-    // 0, 0, 0 is the blue depot with the intake facing opposite the red depot
-    public double x = 0;
-    public double y = 0;
-    public double theta = 0;
+    // Robot physical location]
+    public double x, y, theta;
 
-    // Hardware mapping
+    // Map from hardware name to physical address
     private HardwareMap hwMap;
 
     // Gyro
     public BNO055IMU imu;
 
     // Drive train
-    public DcMotorEx leftFront = null;
-    public DcMotorEx rightFront = null;
-    public DcMotorEx leftRear = null;
-    public DcMotorEx rightRear = null;
+    public DcMotorEx leftFront, rightFront, leftRear, rightRear;
 
     // Odometry hardware
-    private DcMotorEx leftEncoder = null;
-    private DcMotorEx rightEncoder = null;
-    private DcMotorEx centerEncoder = null;
+    private DcMotorEx leftEncoder, rightEncoder, centerEncoder;
 
     // Rev Expansion Hub Data
     public RevBulkData bulkData;
@@ -80,47 +72,17 @@ public class Hardware {
     public ExpansionHubMotor leftOdom, rightOdom, centerOdom;
 
     // Odometry encoder positions
-    public int leftEncoderPos = 0;
-    public int centerEncoderPos = 0;
-    public int rightEncoderPos = 0;
+    public int leftEncoderPos, centerEncoderPos, rightEncoderPos;
 
     // Real world distance traveled by the wheels
-    public double leftOdomTraveled = 0;
-    public double rightOdomTraveled = 0;
-    public double centerOdomTraveled = 0;
+    public double leftOdomTraveled, rightOdomTraveled, centerOdomTraveled;
 
     // Intake
-    public DcMotor intakeLeft;
-    public DcMotor intakeRight;
-    public Servo stoneGuide;
+    public DcMotor intakeLeft, intakeRight;
+    public Servo intakeBlock;
 
-    // Tower arm
-    public DcMotor towerArmMotor;
-    public Servo clawRight;
-    public Servo clawLeft;
-
-    public enum TowerArmPos {
-        RAISE,
-        LOWER,
-        STOP,
-        RESET
-    }
-
-    // Capstone arm
-    public Servo capstonePlacer;
-    public DcMotor capstoneSlides;
-
-    // Foundation/Stone grabber
-    public Servo grabber;
-    public Servo foundationGrabber1;
-    public Servo foundationGrabber2;
-
-    /**
-     * Simple constructor to set hardware mapping to null
-     */
-    public Hardware() {
-        hwMap = null;
-    }
+    // Foundation Grabber
+    public Servo foundationGrabber1, foundationGrabber2;
 
     /**
      * Initialization of hardware
@@ -173,35 +135,13 @@ public class Hardware {
         intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeRight.setDirection(DcMotor.Direction.REVERSE);
         intakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Stone guide motor setup
-        stoneGuide = hwMap.servo.get("stoneGuide");
-
-        // Tower arm setup
-        // arm motor
-        towerArmMotor = hwMap.dcMotor.get("towerArm");
-        towerArmMotor.setDirection(DcMotor.Direction.REVERSE);
-        towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // claw servos
-        clawLeft = hwMap.servo.get("clawLeft");
-        clawRight = hwMap.servo.get("clawRight");
-        clawLeft.setDirection(Servo.Direction.REVERSE);
-
-        // Capstone arm motor setup
-        // Capstone place
-        capstonePlacer = hwMap.servo.get("capstonePlacer");
-        // Capstone slides
-        capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
-        capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Intake blocker
+        intakeBlock = hwMap.servo.get("intakeBlock");
 
         // Foundation/Stone grabber setup
-        grabber = hwMap.servo.get("stoneGrabber");
         foundationGrabber1 = hwMap.servo.get("foundGrabber1");
-        foundationGrabber1.setDirection(Servo.Direction.REVERSE);
         foundationGrabber2 = hwMap.servo.get("foundGrabber2");
+        foundationGrabber2.setDirection(Servo.Direction.REVERSE);
     }
 
     /**
@@ -245,29 +185,6 @@ public class Hardware {
 
     private int getDeltaCenterTicks() {
         return centerEncoderPos - bulkData.getMotorCurrentPosition(centerOdom);
-    }
-
-    /**
-     * Resets odometry position and values back to default at 0, 0, 0
-     */
-    public void resetOdometry() {
-        x = 0;
-        y = 0;
-        theta = 0;
-        leftOdomTraveled = 0;
-        rightOdomTraveled = 0;
-        leftOdomTraveled = 0;
-        leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        centerEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftEncoderPos = 0;
-        rightEncoderPos = 0;
-        centerEncoderPos = 0;
-
-        // Run mode needs to be reset because encoders and wheels are pointing to the same location
-        leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        centerEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**

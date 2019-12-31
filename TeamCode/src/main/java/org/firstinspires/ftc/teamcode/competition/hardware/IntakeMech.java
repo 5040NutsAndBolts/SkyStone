@@ -4,31 +4,30 @@ public class IntakeMech {
 
     private Hardware robot;
     public double intakeSpeed = 1;
+    private boolean released = false;
 
     public IntakeMech(Hardware r) {
         robot = r;
     }
 
     public void setPower(int intaking) {
-        if (intaking == 0){
+        if (intaking == 1) {
             robot.intakeLeft.setPower(intakeSpeed);
             robot.intakeRight.setPower(intakeSpeed);
-        } else if (intaking == 1){
+        } else if (intaking == -1) {
             robot.intakeLeft.setPower(-intakeSpeed);
             robot.intakeRight.setPower(-intakeSpeed);
-        }
-        else {
+        } else {
             robot.intakeLeft.setPower(0);
             robot.intakeRight.setPower(0);
         }
     }
 
-    public void guideOut() {
-        robot.stoneGuide.setPosition(0);
-    }
-
-    public void guideIn() {
-        robot.stoneGuide.setPosition(1);
+    public void releaseIntake() {
+        if (!released) {
+            robot.intakeBlock.setPosition(.5);
+            released = true;
+        }
     }
 
 }

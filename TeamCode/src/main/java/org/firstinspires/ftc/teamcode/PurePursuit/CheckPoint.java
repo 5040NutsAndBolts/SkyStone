@@ -40,7 +40,8 @@ public class CheckPoint extends Thread {
         }
     }
 
-    private void onHit() { }
+    private void onHit() {
+    }
 
     public void terminate() {
         terminate = true;
