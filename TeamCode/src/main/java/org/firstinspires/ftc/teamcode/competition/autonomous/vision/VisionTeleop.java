@@ -53,14 +53,14 @@ public class VisionTeleop extends LinearOpMode {
             telemetry.addData("Total frame time ms", phoneCamera.getTotalFrameTimeMs());
             telemetry.addData("Pipeline time ms", phoneCamera.getPipelineTimeMs());
             telemetry.addData("Overhead time ms", phoneCamera.getOverheadTimeMs());
-            telemetry.addData("Theoretical max FPS", phoneCamera.getCurrentPipelineMaxFps());
-            telemetry.update();
-            sleep(100);
-        }
-
-        // Stops camera streaming
+            telemetry.addData("Theoretical max FPS", 1);
+        // Stops camera ", phoneCamera.getCurrentPipelineMaxFps());
+        //            telemetry.update();
+        //            sleep(100);
+        //        }streaming
         phoneCamera.stopStreaming();
     }
+}
 }
 
 

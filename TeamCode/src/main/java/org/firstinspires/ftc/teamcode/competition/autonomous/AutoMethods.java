@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.competition.hardware.GrabbingMech;
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
@@ -25,7 +24,7 @@ public abstract class AutoMethods extends LinearOpMode {
             currently, it only works properly if the robot theta is 0
         */
         while (opModeIsActive() && !HelperMethods.inThreshold(robot.x, endPosition, thresholdPercent)) {
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
             if (robot.x < endPosition)
                 drive.drive(-.5, 0, 0);
             else if (robot.x > endPosition)
@@ -44,7 +43,7 @@ public abstract class AutoMethods extends LinearOpMode {
             currently, it only works properly if the robot theta is 0
         */
         while (opModeIsActive() && !HelperMethods.inThreshold(robot.y, endPosition, thresholdPercent)) {
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
             if (robot.y < endPosition)
                 drive.drive(0, .5, 0);
             else if (robot.y > endPosition)
@@ -72,13 +71,13 @@ public abstract class AutoMethods extends LinearOpMode {
         endAngle = Math.toRadians(endAngle)%(2*Math.PI);
         if (robot.theta > endAngle) {
             while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, endAngle, thresholdPercent)) {
-                updateOdometryTeleop();
+                updateOdometryTelemetry();
                 drive.drive(0, 0, .3);
             }
         }
         else {
             while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, endAngle, thresholdPercent)) {
-                updateOdometryTeleop();
+                updateOdometryTelemetry();
                 drive.drive(0, 0, -.3);
             }
         }
@@ -88,7 +87,7 @@ public abstract class AutoMethods extends LinearOpMode {
     /**
      * Updates the robot position and displays it in the telemetry
      */
-    protected void updateOdometryTeleop() {
+    protected void updateOdometryTelemetry() {
         robot.updatePositionRoadRunner();
         telemetry.addData("X Position", robot.x);
         telemetry.addData("Y Position", robot.y);
@@ -115,7 +114,7 @@ public abstract class AutoMethods extends LinearOpMode {
         while(opModeIsActive() && !robot.imu.isGyroCalibrated()) {
             telemetry.addData("imu calibration", robot.imu.isGyroCalibrated());
             telemetry.addLine();
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
         }
     }
 
@@ -143,7 +142,7 @@ public abstract class AutoMethods extends LinearOpMode {
         while(opModeIsActive()) {
             telemetry.addLine("Auto has ended");
             telemetry.addLine("==========");
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
             drive.hardBrakeMotors();
         }
     }

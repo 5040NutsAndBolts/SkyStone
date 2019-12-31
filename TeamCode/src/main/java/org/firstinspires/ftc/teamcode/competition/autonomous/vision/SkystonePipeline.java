@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.competition.visiontesting;
+package org.firstinspires.ftc.teamcode.competition.autonomous.vision;
 
+import org.firstinspires.ftc.teamcode.competition.autonomous.vision.GrayscaleFilter;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -19,6 +20,7 @@ import java.util.List;
  * - For whatever reason instantiated objects cannot access public methods or fields other than
  *       the two overridden methods, but can be accessed if they are set to static: so they are
  */
+
 /**
  * OpenCV pipeline used to find the skystone
  * Detects skystone by finding the largest/darkest area in a given camera frame
@@ -26,7 +28,7 @@ import java.util.List;
 public class SkystonePipeline extends OpenCvPipeline {
 
     // Coordinate position of the top left corner of the selected rectangle
-    public static Point screenPosition = new Point(0,0);
+    public static Point screenPosition = new Point(0, 0);
 
     private Mat
             rawImage,       // Raw image output from the camera
@@ -49,6 +51,7 @@ public class SkystonePipeline extends OpenCvPipeline {
         SELECTIONS,         // This will show all selected rectangles and the current selected rectangle
         SKYSTONE_ONLY,      // Selects only the skystone
     }
+
     // Sets the current stage to render
     public static ViewportRenderStage stageToRenderToViewport = ViewportRenderStage.SELECTIONS;
     // Array to cycle through of each viewport render stage
@@ -74,13 +77,13 @@ public class SkystonePipeline extends OpenCvPipeline {
      * When the viewport is tapped it changes what is rendered on the screen:
      * Raw Image (Just regular camera), Display Mat (Highlights boxes and shows chosen), and
      * Threshold (What the "vision" sees)
-     *     AKA it turns all dark colors to full white and all non-dark colors to full black
+     * AKA it turns all dark colors to full white and all non-dark colors to full black
      */
     @Override
     public void onViewportTapped() {
         int nextStageNum = stageToRenderToViewport.ordinal() + 1;
 
-        if(nextStageNum >= stages.length)
+        if (nextStageNum >= stages.length)
             nextStageNum = 0;
 
         stageToRenderToViewport = stages[nextStageNum];
@@ -107,7 +110,7 @@ public class SkystonePipeline extends OpenCvPipeline {
         //     that has a thickness multiplier of 1
         // without using a thick anti-aliased line (all you need to know is this saves the most time)
         //     really just a 4-connected Bresenham algorithm line type
-        Imgproc.rectangle(reflectiveMask, bestRect.tl(), bestRect.br(), new Scalar(255,255,255), 1, Imgproc.LINE_4);
+        Imgproc.rectangle(reflectiveMask, bestRect.tl(), bestRect.br(), new Scalar(255, 255, 255), 1, Imgproc.LINE_4);
 
         // processes the working image into a grayscale image
         //     Uses a clone of the working image because the image gets modified in the process
@@ -123,10 +126,10 @@ public class SkystonePipeline extends OpenCvPipeline {
         Imgproc.findContours(reflectiveMask, contoursList, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
         // Draws outlines of contours from contoursList onto the selectionMask
         //     Drawn in gray
-        Imgproc.drawContours(selectionMask, contoursList,-1, new Scalar(40,40,40),2);
+        Imgproc.drawContours(selectionMask, contoursList, -1, new Scalar(40, 40, 40), 2);
 
         // Scores all the contours and selects the best of them
-        for(MatOfPoint contour : contoursList){
+        for (MatOfPoint contour : contoursList) {
             // Calculate the "score" of the selected contour
             double score = calculateScore(contour);
 
@@ -135,10 +138,10 @@ public class SkystonePipeline extends OpenCvPipeline {
 
             // Draw the current found rectangle on the selections mask
             //     Drawn in blue
-            Imgproc.rectangle(selectionMask, rect.tl(), rect.br(), new Scalar(0,0,255),2);
+            Imgproc.rectangle(selectionMask, rect.tl(), rect.br(), new Scalar(0, 0, 255), 2);
 
             // If the result is better then the previously tracked one, set this rect as the new best
-            if(score < lowestScore && rect.tl().y >= 120&&rect.tl().>70){
+            if (score < lowestScore && rect.tl().y >= 120 && rect.tl().x > 70) {
                 lowestScore = score;
                 bestRect = rect;
             }
@@ -146,8 +149,8 @@ public class SkystonePipeline extends OpenCvPipeline {
 
         // Draw the "best fit" rectangle on the selections mask and skystone only mask
         //     Drawn in red
-        Imgproc.rectangle(selectionMask, bestRect.tl(), bestRect.br(), new Scalar(255,0,0),4);
-        Imgproc.rectangle(skystoneMask, bestRect.tl(), bestRect.br(), new Scalar(255,0,0), 4);
+        Imgproc.rectangle(selectionMask, bestRect.tl(), bestRect.br(), new Scalar(255, 0, 0), 4);
+        Imgproc.rectangle(skystoneMask, bestRect.tl(), bestRect.br(), new Scalar(255, 0, 0), 4);
 
         // Sets the position of the selected rectangle (relative to the screen resolution)
         screenPosition = new Point(bestRect.x, bestRect.y);
@@ -174,12 +177,13 @@ public class SkystonePipeline extends OpenCvPipeline {
     /**
      * "scores" a given section, "input," of the screen
      * The "score" being the area of a given section on the screen
+     *
      * @param input a section of the screen which needs to be scored
      * @return calculated "score" of a given section on the screen
      */
     private double calculateScore(Mat input) {
         // Validates input, returning the maximum value if invalid
-        if(!(input instanceof MatOfPoint))
+        if (!(input instanceof MatOfPoint))
             return Double.MAX_VALUE;
         // Otherwise returns the calculated area of the contour
         return -Imgproc.contourArea(input);

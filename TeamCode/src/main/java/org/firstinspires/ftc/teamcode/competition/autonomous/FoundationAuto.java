@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.PurePursuit.CheckPoint;
 import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuit;
 import org.firstinspires.ftc.teamcode.PurePursuit.WayPoint;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.Point;
 
 import java.util.ArrayList;
 
@@ -50,14 +49,14 @@ public class FoundationAuto extends AutoMethods {
         p4.add(new WayPoint(-1, 70, 0));
 
         while (!isStarted() && !isStopRequested()) {
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
         }
 
         purePursuit.initPath(p1, .4, .005, .55);
         pool.submit(c1);
         while (opModeIsActive() && !c1.isHit) {
             telemetry.addData("PID", purePursuit.pos.getPID());
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
 
             purePursuit.followPath(p1, 4, 2, 1.2);
         }
@@ -75,7 +74,7 @@ public class FoundationAuto extends AutoMethods {
         pool.submit(c2);
         while (opModeIsActive() && !c2.isHit) {
             telemetry.addData("PID", purePursuit.pos.getPID());
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
 
             purePursuit.followPath(p2, 4, 3.1, .5);
         }
@@ -92,7 +91,7 @@ public class FoundationAuto extends AutoMethods {
         timer.reset();
         while (opModeIsActive() && !c3.isHit&&timer.seconds()<3) {
             telemetry.addData("PID", purePursuit.pos.getPID());
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
 
             purePursuit.followPath(p3, 4, 1.7, 1);
         }
@@ -102,7 +101,7 @@ public class FoundationAuto extends AutoMethods {
         purePursuit.initPath(p4);
         while (opModeIsActive() && !c3.isHit) {
             telemetry.addData("PID", purePursuit.pos.getPID());
-            updateOdometryTeleop();
+            updateOdometryTelemetry();
 
             purePursuit.followPath(p4, 4, 1.7, 1);
         }
@@ -114,4 +113,3 @@ public class FoundationAuto extends AutoMethods {
         displayEndAuto();
     }
 }
-

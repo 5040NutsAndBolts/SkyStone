@@ -94,6 +94,9 @@ public class Hardware {
     public DcMotor intakeRight;
     public Servo stoneGuide;
 
+    //Intake Blocker
+    public Servo intakeRelease;
+
     // Tower arm
     public DcMotor towerArmMotor;
     public Servo clawRight;
@@ -175,30 +178,33 @@ public class Hardware {
         intakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Stone guide motor setup
-        stoneGuide = hwMap.servo.get("stoneGuide");
+        //stoneGuide = hwMap.servo.get("stoneGuide");
+
+        //Intake Stop Servo Setup
+        intakeRelease = hwMap.servo.get("intakeRelease");
 
         // Tower arm setup
         // arm motor
-        towerArmMotor = hwMap.dcMotor.get("towerArm");
-        towerArmMotor.setDirection(DcMotor.Direction.REVERSE);
-        towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // claw servos
-        clawLeft = hwMap.servo.get("clawLeft");
-        clawRight = hwMap.servo.get("clawRight");
-        clawLeft.setDirection(Servo.Direction.REVERSE);
-
-        // Capstone arm motor setup
-        // Capstone place
-        capstonePlacer = hwMap.servo.get("capstonePlacer");
-        // Capstone slides
-        capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
-        capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Foundation/Stone grabber setup
-        grabber = hwMap.servo.get("stoneGrabber");
+//        towerArmMotor = hwMap.dcMotor.get("towerArm");
+//        towerArmMotor.setDirection(DcMotor.Direction.REVERSE);
+//        towerArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        towerArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        towerArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        // claw servos
+//        clawLeft = hwMap.servo.get("clawLeft");
+//        clawRight = hwMap.servo.get("clawRight");
+//        clawLeft.setDirection(Servo.Direction.REVERSE);
+//
+//        // Capstone arm motor setup
+//        // Capstone place
+//        capstonePlacer = hwMap.servo.get("capstonePlacer");
+//        // Capstone slides
+//        capstoneSlides = hwMap.dcMotor.get("capstoneSlides");
+//        capstoneSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        capstoneSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        // Foundation/Stone grabber setup
+//        grabber = hwMap.servo.get("stoneGrabber");
         foundationGrabber1 = hwMap.servo.get("foundGrabber1");
         foundationGrabber1.setDirection(Servo.Direction.REVERSE);
         foundationGrabber2 = hwMap.servo.get("foundGrabber2");
