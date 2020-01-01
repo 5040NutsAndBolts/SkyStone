@@ -10,8 +10,21 @@ public class SkystoneAuto extends AutoMethods {
     public void runOpMode() throws InterruptedException {
         initAuto(true);
 
-        // Open the intake to grab block
-        intake.releaseIntake();
+        // Release intake
+        robot.intakeBlock.setPosition(.5);
+        // Set robot position
+        robot.resetOdometry(126, 126, -Math.PI / 2);
+
+        /*
+        New Auto Path:
+        - Robot will start in red depot with phone facing stones
+        - Humans will push robot to proper position
+        - ** Depending on where Skystone is, move to that position
+        - Then move forward and get the block stuck to the intake
+        - Move to the exact same position to deposit a stone
+        - If there is time, grab another
+        - Otherwise, park
+         */
 
         if (skystonePosition == 1) {
             runPurePursuitPath(

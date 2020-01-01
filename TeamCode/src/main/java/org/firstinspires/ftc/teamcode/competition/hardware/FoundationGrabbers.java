@@ -9,7 +9,7 @@ public class FoundationGrabbers {
     }
 
     public void grab() {
-        robot.foundationGrabber1.setPosition(.1);
+        robot.foundationGrabber1.setPosition(.15);
         robot.foundationGrabber2.setPosition(0);
     }
 

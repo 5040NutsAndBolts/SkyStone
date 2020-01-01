@@ -7,14 +7,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.PurePursuit.CheckPoint;
-import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuit;
-import org.firstinspires.ftc.teamcode.PurePursuit.WayPoint;
+import org.firstinspires.ftc.teamcode.PurePursuit.*;
 import org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline;
-import org.firstinspires.ftc.teamcode.competition.hardware.FoundationGrabbers;
-import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.competition.hardware.IntakeMech;
-import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.competition.hardware.*;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
@@ -32,6 +27,7 @@ public abstract class AutoMethods extends LinearOpMode {
     protected MecanumDrive drive;
     protected IntakeMech intake;
     protected FoundationGrabbers foundationGrabbers;
+    protected LiftMech lift;
     protected PurePursuit purePursuit;
     protected OpenCvCamera phoneCamera;
 
@@ -55,13 +51,21 @@ public abstract class AutoMethods extends LinearOpMode {
      * Also has instructions for alliance and parking selection
      */
     protected void initAuto(boolean visionAuto) {
+        // Initialize all the hardware
         robot.init(hardwareMap);
         drive = new MecanumDrive(robot);
         drive.softBrakeMotors();
         intake = new IntakeMech(robot);
         foundationGrabbers = new FoundationGrabbers(robot);
+        lift = new LiftMech(robot);
         purePursuit = new PurePursuit(robot);
 
+        // Keep hardware from unintentionally moving around
+        lift.openClose();
+        lift.extendRetract();
+        foundationGrabbers.grab();
+
+        // Setup the phone camera for OpenCV
         if (visionAuto) {
             // Set the phone camera for OpenCV
             phoneCamera = new OpenCvInternalCamera(
@@ -90,7 +94,6 @@ public abstract class AutoMethods extends LinearOpMode {
                 onRed = false;
             if (gamepad1.b || gamepad2.b)
                 onRed = true;
-
             if (gamepad1.y || gamepad2.y)
                 parkAgainstBridge = true;
             if (gamepad1.a || gamepad2.a)
@@ -108,6 +111,7 @@ public abstract class AutoMethods extends LinearOpMode {
             else
                 telemetry.addLine("Park against wall");
             telemetry.addLine("==========");
+
             if (visionAuto) {
                 if (screenPosition.x > 145)
                     screenPosition.x =
@@ -117,9 +121,11 @@ public abstract class AutoMethods extends LinearOpMode {
                 telemetry.addData("Block Selected", skystonePosition);
             }
             telemetry.addLine("==========");
+
             updateOdometryTelemetry();
         }
 
+        // End streaming for efficiency
         if (visionAuto)
             phoneCamera.stopStreaming();
     }

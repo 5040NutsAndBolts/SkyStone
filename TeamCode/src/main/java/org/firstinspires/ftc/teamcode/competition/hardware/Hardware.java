@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -84,6 +85,10 @@ public class Hardware {
     // Foundation Grabber
     public Servo foundationGrabber1, foundationGrabber2;
 
+    // Lift
+    public DcMotor liftMotor1, liftMotor2;
+    public Servo claw, clawExtension;
+
     /**
      * Initialization of hardware
      *
@@ -142,6 +147,13 @@ public class Hardware {
         foundationGrabber1 = hwMap.servo.get("foundGrabber1");
         foundationGrabber2 = hwMap.servo.get("foundGrabber2");
         foundationGrabber2.setDirection(Servo.Direction.REVERSE);
+
+        // Lift mechanism
+        liftMotor1 = hwMap.dcMotor.get("liftMotor1");
+        liftMotor2 = hwMap.dcMotor.get("liftMotor2");
+        liftMotor2.setDirection(DcMotor.Direction.REVERSE);
+        clawExtension = hwMap.servo.get("clawExtension");
+        claw = hwMap.servo.get("claw");
     }
 
     /**

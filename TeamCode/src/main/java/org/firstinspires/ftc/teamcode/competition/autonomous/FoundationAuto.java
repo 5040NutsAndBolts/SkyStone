@@ -10,6 +10,8 @@ public class FoundationAuto extends AutoMethods {
     public void runOpMode() {
         initAuto(false);
 
+        foundationGrabbers.release();
+
         runPurePursuitPath(
                 cp_foundationGrab,
                 wp_foundationGrab,

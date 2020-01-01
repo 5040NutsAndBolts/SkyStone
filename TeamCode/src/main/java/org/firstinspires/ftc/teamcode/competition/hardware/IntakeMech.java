@@ -10,24 +10,9 @@ public class IntakeMech {
         robot = r;
     }
 
-    public void setPower(int intaking) {
-        if (intaking == 1) {
-            robot.intakeLeft.setPower(intakeSpeed);
-            robot.intakeRight.setPower(intakeSpeed);
-        } else if (intaking == -1) {
-            robot.intakeLeft.setPower(-intakeSpeed);
-            robot.intakeRight.setPower(-intakeSpeed);
-        } else {
-            robot.intakeLeft.setPower(0);
-            robot.intakeRight.setPower(0);
-        }
-    }
-
-    public void releaseIntake() {
-        if (!released) {
-            robot.intakeBlock.setPosition(.5);
-            released = true;
-        }
+    public void setPower(double intakeSpeed) {
+        robot.intakeLeft.setPower(intakeSpeed);
+        robot.intakeRight.setPower(intakeSpeed);
     }
 
 }
