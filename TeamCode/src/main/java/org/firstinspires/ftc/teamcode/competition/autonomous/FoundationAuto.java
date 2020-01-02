@@ -12,61 +12,66 @@ public class FoundationAuto extends AutoMethods {
 
         foundationGrabbers.release();
 
+        // Run forward to grab foundation
         runPurePursuitPath(
                 cp_foundationGrab,
                 wp_foundationGrab,
-                new double[]{
-                        .4,
-                        .005,
-                        .55,
-                        4,
-                        2,
-                        1.2
-                });
+                .4,
+                .005,
+                .55,
+                4,
+                2,
+                1.2
+        );
 
+        // Grab foundation
         foundationGrabbers.grab();
+        waitTime(1);
 
-        waitTime(1.5);
-
+        // Pull foundation back
         runPurePursuitPath(
                 cp_foundationPull,
                 wp_foundationPull,
-                new double[]{
-                        .05,
-                        .05,
-                        0,
-                        4,
-                        3.1,
-                        .5
-                });
+                .05,
+                .05,
+                0,
+                4,
+                3.1,
+                .5
+        );
 
+        // Release the foundation
         foundationGrabbers.release();
+        waitTime(1);
 
-        waitTime(1.5);
-
+        // Push the foundation back into the wall
         runPurePursuitPath(
                 cp_foundationPush,
                 wp_foundationPush,
-                new double[]{
-                        .5,
-                        .1,
-                        .01,
-                        4,
-                        1.7,
-                        1
-                });
+                .5,
+                .1,
+                .01,
+                4,
+                1.7,
+                1
+        );
 
+        // Put the foundation grabbers down
         foundationGrabbers.grab();
 
-        if (!parkAgainstBridge)
+        // Parking
+        if (!parkAgainstBridge) {
             runPurePursuitPath(
                     cp_foundationParkWall,
                     wp_foundationParkWall,
-                    new double[]{
-                            4,
-                            1.7,
-                            1
-                    });
+                    4,
+                    1.7,
+                    1
+            );
+        }
+        else {
+
+        }
 
         displayEndAuto();
     }

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
-@TeleOp(name = "Tile Runner Arcade", group = "DemoBot")
+@TeleOp(name = "Tile Runner", group = "DemoBot")
 
 public class TileRunner extends OpMode {
 

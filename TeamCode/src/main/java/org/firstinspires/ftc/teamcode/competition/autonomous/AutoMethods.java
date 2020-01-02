@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.PurePursuit.*;
 import org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline;
 import org.firstinspires.ftc.teamcode.competition.hardware.*;
+import org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
@@ -30,6 +31,7 @@ public abstract class AutoMethods extends LinearOpMode {
     protected LiftMech lift;
     protected PurePursuit purePursuit;
     protected OpenCvCamera phoneCamera;
+    protected ElapsedTime timer = new ElapsedTime();
 
     protected boolean onRed = false;
     protected boolean parkAgainstBridge = false;
@@ -50,7 +52,7 @@ public abstract class AutoMethods extends LinearOpMode {
      * Initializes all the hardware and pure pursuit for auto
      * Also has instructions for alliance and parking selection
      */
-    protected void initAuto(boolean visionAuto) {
+    protected void initAuto(boolean visionAuto, double robotX, double robotY, double robotTheta) {
         // Initialize all the hardware
         robot.init(hardwareMap);
         drive = new MecanumDrive(robot);
@@ -64,6 +66,9 @@ public abstract class AutoMethods extends LinearOpMode {
         lift.openClose();
         lift.extendRetract();
         foundationGrabbers.grab();
+
+        // Reset robot position to a specified value
+        robot.resetOdometry(robotX, robotY, robotTheta);
 
         // Setup the phone camera for OpenCV
         if (visionAuto) {
@@ -114,7 +119,7 @@ public abstract class AutoMethods extends LinearOpMode {
 
             if (visionAuto) {
                 if (screenPosition.x > 145)
-                    screenPosition.x =
+                    skystonePosition =
                             (screenPosition.x < 190) ? 2 : 1;
                 else
                     skystonePosition = 3;
@@ -128,6 +133,10 @@ public abstract class AutoMethods extends LinearOpMode {
         // End streaming for efficiency
         if (visionAuto)
             phoneCamera.stopStreaming();
+    }
+
+    protected void initAuto(boolean visionAuto) {
+        initAuto(visionAuto, 0, 0, 0);
     }
 
     /**
@@ -152,7 +161,7 @@ public abstract class AutoMethods extends LinearOpMode {
             telemetry.update();
         }
 
-        initAuto(visionAuto);
+        initAuto(visionAuto, 0, 0, 0);
     }
 
     /**
@@ -171,6 +180,8 @@ public abstract class AutoMethods extends LinearOpMode {
      * Displays position data for the end of autonomous
      */
     protected void displayEndAuto() {
+        ThreadPool.renewPool();
+
         while (opModeIsActive()) {
             telemetry.addLine("Auto has ended");
             telemetry.addLine("==========");
@@ -204,29 +215,24 @@ public abstract class AutoMethods extends LinearOpMode {
     /**
      * Runs a Pure Pursuit path with given data until it reaches a specific checkpoint
      *
-     * @param checkPoint Checkpoint at which to stop running path
-     * @param path       Pure Pursuit path to run the robot along
-     * @param pathData   P.I.D. (Optional), look ahead distance, speed, and turn speed information for Pure Pursuit
+     * @param checkPoint    Checkpoint at which to stop running path
+     * @param path          Pure Pursuit path to run the robot along
+     * @param P             Proportional for PID
+     * @param I             Integral for PID
+     * @param D             Derivative for PID
+     * @param lookAheadDist Radius of Pure Pursuit look ahead circle
+     * @param speed         Max speed the robot will follow the path at
+     * @param turnSpeed     Max speed the robot will curve at while following the path
      */
-    public void runPurePursuitPath(CheckPoint checkPoint, ArrayList<WayPoint> path, double[] pathData) {
+    public void runPurePursuitPath(CheckPoint checkPoint, ArrayList<WayPoint> path,
+                                   double P, double I, double D,
+                                   double lookAheadDist, double speed, double turnSpeed) {
         // Flips the path to work for red alliance
         if (onRed)
             flipPurePursuitPath(checkPoint, path);
 
         // Initializes the pure pursuit path and declares the followPath() arguments
-        double lookAheadDistance, speed, turnSpeed;
-        if (pathData.length == 3) {
-            purePursuit.initPath(path);
-            lookAheadDistance = pathData[0];
-            speed = pathData[1];
-            turnSpeed = pathData[2];
-        } else {
-            purePursuit.initPath(path, pathData[0], pathData[1], pathData[2]);
-            lookAheadDistance = pathData[3];
-            speed = pathData[4];
-            turnSpeed = pathData[5];
-        }
-
+        purePursuit.initPath(path, P, I, D);
         // Submits the checkpoint to the thread pool
         pool.submit(checkPoint);
         // Continuously runs the pure pursuit path until the robot hits the checkpoint
@@ -234,7 +240,7 @@ public abstract class AutoMethods extends LinearOpMode {
             telemetry.addData("PID", purePursuit.pos.getPID());
             updateOdometryTelemetry();
 
-            purePursuit.followPath(path, lookAheadDistance, speed, turnSpeed);
+            purePursuit.followPath(path, lookAheadDist, speed, turnSpeed);
         }
         // Stop the robot and expel the checkpoint form the thread pool
         drive.hardBrakeMotors();
@@ -244,6 +250,43 @@ public abstract class AutoMethods extends LinearOpMode {
         if (onRed)
             flipPurePursuitPath(checkPoint, path);
     }
+
+    public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path,
+                                   double lookAheadDist, double speed, double turnSpeed) {
+        runPurePursuitPath(cp, path, .06, .005, .05, lookAheadDist, speed, turnSpeed);
+    }
+
+    public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path) {
+        runPurePursuitPath(cp, path, .06, .005, .05, 4, 1.5, 1);
+    }
+
+    // =======
+    // PARKING
+    // =======
+
+    public CheckPoint
+            cp_parkWall = new CheckPoint(9, 81, 2, robot),
+            cp_parkBridge = new CheckPoint(21, 81, 2, robot);
+
+    public ArrayList<WayPoint>
+            wp_parkWallFromLeft = new ArrayList<>(
+            Arrays.asList(
+                    new WayPoint(9, 81, robot.theta)
+            )),
+            wp_parkWallFromRight = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(9, 81, robot.theta)
+                    )),
+            wp_parkBridgeFromLeft = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(21, 81, robot.theta),
+                            new WayPoint(21, 81, robot.theta)
+                    )),
+            wp_parkBridgeFromRight = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(21, 81, robot.theta),
+                            new WayPoint(21, 81, robot.theta)
+                    ));
 
     // ===============
     // FOUNDATION AUTO
@@ -258,12 +301,11 @@ public abstract class AutoMethods extends LinearOpMode {
     public ArrayList<WayPoint>
             wp_foundationGrab = new ArrayList<>(
             Arrays.asList(
-                    new WayPoint(31.5, 12, 0)
+                    new WayPoint(32, 12, 0)
             )),
             wp_foundationPull = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(0, 12, 0),
-                            new WayPoint(0, 4, 0)
+                            new WayPoint(0, 12, 0)
                     )),
             wp_foundationPush = new ArrayList<>(
                     Arrays.asList(
@@ -276,44 +318,61 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(-1, 70, 0)
                     ));
 
-    // ==========
+    // =============
     // SKYSTONE AUTO
-    // ==========
+    // =============
 
     public CheckPoint
-            cp_grabSkystone_pos1 = new CheckPoint(30, -10, 2, robot),
-            cp_depositSkystone_pos1 = new CheckPoint(16, -60, 2, robot),
-            cp_grabSkystone_pos2 = new CheckPoint(30, -12, 2, robot),
-            cp_depositSkystone_pos2 = new CheckPoint(15, -50, 2, robot),
-            cp_grabSkystone_pos3 = new CheckPoint(30, -21, 2, robot),
-            cp_depositSkystone_pos3 = new CheckPoint(15, -50, 2, robot);
+            cp_grabSkystone1_pos1 = new CheckPoint(42, 100, 1, robot),
+            cp_grabSkystone2_pos1 = new CheckPoint(42, 108, 1, robot),
+            cp_grabSkystone1_pos2 = new CheckPoint(42, 91, 1, robot),
+            cp_grabSkystone2_pos2 = new CheckPoint(42, 99, 1, robot),
+            cp_grabSkystone1_pos3 = new CheckPoint(36, 82, 1, robot),
+            cp_grabSkystone2_pos3 = new CheckPoint(36, 90, 1, robot),
+            cp_prepareForDeposit = new CheckPoint(15, 97, 2, robot),
+            cp_prepareForDepositPos1 = new CheckPoint(15, 97, 3, robot),
+            cp_depositSkystone = new CheckPoint(33, 57, 2, robot),
+            cp_prepareForSecondSkystone = new CheckPoint(15, 97, 2, robot);
 
     public ArrayList<WayPoint>
-            wp_grabSkystone_pos1 = new ArrayList<>(
+            wp_grabSkystone1_pos1 = new ArrayList<>(
             Arrays.asList(
-                    new WayPoint(30, -10, -Math.PI / 2)
+                    new WayPoint(42, 100, 3.7637)
             )),
-            wp_depositSkystone_pos1 = new ArrayList<>(
+            wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(15, -10, -Math.PI / 2),
-                            new WayPoint(15, -60, -Math.PI / 2)
+                            new WayPoint(42, 108, 3.7637)
                     )),
-            wp_grabSkystone_pos2 = new ArrayList<>(
+            wp_grabSkystone1_pos2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(30, -12, -Math.PI / 2)
+                            new WayPoint(42, 91, 3.7637)
                     )),
-            wp_depositSkystone_pos2 = new ArrayList<>(
+            wp_grabSkystone2_pos2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(15, 0, -Math.PI / 2),
-                            new WayPoint(15, -50, -Math.PI / 2)
+                            new WayPoint(42, 99, 3.7637)
                     )),
-            wp_grabSkystone_pos3 = new ArrayList<>(
+            wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(30, -21, -Math.PI / 2)
+                            new WayPoint(36, 82, 3.7637)
                     )),
-            wp_depositSkystone_pos3 = new ArrayList<>(
+            wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(15, 0, -Math.PI / 2),
-                            new WayPoint(15, -50, -Math.PI / 2)
+                            new WayPoint(36, 90, 3.7637)
+                    )),
+            wp_prepareForDeposit = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(15, 97, Math.PI)
+                    )
+            ),
+            wp_depositSkystone = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(24, 106, Math.PI / 2),
+                            new WayPoint(33, 57, Math.PI / 2)
+                    )
+            ),
+            wp_prepareForSecondSkystone = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(24, 106, 3 * Math.PI / 2),
+                            new WayPoint(15, 97, 3 * Math.PI / 2)
                     ));
 }

@@ -64,8 +64,10 @@ public class Teleop extends OpMode {
         // ====================
 
         // Raising the lift mechanism
-        if (Math.abs(gamepad2.right_stick_y) > .05)
+        if (gamepad2.right_stick_y > 0)
             lift.raiseLower(gamepad2.right_stick_y);
+        else if (gamepad2.right_stick_y < 0)
+            lift.raiseLower(gamepad2.right_stick_y/2);
 
         // Extending out the claw
         if (!gamepad2PressedA && gamepad2.a)
