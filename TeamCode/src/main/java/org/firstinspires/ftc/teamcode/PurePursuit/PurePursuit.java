@@ -162,7 +162,7 @@ public class PurePursuit {
         else if (movementTurn < -1.5)
             movementTurn = -1.5;
 
-        // If the robot is sufficiently close to the goal angle, decrease the speed to avoid oscillation
+        // If the robot is sufficiently close to the goal angle increase the speed to allow the robot to hit the angle
         if (Math.abs(movementTurn) < .5)
             movementTurn *= 1.1;
 

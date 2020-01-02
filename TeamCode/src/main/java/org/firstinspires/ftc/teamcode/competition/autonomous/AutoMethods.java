@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline.screenPosition;
+import static org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods.inThreshold;
 import static org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool.pool;
 
 public abstract class AutoMethods extends LinearOpMode {
@@ -175,6 +176,40 @@ public abstract class AutoMethods extends LinearOpMode {
         while (timer.seconds() < seconds && opModeIsActive())
             drive.hardBrakeMotors();
     }
+
+    /**
+     * Does a point turn to reach a specific angle
+     *
+     * @param angle Angle in radians to turn to
+     * @param threshold Threshold the the robot angle must be within
+     */
+    protected void pointTurnToAngle(double angle, double threshold)
+    {
+
+        while(!inThreshold(angle,robot.theta,threshold))
+        {
+
+            double movementTurn = robot.theta - angle;
+            if (movementTurn > Math.PI)
+                movementTurn = Math.PI - movementTurn;
+            else if (movementTurn < -Math.PI)
+                movementTurn = -movementTurn - Math.PI;
+
+            // Cap the turning speed
+            if (movementTurn > 1.5)
+                movementTurn = 1.5;
+            else if (movementTurn < -1.5)
+                movementTurn = -1.5;
+
+            // If the robot is sufficiently close to the goal angle increase the speed to allow the robot to hit the angle
+            if (Math.abs(movementTurn) < .5)
+                movementTurn *= 1.1;
+
+            drive.drive(0,0,movementTurn);
+        }
+
+    }
+
 
     /**
      * Displays position data for the end of autonomous
