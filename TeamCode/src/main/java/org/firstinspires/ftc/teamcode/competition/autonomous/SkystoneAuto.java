@@ -116,7 +116,7 @@ public class SkystoneAuto extends AutoMethods {
                     .05,
                     4,
                     1.5,
-                    .9
+                    .3
             );
         }
         else if (skystonePosition == 2) {
@@ -182,7 +182,7 @@ public class SkystoneAuto extends AutoMethods {
         // Spit out the block
         timer.reset();
         timer.startTime();
-        while (opModeIsActive() && timer.seconds() < .3) {
+        while (opModeIsActive() && timer.seconds() < .6) {
             intake.setPower(1);
         }
         timer.reset();
@@ -197,8 +197,8 @@ public class SkystoneAuto extends AutoMethods {
                     .005,
                     .07,
                     4,
-                    2,
-                    2
+                    1.5,
+                    .5
             );
         }
         else {
@@ -209,8 +209,8 @@ public class SkystoneAuto extends AutoMethods {
                     .005,
                     .07,
                     4,
-                    2,
-                    2
+                    1.5,
+                    .5
             );
         }
 
