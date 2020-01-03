@@ -17,7 +17,7 @@ public class Teleop extends OpMode {
 
     private boolean
             gamepad1PressedB, gamepad1PressedA, gamepad1PressedX,
-            gamepad2PressedA,  gamepad2PressedB;
+            gamepad2PressedA, gamepad2PressedB;
     private boolean startTeleop;
 
     /**
@@ -36,6 +36,14 @@ public class Teleop extends OpMode {
      */
     public void init() {
         robot.init(hardwareMap);
+    }
+
+    @Override
+    public void init_loop() {
+        telemetry.addData("X Position", robot.x);
+        telemetry.addData("Y Position", robot.y);
+        telemetry.addData("Rotation", robot.theta);
+        telemetry.update();
     }
 
     /**
@@ -67,7 +75,7 @@ public class Teleop extends OpMode {
         if (gamepad2.right_stick_y > 0)
             lift.raiseLower(gamepad2.right_stick_y);
         else if (gamepad2.right_stick_y < 0)
-            lift.raiseLower(gamepad2.right_stick_y/2);
+            lift.raiseLower(gamepad2.right_stick_y / 2);
 
         // Extending out the claw
         if (!gamepad2PressedA && gamepad2.a)
@@ -108,6 +116,9 @@ public class Teleop extends OpMode {
             drive.hardBrakeMotors();
         else
             drive.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+
+        if (gamepad1.y)
+            robot.resetOdometry(9, 9, 3 * Math.PI / 2);
 
         // ===================
         // UPDATE CONTROLLERS

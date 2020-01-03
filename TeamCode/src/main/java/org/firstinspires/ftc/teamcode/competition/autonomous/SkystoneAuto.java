@@ -13,17 +13,6 @@ public class SkystoneAuto extends AutoMethods {
         // Release intake
         robot.intakeBlock.setPosition(.5);
 
-        /*
-        New Auto Path:
-        - Robot will start in red depot with phone facing stones
-        - Humans will push robot to proper position
-        - ** Depending on where Skystone is, move to that position
-        - Then move forward and get the block stuck to the intake
-        - Move to the exact same position to deposit a stone
-        - If there is time, grab another
-        - Otherwise, park
-         */
-
         // Goes to position to grab skystone
         if (skystonePosition == 1) {
             runPurePursuitPath(
@@ -62,8 +51,54 @@ public class SkystoneAuto extends AutoMethods {
             );
         }
 
-        // Go and deposit first skystone
-        runWithSkystone();
+        // Move forward to intake the skystone
+        timer.reset();
+        timer.startTime();
+        while (opModeIsActive() &&
+                (skystonePosition != 3 && timer.seconds() < 1.25) ||
+                (skystonePosition == 3 && timer.seconds() < 1.3)) {
+            drive.drive(.25, 0, 0);
+            intake.setPower(-1);
+        }
+        intake.setPower(0);
+        drive.hardBrakeMotors();
+
+        // Drive backwards to be out of way with skystone
+        if (skystonePosition == 1) {
+            runPurePursuitPath(
+                    cp_prepareForDepositPos1,
+                    wp_prepareForDeposit
+            );
+        }
+        else {
+            runPurePursuitPath(
+                    cp_prepareForDeposit,
+                    wp_prepareForDeposit
+            );
+        }
+
+        // Run to build zone with the skystone
+        runPurePursuitPath(
+                cp_depositSkystone,
+                wp_depositSkystone,
+                4,
+                1,
+                .75
+        );
+
+        // Spit out the block
+        timer.reset();
+        timer.startTime();
+        while (opModeIsActive() && timer.seconds() < .3)
+            intake.setPower(1);
+        timer.reset();
+        intake.setPower(0);
+
+
+        // ==========================
+        // WORKS PERFECTLY UP TO HERE
+        // ==========================
+
 
         // Drive back to the quarry
         runPurePursuitPath(
@@ -71,17 +106,17 @@ public class SkystoneAuto extends AutoMethods {
                 wp_prepareForSecondSkystone
         );
 
-        // Goes to position to grab skystone
+        // Goes to position to grab second skystone
         if (skystonePosition == 1) {
             runPurePursuitPath(
                     cp_grabSkystone2_pos1,
                     wp_grabSkystone2_pos1,
                     .15,
-                    .006,
                     0,
+                    .05,
                     4,
-                    1.25,
-                    1
+                    1.5,
+                    .9
             );
         }
         else if (skystonePosition == 2) {
@@ -109,23 +144,10 @@ public class SkystoneAuto extends AutoMethods {
             );
         }
 
-        // Go and deposit second skystone
-        runWithSkystone();
-
-        // Park
-        if (parkAgainstBridge);
-        else;
-
-        displayEndAuto();
-    }
-
-    /**
-     * Pure Pursuit maneuvering with the skystone out of the quarry to deposit in build zone
-     */
-    private void runWithSkystone() {
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
+        // Position 1 and time 1.25 works
         while ((skystonePosition != 3 && timer.seconds() < 1.25) ||
                 (skystonePosition == 3 && timer.seconds() < 1.3) && opModeIsActive()) {
             drive.drive(.25, 0, 0);
@@ -135,20 +157,22 @@ public class SkystoneAuto extends AutoMethods {
         drive.hardBrakeMotors();
 
         // Drive backwards to be out of way with skystone
-        if (skystonePosition == 1)
+        if (skystonePosition == 1) {
             runPurePursuitPath(
-                    cp_prepareForDepositPos1,
+                    cp_prepareForDepositPos1_2,
                     wp_prepareForDeposit
             );
-        else
+        }
+        else {
             runPurePursuitPath(
-                    cp_prepareForDeposit,
+                    cp_prepareForDeposit_2,
                     wp_prepareForDeposit
             );
+        }
 
         // Run to build zone with the skystone
         runPurePursuitPath(
-                cp_depositSkystone,
+                cp_depositSkystone_2,
                 wp_depositSkystone,
                 4,
                 1,
@@ -158,10 +182,38 @@ public class SkystoneAuto extends AutoMethods {
         // Spit out the block
         timer.reset();
         timer.startTime();
-        while (timer.seconds() < .3) {
+        while (opModeIsActive() && timer.seconds() < .3) {
             intake.setPower(1);
         }
         timer.reset();
         intake.setPower(0);
+
+        // Park
+        if (parkAgainstBridge) {
+            runPurePursuitPath(
+                    cp_parkBridge,
+                    wp_parkBridgeFromLeft,
+                    .06,
+                    .005,
+                    .07,
+                    4,
+                    2,
+                    2
+            );
+        }
+        else {
+            runPurePursuitPath(
+                    cp_parkWall,
+                    wp_parkWallFromLeft,
+                    .06,
+                    .005,
+                    .07,
+                    4,
+                    2,
+                    2
+            );
+        }
+
+        displayEndAuto();
     }
 }

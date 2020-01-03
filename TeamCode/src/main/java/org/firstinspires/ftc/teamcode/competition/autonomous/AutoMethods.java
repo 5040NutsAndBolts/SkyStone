@@ -37,6 +37,7 @@ public abstract class AutoMethods extends LinearOpMode {
     protected boolean onRed = false;
     protected boolean parkAgainstBridge = false;
     protected int skystonePosition;
+    protected double autoWait;
 
     /**
      * Updates the robot position and displays it in the telemetry
@@ -94,16 +95,31 @@ public abstract class AutoMethods extends LinearOpMode {
             phoneCamera.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
         }
 
+        boolean dpadUpPressed = false, dpadDownPressed = false;
 
         while (!isStarted() && !isStopRequested()) {
-            if (gamepad1.x || gamepad2.x)
+            if (gamepad1.x || gamepad2.x) {
                 onRed = false;
-            if (gamepad1.b || gamepad2.b)
+                if (robot.y < 0)
+                    robot.y *= -1;
+            }
+            if (gamepad1.b || gamepad2.b) {
                 onRed = true;
+                if (robot.y > 0)
+                    robot.y *= -1;
+            }
             if (gamepad1.y || gamepad2.y)
                 parkAgainstBridge = true;
             if (gamepad1.a || gamepad2.a)
                 parkAgainstBridge = false;
+
+            if (gamepad1.dpad_up || gamepad2.dpad_up && !dpadUpPressed)
+                autoWait += .5;
+            if (gamepad1.dpad_down || gamepad2.dpad_down && !dpadDownPressed)
+                autoWait -= .5;
+            dpadUpPressed = gamepad1.dpad_up || gamepad2.dpad_up;
+            dpadDownPressed = gamepad1.dpad_down || gamepad2.dpad_down;
+
 
             telemetry.addLine("Press X for blue and B for red alliances");
             telemetry.addLine("Press Y for parking against bridge A for against wall");
@@ -116,6 +132,7 @@ public abstract class AutoMethods extends LinearOpMode {
                 telemetry.addLine("Park against neutral bridge");
             else
                 telemetry.addLine("Park against wall");
+            telemetry.addData("Wait time before auto starts", autoWait);
             telemetry.addLine("==========");
 
             if (visionAuto) {
@@ -180,15 +197,11 @@ public abstract class AutoMethods extends LinearOpMode {
     /**
      * Does a point turn to reach a specific angle
      *
-     * @param angle Angle in radians to turn to
+     * @param angle     Angle in radians to turn to
      * @param threshold Threshold the the robot angle must be within
      */
-    protected void pointTurnToAngle(double angle, double threshold)
-    {
-
-        while(!inThreshold(angle,robot.theta,threshold))
-        {
-
+    protected void pointTurnToAngle(double angle, double threshold) {
+        while (!inThreshold(angle, robot.theta, threshold)) {
             double movementTurn = robot.theta - angle;
             if (movementTurn > Math.PI)
                 movementTurn = Math.PI - movementTurn;
@@ -205,9 +218,8 @@ public abstract class AutoMethods extends LinearOpMode {
             if (Math.abs(movementTurn) < .5)
                 movementTurn *= 1.1;
 
-            drive.drive(0,0,movementTurn);
+            drive.drive(0, 0, movementTurn);
         }
-
     }
 
 
@@ -306,21 +318,23 @@ public abstract class AutoMethods extends LinearOpMode {
     public ArrayList<WayPoint>
             wp_parkWallFromLeft = new ArrayList<>(
             Arrays.asList(
-                    new WayPoint(9, 81, robot.theta)
+                    new WayPoint(9, 72, 3 * Math.PI / 2),
+                    new WayPoint(9, 81, 3 * Math.PI / 2)
             )),
             wp_parkWallFromRight = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(9, 81, robot.theta)
+                            new WayPoint(9, 90, Math.PI / 2),
+                            new WayPoint(9, 81, Math.PI / 2)
                     )),
             wp_parkBridgeFromLeft = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(21, 81, robot.theta),
-                            new WayPoint(21, 81, robot.theta)
+                            new WayPoint(21, 72, 3 * Math.PI / 2),
+                            new WayPoint(21, 81, 3 * Math.PI / 2)
                     )),
             wp_parkBridgeFromRight = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(21, 81, robot.theta),
-                            new WayPoint(21, 81, robot.theta)
+                            new WayPoint(21, 90, Math.PI / 2),
+                            new WayPoint(21, 81, Math.PI / 2)
                     ));
 
     // ===============
@@ -359,15 +373,18 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             cp_grabSkystone1_pos1 = new CheckPoint(42, 100, 1, robot),
-            cp_grabSkystone2_pos1 = new CheckPoint(42, 108, 1, robot),
+            cp_grabSkystone2_pos1 = new CheckPoint(48, 130, 1, robot),
             cp_grabSkystone1_pos2 = new CheckPoint(42, 91, 1, robot),
-            cp_grabSkystone2_pos2 = new CheckPoint(42, 99, 1, robot),
+            cp_grabSkystone2_pos2 = new CheckPoint(42, 115, 1, robot),
             cp_grabSkystone1_pos3 = new CheckPoint(36, 82, 1, robot),
-            cp_grabSkystone2_pos3 = new CheckPoint(36, 90, 1, robot),
+            cp_grabSkystone2_pos3 = new CheckPoint(39, 115.5, 1, robot),
             cp_prepareForDeposit = new CheckPoint(15, 97, 2, robot),
             cp_prepareForDepositPos1 = new CheckPoint(15, 97, 3, robot),
             cp_depositSkystone = new CheckPoint(33, 57, 2, robot),
-            cp_prepareForSecondSkystone = new CheckPoint(15, 97, 2, robot);
+            cp_prepareForSecondSkystone = new CheckPoint(15, 97, 3, robot),
+            cp_prepareForDeposit_2 = new CheckPoint(15, 97, 2, robot),
+            cp_prepareForDepositPos1_2 = new CheckPoint(15, 97, 3, robot),
+            cp_depositSkystone_2 = new CheckPoint(33, 57, 2, robot);
 
     public ArrayList<WayPoint>
             wp_grabSkystone1_pos1 = new ArrayList<>(
@@ -376,7 +393,7 @@ public abstract class AutoMethods extends LinearOpMode {
             )),
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(42, 108, 3.7637)
+                            new WayPoint(48, 130, 3 * Math.PI / 2)
                     )),
             wp_grabSkystone1_pos2 = new ArrayList<>(
                     Arrays.asList(
@@ -384,7 +401,7 @@ public abstract class AutoMethods extends LinearOpMode {
                     )),
             wp_grabSkystone2_pos2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(42, 99, 3.7637)
+                            new WayPoint(42, 115, 3.7637)
                     )),
             wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
@@ -392,7 +409,7 @@ public abstract class AutoMethods extends LinearOpMode {
                     )),
             wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(36, 90, 3.7637)
+                            new WayPoint(39, 115.5, 3.955)
                     )),
             wp_prepareForDeposit = new ArrayList<>(
                     Arrays.asList(
@@ -407,7 +424,7 @@ public abstract class AutoMethods extends LinearOpMode {
             ),
             wp_prepareForSecondSkystone = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(24, 106, 3 * Math.PI / 2),
+                            new WayPoint(24, 97, 3 * Math.PI / 2),
                             new WayPoint(15, 97, 3 * Math.PI / 2)
                     ));
 }
