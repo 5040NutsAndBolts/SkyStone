@@ -152,6 +152,8 @@ public class Hardware {
         liftMotor1 = hwMap.dcMotor.get("liftMotor1");
         liftMotor2 = hwMap.dcMotor.get("liftMotor2");
         liftMotor2.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         clawExtension = hwMap.servo.get("clawExtension");
         claw = hwMap.servo.get("claw");
     }

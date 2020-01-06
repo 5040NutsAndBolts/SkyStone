@@ -82,14 +82,14 @@ public class SkystoneAuto extends AutoMethods {
                 cp_depositSkystone,
                 wp_depositSkystone,
                 4,
-                1,
-                .75
+                .9,
+                .3
         );
 
         // Spit out the block
         timer.reset();
         timer.startTime();
-        while (opModeIsActive() && timer.seconds() < .3)
+        while (opModeIsActive() && timer.seconds() < .5)
             intake.setPower(1);
         timer.reset();
         intake.setPower(0);
@@ -137,10 +137,10 @@ public class SkystoneAuto extends AutoMethods {
                     wp_grabSkystone2_pos3,
                     .15,
                     .006,
-                    0,
+                    .8,
                     4,
-                    1.25,
-                    1
+                    1,
+                    .3
             );
         }
 
@@ -148,8 +148,8 @@ public class SkystoneAuto extends AutoMethods {
         timer.reset();
         timer.startTime();
         // Position 1 and time 1.25 works
-        while ((skystonePosition != 3 && timer.seconds() < 1.25) ||
-                (skystonePosition == 3 && timer.seconds() < 1.3) && opModeIsActive()) {
+        while ((skystonePosition != 3 && timer.seconds() < 1.3) ||
+                (skystonePosition == 3 && timer.seconds() < 1.35) && opModeIsActive()) {
             drive.drive(.25, 0, 0);
             intake.setPower(-1);
         }
