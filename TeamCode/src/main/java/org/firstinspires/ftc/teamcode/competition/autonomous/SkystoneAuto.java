@@ -12,6 +12,12 @@ public class SkystoneAuto extends AutoMethods {
 
         // Release intake
         robot.intakeBlock.setPosition(.5);
+        timer.reset();
+        timer.startTime();
+        while(timer.seconds() < .3 && opModeIsActive())
+            intake.setPower(1);
+
+        intake.setPower(0);
 
         // Goes to position to grab skystone
         if (skystonePosition == 1) {
@@ -20,7 +26,7 @@ public class SkystoneAuto extends AutoMethods {
                     wp_grabSkystone1_pos1,
                     .15,
                     .006,
-                    0,
+                    0.1,
                     4,
                     1.25,
                     1
@@ -30,12 +36,12 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos2,
                     wp_grabSkystone1_pos2,
-                    .15,
+                    .155,
                     .006,
-                    0,
+                    0.05,
                     4,
                     1.25,
-                    1
+                    .9
             );
         }
         else if (skystonePosition == 3) {
@@ -123,12 +129,12 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos2,
                     wp_grabSkystone2_pos2,
-                    .15,
+                    .17,
                     .006,
-                    0,
+                    0.05,
                     4,
-                    1.25,
-                    1
+                    1,
+                    .3
             );
         }
         else if (skystonePosition == 3) {
@@ -148,8 +154,8 @@ public class SkystoneAuto extends AutoMethods {
         timer.reset();
         timer.startTime();
         // Position 1 and time 1.25 works
-        while ((skystonePosition != 3 && timer.seconds() < 1.3) ||
-                (skystonePosition == 3 && timer.seconds() < 1.35) && opModeIsActive()) {
+        while ((skystonePosition != 3 && timer.seconds() < 1.25) ||
+                (skystonePosition == 3 && timer.seconds() < 1.1) && opModeIsActive()) {
             drive.drive(.25, 0, 0);
             intake.setPower(-1);
         }
