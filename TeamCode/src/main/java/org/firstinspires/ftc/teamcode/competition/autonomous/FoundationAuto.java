@@ -17,10 +17,10 @@ public class FoundationAuto extends AutoMethods {
                 cp_foundationGrab,
                 wp_foundationGrab,
                 .4,
-                .005,
-                .55,
+                0,
+                .6,
                 4,
-                2,
+                1.5,
                 1.2
         );
 
@@ -28,17 +28,13 @@ public class FoundationAuto extends AutoMethods {
         foundationGrabbers.grab();
         waitTime(1);
 
-        // Pull foundation back
-        runPurePursuitPath(
-                cp_foundationPull,
-                wp_foundationPull,
-                .1,
-                .05,
-                0,
-                4,
-                3.1,
-                .5
-        );
+        // Pull the foundation backwards for 4 seconds just for redundancy with the odometry
+        timer.reset();
+        timer.startTime();
+        while (opModeIsActive() && timer.seconds() < 2)
+            drive.drive(.4, 0, 0);
+        drive.hardBrakeMotors();
+        robot.resetOdometry(0, robot.y, 0);
 
         // Release the foundation
         foundationGrabbers.release();
@@ -68,9 +64,14 @@ public class FoundationAuto extends AutoMethods {
                     1.7,
                     1
             );
-        }
-        else {
-
+        } else {
+            runPurePursuitPath(
+                    cp_parkBridge,
+                    wp_parkBridgeFromLeft,
+                    4,
+                    1.7,
+                    1
+            );
         }
 
         displayEndAuto();

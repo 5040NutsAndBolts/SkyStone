@@ -392,7 +392,6 @@ public class FtcRobotControllerActivity extends Activity
     }
 
     FtcDashboard.start();
-
   }
 
   protected UpdateUI createUpdateUI() {
@@ -477,7 +476,6 @@ public class FtcRobotControllerActivity extends Activity
     RobotLog.cancelWriteLogcatToDisk();
 
     FtcDashboard.stop();
-
   }
 
   protected void bindToService() {
@@ -706,7 +704,6 @@ public class FtcRobotControllerActivity extends Activity
     });
 
     FtcDashboard.attachWebServer(service.getWebServer());
-
   }
 
   private void updateUIAndRequestRobotSetup() {
@@ -747,8 +744,7 @@ public class FtcRobotControllerActivity extends Activity
     passReceivedUsbAttachmentsToEventLoop();
     AndroidBoard.showErrorIfUnknownControlHub();
 
-  FtcDashboard.attachEventLoop(eventLoop);
-
+    FtcDashboard.attachEventLoop(eventLoop);
   }
 
   protected OpModeRegister createOpModeRegister() {

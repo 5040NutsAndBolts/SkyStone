@@ -71,6 +71,7 @@ public abstract class AutoMethods extends LinearOpMode {
         lift.openClose();
         lift.extendRetract();
         foundationGrabbers.grab();
+        robot.intakeBlock.setPosition(1);
 
         // Reset robot position to a specified value
         robot.resetOdometry(robotX, robotY, robotTheta);
@@ -361,7 +362,6 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             cp_foundationGrab = new CheckPoint(31.5, 12, 2, robot),
-            cp_foundationPull = new CheckPoint(-1, 12, 3, robot),
             cp_foundationPush = new CheckPoint(20, 36, 1, robot),
             cp_foundationParkWall = new CheckPoint(-1, 70, 2, robot);
 
@@ -370,10 +370,6 @@ public abstract class AutoMethods extends LinearOpMode {
             Arrays.asList(
                     new WayPoint(32, 12, 0)
             )),
-            wp_foundationPull = new ArrayList<>(
-                    Arrays.asList(
-                            new WayPoint(-1, 12, 0)
-                    )),
             wp_foundationPush = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(-1, 48, 0),
