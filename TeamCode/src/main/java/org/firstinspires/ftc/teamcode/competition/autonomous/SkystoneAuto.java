@@ -10,13 +10,15 @@ public class SkystoneAuto extends AutoMethods {
     public void runOpMode() {
         initAuto(true, 9, 135, 3 * Math.PI / 2);
 
+        robot.resetOdometry(9, robot.y, robot.theta);
+
         // Release intake
         robot.intakeBlock.setPosition(.5);
         timer.reset();
         timer.startTime();
-        while(timer.seconds() < .3 && opModeIsActive())
-            intake.setPower(1);
-
+        while (timer.seconds() < .5 && opModeIsActive())
+            if (timer.seconds() > .3)
+                intake.setPower(1);
         intake.setPower(0);
 
         // Goes to position to grab skystone
@@ -88,8 +90,8 @@ public class SkystoneAuto extends AutoMethods {
                 cp_depositSkystone,
                 wp_depositSkystone,
                 4,
-                .9,
-                .3
+                .75,
+                .25
         );
 
         // Spit out the block
@@ -109,7 +111,10 @@ public class SkystoneAuto extends AutoMethods {
         // Drive back to the quarry
         runPurePursuitPath(
                 cp_prepareForSecondSkystone,
-                wp_prepareForSecondSkystone
+                wp_prepareForSecondSkystone,
+                4,
+                .75,
+                .5
         );
 
         // Goes to position to grab second skystone
@@ -119,7 +124,7 @@ public class SkystoneAuto extends AutoMethods {
                     wp_grabSkystone2_pos1,
                     .15,
                     0,
-                    .05,
+                    .1,
                     4,
                     1.5,
                     .3
@@ -154,10 +159,18 @@ public class SkystoneAuto extends AutoMethods {
         timer.reset();
         timer.startTime();
         // Position 1 and time 1.25 works
-        while ((skystonePosition != 3 && timer.seconds() < 1.25) ||
-                (skystonePosition == 3 && timer.seconds() < 1.1) && opModeIsActive()) {
-            drive.drive(.25, 0, 0);
-            intake.setPower(-1);
+        if (skystonePosition == 1) {
+            while(timer.seconds() < .75 && opModeIsActive()) {
+                drive.drive(.25,0,0);
+                intake.setPower(-.75);
+            }
+        }
+        else {
+            while (((skystonePosition == 2 && timer.seconds() < 1.25) ||
+                    (skystonePosition == 3 && timer.seconds() < 1.1)) && opModeIsActive()) {
+                drive.drive(.25, 0, 0);
+                intake.setPower(-1);
+            }
         }
         intake.setPower(0);
         drive.hardBrakeMotors();
@@ -181,8 +194,8 @@ public class SkystoneAuto extends AutoMethods {
                 cp_depositSkystone_2,
                 wp_depositSkystone,
                 4,
-                1,
-                .75
+                .75,
+                .5
         );
 
         // Spit out the block
@@ -206,8 +219,7 @@ public class SkystoneAuto extends AutoMethods {
                     1.5,
                     .5
             );
-        }
-        else {
+        } else {
             runPurePursuitPath(
                     cp_parkWall,
                     wp_parkWallFromLeft,

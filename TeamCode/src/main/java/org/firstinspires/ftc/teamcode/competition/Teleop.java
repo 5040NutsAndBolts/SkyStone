@@ -19,6 +19,7 @@ public class Teleop extends OpMode {
             gamepad1PressedB, gamepad1PressedA, gamepad1PressedX,
             gamepad2PressedA, gamepad2PressedB;
     private boolean startTeleop;
+    private boolean slowMode = false;
 
     /**
      * Instantiates objects
@@ -75,7 +76,7 @@ public class Teleop extends OpMode {
         if (gamepad2.right_stick_y > .05)
             lift.raiseLower(-gamepad2.right_stick_y);
         else if (gamepad2.right_stick_y < -.05)
-            lift.raiseLower(-gamepad2.right_stick_y );
+            lift.raiseLower(-gamepad2.right_stick_y);
         else
             lift.raiseLower(0);
 
@@ -113,12 +114,23 @@ public class Teleop extends OpMode {
         if (gamepad1.right_bumper)
             foundationGrabbers.grab();
 
+        // Slow mode for the drive train
+        if (gamepad1.left_stick_button)
+            slowMode = true;
+        else
+            slowMode = false;
+
         // Drive Train
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
             drive.hardBrakeMotors();
-        else
-            drive.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+        else {
+            if (!slowMode)
+                drive.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+            else
+                drive.drive(-gamepad1.left_stick_y / 2, gamepad1.left_stick_x / 2, -gamepad1.right_stick_x / 2);
+        }
 
+        // TeleOp debugging
         if (gamepad1.y)
             robot.resetOdometry(9, 9, 3 * Math.PI / 2);
 

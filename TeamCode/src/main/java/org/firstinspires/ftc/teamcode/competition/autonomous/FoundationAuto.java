@@ -32,7 +32,7 @@ public class FoundationAuto extends AutoMethods {
         runPurePursuitPath(
                 cp_foundationPull,
                 wp_foundationPull,
-                .05,
+                .1,
                 .05,
                 0,
                 4,

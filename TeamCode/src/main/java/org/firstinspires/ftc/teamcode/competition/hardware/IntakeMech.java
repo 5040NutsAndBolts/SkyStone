@@ -4,7 +4,6 @@ public class IntakeMech {
 
     private Hardware robot;
     public double intakeSpeed = 1;
-    private boolean released = false;
 
     public IntakeMech(Hardware r) {
         robot = r;

@@ -64,6 +64,9 @@ public abstract class AutoMethods extends LinearOpMode {
         lift = new LiftMech(robot);
         purePursuit = new PurePursuit(robot);
 
+        if (onRed)
+            robot.resetOdometry(robot.x, -robot.y, robot.theta + Math.PI);
+
         // Keep hardware from unintentionally moving around
         lift.openClose();
         lift.extendRetract();
@@ -99,15 +102,16 @@ public abstract class AutoMethods extends LinearOpMode {
 
         while (!isStarted() && !isStopRequested()) {
             if (gamepad1.x || gamepad2.x) {
+                if (onRed)
+                    robot.resetOdometry(robot.x, -robot.y, robot.theta + Math.PI);
                 onRed = false;
-                if (robot.y < 0)
-                    robot.y *= -1;
             }
             if (gamepad1.b || gamepad2.b) {
+                if (!onRed)
+                    robot.resetOdometry(robot.x, -robot.y, robot.theta + Math.PI);
                 onRed = true;
-                if (robot.y > 0)
-                    robot.y *= -1;
             }
+
             if (gamepad1.y || gamepad2.y)
                 parkAgainstBridge = true;
             if (gamepad1.a || gamepad2.a)
@@ -282,12 +286,22 @@ public abstract class AutoMethods extends LinearOpMode {
         purePursuit.initPath(path, P, I, D);
         // Submits the checkpoint to the thread pool
         pool.submit(checkPoint);
+        // Start a timer to count down so the robot doesn't take too long getting to a checkpoint
+        timer.reset();
+        timer.startTime();
         // Continuously runs the pure pursuit path until the robot hits the checkpoint
         while (opModeIsActive() && !checkPoint.isHit) {
             telemetry.addData("PID", purePursuit.pos.getPID());
             updateOdometryTelemetry();
 
             purePursuit.followPath(path, lookAheadDist, speed, turnSpeed);
+
+            // If its been more than 5 seconds and the checkpoint hasn't been hit, just say it has
+            if (timer.seconds() >= 5) {
+                checkPoint.isHit = true;
+                checkPoint.onHit();
+                checkPoint.terminate();
+            }
         }
         // Stop the robot and expel the checkpoint form the thread pool
         drive.hardBrakeMotors();
@@ -313,32 +327,32 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Parking against the wall
-            cp_parkWall = new CheckPoint(9, 77, 2, robot),
+            cp_parkWall = new CheckPoint(9, 70, 2, robot),
             // Parking against the neutral bridge
-            cp_parkBridge = new CheckPoint(21, 77, 2, robot);
+            cp_parkBridge = new CheckPoint(21, 70, 2, robot);
 
     public ArrayList<WayPoint>
             // Robot quickly rotates then moves next to the wall and slides down
             wp_parkWallFromLeft = new ArrayList<>(
             Arrays.asList(
                     new WayPoint(9, 68, Math.PI / 2),
-                    new WayPoint(9, 77, Math.PI / 2)
+                    new WayPoint(9, 70, Math.PI / 2)
             )),
             wp_parkWallFromRight = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(9, 90, Math.PI / 2),
-                            new WayPoint(9, 77, Math.PI / 2)
+                            new WayPoint(9, 70, Math.PI / 2)
                     )),
             // Robot quickly rotates then moves up to near the neutral bridge and over to park
             wp_parkBridgeFromLeft = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(21, 72, 3 * Math.PI / 2),
-                            new WayPoint(21, 77, 3 * Math.PI / 2)
+                            new WayPoint(21, 70, 3 * Math.PI / 2)
                     )),
             wp_parkBridgeFromRight = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(21, 90, 3 * Math.PI / 2),
-                            new WayPoint(21, 77, 3 * Math.PI / 2)
+                            new WayPoint(21, 70, 3 * Math.PI / 2)
                     ));
 
     // ===============
@@ -347,7 +361,7 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             cp_foundationGrab = new CheckPoint(31.5, 12, 2, robot),
-            cp_foundationPull = new CheckPoint(0, 4, 4, robot),
+            cp_foundationPull = new CheckPoint(-1, 12, 3, robot),
             cp_foundationPush = new CheckPoint(20, 36, 1, robot),
             cp_foundationParkWall = new CheckPoint(-1, 70, 2, robot);
 
@@ -358,7 +372,7 @@ public abstract class AutoMethods extends LinearOpMode {
             )),
             wp_foundationPull = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(0, 12, 0)
+                            new WayPoint(-1, 12, 0)
                     )),
             wp_foundationPush = new ArrayList<>(
                     Arrays.asList(
@@ -377,9 +391,9 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Position to grab the right most skystone closest to the sky bridge
-            cp_grabSkystone1_pos1 = new CheckPoint(42, 100, 1, robot),
+            cp_grabSkystone1_pos1 = new CheckPoint(42, 100, 1.5, robot),
             // Position to grab the right most skystone closest to the wall
-            cp_grabSkystone2_pos1 = new CheckPoint(53, 118, 1.25, robot),
+            cp_grabSkystone2_pos1 = new CheckPoint(52, 122, 1.5, robot),
 
             // Position to grab the middle skystone closest to the sky bridge
             cp_grabSkystone1_pos2 = new CheckPoint(43, 91, 1.2, robot),
@@ -407,30 +421,35 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_depositSkystone_2 = new CheckPoint(33, 57, 2, robot);
 
     public ArrayList<WayPoint>
+            // Right most skystone paths
             wp_grabSkystone1_pos1 = new ArrayList<>(
             Arrays.asList(
                     new WayPoint(42, 100, 3.7637)
             )),
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(47, 118, 3 * Math.PI / 2)
+                            new WayPoint(42, 122, 3 * Math.PI / 2),
+                            new WayPoint(52, 122, 3 * Math.PI / 2)
                     )),
+            // Middle skystone paths
             wp_grabSkystone1_pos2 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(43, 91, 3.9637)
                     )),
             wp_grabSkystone2_pos2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(53, 114, 3*Math.PI/2)
+                            new WayPoint(53, 114, 3 * Math.PI / 2)
                     )),
+            // Left most skystone paths
             wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(36, 82, 3.7637)
                     )),
             wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(53, 102, 3*Math.PI/2)
+                            new WayPoint(53, 102, 3 * Math.PI / 2)
                     )),
+            // Depositing the skystones
             wp_prepareForDeposit = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(19, 97, Math.PI)
@@ -442,6 +461,7 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(33, 57, Math.PI / 2)
                     )
             ),
+            // Moving to grab the second skystone
             wp_prepareForSecondSkystone = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(24, 97, 3 * Math.PI / 2),

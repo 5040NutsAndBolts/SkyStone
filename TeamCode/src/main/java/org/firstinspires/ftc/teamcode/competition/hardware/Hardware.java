@@ -29,9 +29,10 @@ import java.util.List;
 public class Hardware {
 
     public ThreeTrackingWheelLocalizer odom = new ThreeTrackingWheelLocalizer(
-            new ArrayList<>(Arrays.asList(new Pose2d(8.03  , 0, Math.PI / 2),
-                    new Pose2d(0, 8.51, 0),
-                    new Pose2d(0, -8.51, 0)))) {
+            new ArrayList<>(Arrays.asList(
+                    new Pose2d(8.03  , 0, Math.PI / 2),
+                    new Pose2d(0, 8.511, 0),
+                    new Pose2d(0, -8.511, 0)))) {
         @Override
         public List<Double> getWheelPositions() {
             ArrayList<Double> wheelPositions = new ArrayList<>(3);
