@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -30,7 +29,7 @@ public class Hardware {
 
     public ThreeTrackingWheelLocalizer odom = new ThreeTrackingWheelLocalizer(
             new ArrayList<>(Arrays.asList(
-                    new Pose2d(8.03  , 0, Math.PI / 2),
+                    new Pose2d(8.03, 0, Math.PI / 2),
                     new Pose2d(0, 8.511, 0),
                     new Pose2d(0, -8.511, 0)))) {
         @Override
@@ -150,12 +149,18 @@ public class Hardware {
         foundationGrabber2.setDirection(Servo.Direction.REVERSE);
 
         // Lift mechanism
+        // Lift motor 1
         liftMotor1 = hwMap.dcMotor.get("liftMotor1");
-        liftMotor2 = hwMap.dcMotor.get("liftMotor2");
-        liftMotor2.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Lift motor 2
+        liftMotor2 = hwMap.dcMotor.get("liftMotor2");
+        liftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor2.setDirection(DcMotor.Direction.REVERSE);
         liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Claw extension
         clawExtension = hwMap.servo.get("clawExtension");
+        // Claw grabber
         claw = hwMap.servo.get("claw");
     }
 

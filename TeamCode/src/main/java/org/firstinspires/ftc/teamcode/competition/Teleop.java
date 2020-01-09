@@ -17,7 +17,7 @@ public class Teleop extends OpMode {
 
     private boolean
             gamepad1PressedB, gamepad1PressedA, gamepad1PressedX,
-            gamepad2PressedA, gamepad2PressedB;
+            gamepad2PressedA, gamepad2PressedX;
     private boolean startTeleop;
     private boolean slowMode = false;
 
@@ -52,6 +52,7 @@ public class Teleop extends OpMode {
      */
     @Override
     public void loop() {
+        // Initialize servos upon starting teleop
         if (!startTeleop) {
             robot.intakeBlock.setPosition(.5);
             lift.openClose();
@@ -61,8 +62,6 @@ public class Teleop extends OpMode {
         }
 
         robot.updatePositionRoadRunner();
-        telemetry.addData("Intake speed", intake.intakeSpeed);
-        telemetry.addLine("=========");
         telemetry.addData("X Position", robot.x);
         telemetry.addData("Y Position", robot.y);
         telemetry.addData("Rotation", robot.theta);
@@ -73,20 +72,15 @@ public class Teleop extends OpMode {
         // ====================
 
         // Raising the lift mechanism
-        if (gamepad2.right_stick_y > .05)
-            lift.raiseLower(-gamepad2.right_stick_y);
-        else if (gamepad2.right_stick_y < -.05)
-            lift.raiseLower(-gamepad2.right_stick_y);
-        else
-            lift.raiseLower(0);
+        lift.raiseLower(gamepad2.left_stick_y);
 
         // Extending out the claw
         if (!gamepad2PressedA && gamepad2.a)
-            lift.extendRetract();
+            lift.openClose();
 
         // Open/close the claw
-        if (!gamepad2PressedB && gamepad2.b)
-            lift.openClose();
+        if (!gamepad2PressedX && gamepad2.x)
+            lift.extendRetract();
 
         // =======================
         // Bottom Half (Gamepad 1) - Intake, Drive, Foundation Grabbers
@@ -115,10 +109,7 @@ public class Teleop extends OpMode {
             foundationGrabbers.grab();
 
         // Slow mode for the drive train
-        if (gamepad1.left_stick_button)
-            slowMode = true;
-        else
-            slowMode = false;
+        slowMode = gamepad1.left_stick_button || gamepad1.right_stick_button;
 
         // Drive Train
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
@@ -145,6 +136,6 @@ public class Teleop extends OpMode {
 
         // Gamepad 2
         gamepad2PressedA = gamepad2.a;
-        gamepad2PressedB = gamepad2.b;
+        gamepad2PressedX = gamepad2.x;
     }
 }
