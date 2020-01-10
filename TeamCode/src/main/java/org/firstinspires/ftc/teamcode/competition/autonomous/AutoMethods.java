@@ -104,12 +104,12 @@ public abstract class AutoMethods extends LinearOpMode {
         while (!isStarted() && !isStopRequested()) {
             if (gamepad1.x || gamepad2.x) {
                 if (onRed)
-                    robot.resetOdometry(robot.x, -robot.y, robot.theta + Math.PI);
+                    robot.resetOdometry(robot.x, -robot.y, robot.theta);
                 onRed = false;
             }
             if (gamepad1.b || gamepad2.b) {
                 if (!onRed)
-                    robot.resetOdometry(robot.x, -robot.y, robot.theta + Math.PI);
+                    robot.resetOdometry(robot.x, -robot.y, robot.theta);
                 onRed = true;
             }
 

@@ -31,7 +31,7 @@ public class FoundationAuto extends AutoMethods {
         // Pull the foundation backwards for 4 seconds just for redundancy with the odometry
         timer.reset();
         timer.startTime();
-        while (opModeIsActive() && timer.seconds() < 2)
+        while (opModeIsActive() && timer.seconds() < 3)
             drive.drive(.4, 0, 0);
         drive.hardBrakeMotors();
         robot.resetOdometry(0, robot.y, 0);

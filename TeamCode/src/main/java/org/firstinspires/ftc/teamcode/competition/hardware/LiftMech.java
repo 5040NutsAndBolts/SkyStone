@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 public class LiftMech {
 
     private Hardware robot;
-    private boolean clawOpen = true;
+    public boolean clawOpen = true;
     private boolean clawExtended = true;
 
     public LiftMech(Hardware robot) { this.robot = robot; }

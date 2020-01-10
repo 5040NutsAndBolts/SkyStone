@@ -16,7 +16,7 @@ public class Teleop extends OpMode {
     private LiftMech lift;
 
     private boolean
-            gamepad1PressedB, gamepad1PressedA, gamepad1PressedX,
+            gamepad1PressedB, gamepad1PressedA, gamepad1PressedY,
             gamepad2PressedA, gamepad2PressedX;
     private boolean startTeleop;
     private boolean slowMode = false;
@@ -61,6 +61,11 @@ public class Teleop extends OpMode {
             startTeleop = true;
         }
 
+        if (lift.clawOpen)
+            telemetry.addLine("Claw LOOSE");
+        else
+            telemetry.addLine("Claw GRABBING");
+        telemetry.addLine("==========");
         robot.updatePositionRoadRunner();
         telemetry.addData("X Position", robot.x);
         telemetry.addData("Y Position", robot.y);
@@ -87,11 +92,11 @@ public class Teleop extends OpMode {
         // =======================
 
         // Controlling the speed of the intake
-        if (!gamepad1PressedB && gamepad1.b)
+        if (!gamepad1PressedA && gamepad1.a)
             intake.intakeSpeed = .25;
-        else if (!gamepad1PressedA && gamepad1.a)
+        else if (!gamepad1PressedB && gamepad1.b)
             intake.intakeSpeed = .5;
-        else if (!gamepad1PressedX && gamepad1.x)
+        else if (!gamepad1PressedY && gamepad1.y)
             intake.intakeSpeed = 1;
 
         // Intake/Outtake
@@ -118,7 +123,7 @@ public class Teleop extends OpMode {
             if (!slowMode)
                 drive.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
             else
-                drive.drive(-gamepad1.left_stick_y / 2, gamepad1.left_stick_x / 2, -gamepad1.right_stick_x / 2);
+                drive.drive(-gamepad1.left_stick_y / 4, gamepad1.left_stick_x / 4, -gamepad1.right_stick_x / 4);
         }
 
         // TeleOp debugging
@@ -132,7 +137,7 @@ public class Teleop extends OpMode {
         // Gamepad 1
         gamepad1PressedA = gamepad1.a;
         gamepad1PressedB = gamepad1.b;
-        gamepad1PressedX = gamepad1.x;
+        gamepad1PressedY = gamepad1.y;
 
         // Gamepad 2
         gamepad2PressedA = gamepad2.a;
