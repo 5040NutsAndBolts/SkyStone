@@ -21,11 +21,11 @@ public class LiftMech {
     }
 
     public void openClaw() {
-        robot.claw.setPosition(1);
+        robot.claw.setPosition(.1);
     }
 
     public void closeClaw() {
-        robot.claw.setPosition(.1);
+        robot.claw.setPosition(1);
     }
 
     /**
@@ -41,11 +41,11 @@ public class LiftMech {
     }
 
     public void extendClaw() {
-        robot.clawExtension.setPosition(0);
+        robot.clawExtension.setPosition(1);
     }
 
     public void retractClaw() {
-        robot.clawExtension.setPosition(1);
+        robot.clawExtension.setPosition(0);
     }
 
     /**

@@ -363,7 +363,8 @@ public abstract class AutoMethods extends LinearOpMode {
     public CheckPoint
             cp_foundationGrab = new CheckPoint(31.5, 12, 2, robot),
             cp_foundationPush = new CheckPoint(20, 36, 1, robot),
-            cp_foundationParkWall = new CheckPoint(-1, 70, 2, robot);
+            cp_foundationPushImproved = new CheckPoint(51, 15, 2, robot),
+            cp_foundationParkPrep = new CheckPoint(36, 34 + 9.5, 2, robot);
 
     public ArrayList<WayPoint>
             wp_foundationGrab = new ArrayList<>(
@@ -375,11 +376,17 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(-1, 48, 0),
                             new WayPoint(20, 36, 0)
                     )),
-            wp_foundationParkWall = new ArrayList<>(
+            wp_foundationPushImproved = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(1, 45, 0),
-                            new WayPoint(-1, 70, 0)
-                    ));
+                            new WayPoint(0, 48, 0),
+                            new WayPoint(56,48,0),
+                            new WayPoint(51,15,0)
+                    )),
+            wp_foundationParkPrep = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(0, 0, 0)
+                    )
+            );
 
     // =============
     // SKYSTONE AUTO

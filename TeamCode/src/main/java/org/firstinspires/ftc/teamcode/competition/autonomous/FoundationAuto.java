@@ -40,7 +40,7 @@ public class FoundationAuto extends AutoMethods {
         foundationGrabbers.release();
         waitTime(1);
 
-        // Push the foundation back into the wall
+        /* Push the foundation back into the wall
         runPurePursuitPath(
                 cp_foundationPush,
                 wp_foundationPush,
@@ -50,6 +50,18 @@ public class FoundationAuto extends AutoMethods {
                 4,
                 1.7,
                 1
+        );*/
+
+        // Push foundation towards the alliance wall
+        runPurePursuitPath(
+                cp_foundationPushImproved,
+                wp_foundationPushImproved
+        );
+
+        // Move to be in position to park
+        runPurePursuitPath(
+                cp_foundationParkPrep,
+                wp_foundationParkPrep
         );
 
         // Put the foundation grabbers down
@@ -58,8 +70,8 @@ public class FoundationAuto extends AutoMethods {
         // Parking
         if (!parkAgainstBridge) {
             runPurePursuitPath(
-                    cp_foundationParkWall,
-                    wp_foundationParkWall,
+                    cp_parkWall,
+                    wp_parkWallFromLeft,
                     4,
                     1.7,
                     1

@@ -15,9 +15,7 @@ public class Teleop extends OpMode {
     private FoundationGrabbers foundationGrabbers;
     private LiftMech lift;
 
-    private boolean
-            gamepad1PressedB, gamepad1PressedA, gamepad1PressedY,
-            gamepad2PressedA, gamepad2PressedX;
+    private boolean gamepad1PressedB, gamepad1PressedA, gamepad1PressedY, gamepad1PressedX;
     private boolean startTeleop;
     private boolean slowMode = false;
 
@@ -55,17 +53,12 @@ public class Teleop extends OpMode {
         // Initialize servos upon starting teleop
         if (!startTeleop) {
             robot.intakeBlock.setPosition(.5);
-            lift.openClose();
-            lift.extendRetract();
-            foundationGrabbers.grab();
+            lift.closeClaw();
+            lift.retractClaw();
+            foundationGrabbers.release();
             startTeleop = true;
         }
 
-        if (lift.clawOpen)
-            telemetry.addLine("Claw LOOSE");
-        else
-            telemetry.addLine("Claw GRABBING");
-        telemetry.addLine("==========");
         robot.updatePositionRoadRunner();
         telemetry.addData("X Position", robot.x);
         telemetry.addData("Y Position", robot.y);
@@ -73,19 +66,23 @@ public class Teleop extends OpMode {
         telemetry.update();
 
         // ====================
-        // Top Half (Gamepad 2) - Lift, Claw, Claw Extension
+        // Top Half (Gamepad 2) - Lift, Claw Grabber/Extension
         // ====================
 
         // Raising the lift mechanism
         lift.raiseLower(gamepad2.left_stick_y);
 
         // Extending out the claw
-        if (!gamepad2PressedA && gamepad2.a)
-            lift.openClose();
+        if (gamepad2.x)
+            lift.extendClaw();
+        if (gamepad2.b)
+            lift.retractClaw();
 
         // Open/close the claw
-        if (!gamepad2PressedX && gamepad2.x)
-            lift.extendRetract();
+        if (gamepad2.a)
+            lift.closeClaw();
+        if (gamepad2.y)
+            lift.openClaw();
 
         // =======================
         // Bottom Half (Gamepad 1) - Intake, Drive, Foundation Grabbers
@@ -114,7 +111,8 @@ public class Teleop extends OpMode {
             foundationGrabbers.grab();
 
         // Slow mode for the drive train
-        slowMode = gamepad1.left_stick_button || gamepad1.right_stick_button;
+        if (gamepad1.x && !gamepad1PressedX)
+            slowMode = !slowMode;
 
         // Drive Train
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
@@ -127,7 +125,7 @@ public class Teleop extends OpMode {
         }
 
         // TeleOp debugging
-        if (gamepad1.y)
+        if (gamepad1.back)
             robot.resetOdometry(9, 9, 3 * Math.PI / 2);
 
         // ===================
@@ -138,9 +136,6 @@ public class Teleop extends OpMode {
         gamepad1PressedA = gamepad1.a;
         gamepad1PressedB = gamepad1.b;
         gamepad1PressedY = gamepad1.y;
-
-        // Gamepad 2
-        gamepad2PressedA = gamepad2.a;
-        gamepad2PressedX = gamepad2.x;
+        gamepad1PressedX = gamepad1.x;
     }
 }
