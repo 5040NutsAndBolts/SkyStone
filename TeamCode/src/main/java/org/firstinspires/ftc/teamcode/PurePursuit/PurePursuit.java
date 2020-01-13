@@ -192,6 +192,7 @@ public class PurePursuit {
         // Sets the point where the robot moves to when the path moves outside its FOV
         lastGoal[0] = path.get(0).x;
         lastGoal[1] = path.get(0).y;
+        lastGoal[2] = 1;
     }
 
     /**

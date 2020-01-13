@@ -219,7 +219,8 @@ public class SkystoneAuto extends AutoMethods {
                     1.5,
                     .5
             );
-        } else {
+        }
+        else {
             runPurePursuitPath(
                     cp_parkWall,
                     wp_parkWallFromLeft,

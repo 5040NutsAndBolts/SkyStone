@@ -155,6 +155,10 @@ public class SkystonePipeline extends OpenCvPipeline {
         // Sets the "best fit" rectangle to be the chosen skystone
         skystoneRect = bestRect;
 
+        // Draws rectangles to emulate where the robot can't see due to the crop
+        Imgproc.rectangle();
+        Imgproc.rectangle();
+
         // Sets which viewport render to use
         switch (stageToRenderToViewport) {
             case REFLECT_THRESHOLD:

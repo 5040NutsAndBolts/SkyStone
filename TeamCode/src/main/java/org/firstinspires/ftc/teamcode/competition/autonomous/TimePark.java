@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
+
 @Autonomous(group="Auto",name = "Time Park")
 public class TimePark extends AutoMethods {
 
@@ -15,6 +17,7 @@ public class TimePark extends AutoMethods {
 
         robot.init(hardwareMap);
         // Lets us move the robot during auto (disables brakes)
+        drive = new MecanumDrive(robot);
         drive.softBrakeMotors();
 
         while (!isStarted()) {

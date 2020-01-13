@@ -18,7 +18,7 @@ public class FoundationAuto extends AutoMethods {
                 wp_foundationGrab,
                 .4,
                 0,
-                .6,
+                .7,
                 4,
                 1.5,
                 1.2
@@ -64,22 +64,19 @@ public class FoundationAuto extends AutoMethods {
                 wp_foundationParkPrep
         );
 
-        // Put the foundation grabbers down
-        foundationGrabbers.grab();
-
         // Parking
         if (!parkAgainstBridge) {
             runPurePursuitPath(
-                    cp_parkWall,
-                    wp_parkWallFromLeft,
+                    cp_foundationParkWall,
+                    wp_foundationParkWall,
                     4,
                     1.7,
                     1
             );
         } else {
             runPurePursuitPath(
-                    cp_parkBridge,
-                    wp_parkBridgeFromLeft,
+                    cp_foundationParkBridge,
+                    wp_foundationParkBridge,
                     4,
                     1.7,
                     1

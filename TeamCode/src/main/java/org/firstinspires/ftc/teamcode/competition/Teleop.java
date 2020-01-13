@@ -18,6 +18,7 @@ public class Teleop extends OpMode {
     private boolean gamepad1PressedB, gamepad1PressedA, gamepad1PressedY, gamepad1PressedX;
     private boolean startTeleop;
     private boolean slowMode = false;
+    private boolean debugging = false;
 
     /**
      * Instantiates objects
@@ -39,9 +40,12 @@ public class Teleop extends OpMode {
 
     @Override
     public void init_loop() {
-        telemetry.addData("X Position", robot.x);
-        telemetry.addData("Y Position", robot.y);
-        telemetry.addData("Rotation", robot.theta);
+        telemetry.addData("debugging", debugging);
+        if (debugging) {
+            telemetry.addData("X Position", robot.x);
+            telemetry.addData("Y Position", robot.y);
+            telemetry.addData("Rotation", robot.theta);
+        }
         telemetry.update();
     }
 
@@ -59,10 +63,12 @@ public class Teleop extends OpMode {
             startTeleop = true;
         }
 
-        robot.updatePositionRoadRunner();
-        telemetry.addData("X Position", robot.x);
-        telemetry.addData("Y Position", robot.y);
-        telemetry.addData("Rotation", robot.theta);
+        if (debugging) {
+            robot.updatePositionRoadRunner();
+            telemetry.addData("X Position", robot.x);
+            telemetry.addData("Y Position", robot.y);
+            telemetry.addData("Rotation", robot.theta);
+        }
         telemetry.update();
 
         // ====================
