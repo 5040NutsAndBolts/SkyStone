@@ -26,12 +26,12 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos1,
                     wp_grabSkystone1_pos1,
-                    .15,
-                    .006,
-                    0.1,
+                    .2,
+                    .008,
+                    .5,
                     4,
-                    1.25,
-                    1
+                    1,
+                    .3
             );
         }
         else if (skystonePosition == 2) {
@@ -42,7 +42,7 @@ public class SkystoneAuto extends AutoMethods {
                     .006,
                     0.05,
                     4,
-                    1.25,
+                    1.1,
                     .9
             );
         }
@@ -122,8 +122,8 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos1,
                     wp_grabSkystone2_pos1,
-                    .15,
-                    0,
+                    .17,
+                    0.01,
                     .1,
                     4,
                     1.5,
@@ -137,9 +137,9 @@ public class SkystoneAuto extends AutoMethods {
                     .17 ,
                     .006,
                     0.05,
-                    4,
+                    5,
                     1,
-                    .3
+                    .2
             );
         }
         else if (skystonePosition == 3) {
@@ -172,40 +172,72 @@ public class SkystoneAuto extends AutoMethods {
                 intake.setPower(-1);
             }
         }
-        intake.setPower(0);
+        if(skystonePosition!=1&&skystonePosition!=2)
+            intake.setPower(0);
         drive.hardBrakeMotors();
 
         // Drive backwards to be out of way with skystone
         if (skystonePosition == 1) {
             runPurePursuitPath(
                     cp_prepareForDepositPos1_2,
-                    wp_prepareForDeposit
+                    wp_prepareForDepositPos1,
+                    .15,
+                    .06,
+                    .17,
+                    3,
+                    1,
+                    1
             );
         }
         else {
             runPurePursuitPath(
                     cp_prepareForDeposit_2,
-                    wp_prepareForDeposit
+                    wp_prepareForDeposit,
+                    .15,
+                    .06,
+                    .17,
+                    3,
+                    1,
+                    1
             );
         }
-
-        // Run to build zone with the skystone
-        runPurePursuitPath(
-                cp_depositSkystone_2,
-                wp_depositSkystone,
-                4,
-                .75,
-                .5
-        );
-
-        // Spit out the block
-        timer.reset();
-        timer.startTime();
-        while (opModeIsActive() && timer.seconds() < .6) {
-            intake.setPower(1);
+        if(skystonePosition==1||skystonePosition == 2)
+        {
+            intake.setPower(0);
+            lift.closeClaw();
         }
-        timer.reset();
-        intake.setPower(0);
+        // Run to build zone with the skystone
+
+
+        if(skystonePosition!=1&&skystonePosition != 2) {
+            runPurePursuitPath(
+                    cp_depositSkystone_2,
+                    wp_depositSkystone,
+                    4,
+                    .75,
+                    .5
+            );
+            // Spit out the block
+            timer.reset();
+            timer.startTime();
+            while (opModeIsActive() && timer.seconds() < .6) {
+                intake.setPower(1);
+            }
+            timer.reset();
+            intake.setPower(0);
+        }else
+            {
+                runPurePursuitPath(
+                        cp_depositSkystone_2,
+                        wp_depositSkystonePos1,
+                        4,
+                        .65,
+                        .5
+                );
+                lift.extendClaw();
+                waitTime(1);
+                lift.openClaw();
+            }
 
         // Park
         if (parkAgainstBridge) {
@@ -217,7 +249,7 @@ public class SkystoneAuto extends AutoMethods {
                     .07,
                     4,
                     1.5,
-                    .5
+                    10
             );
         }
         else {
@@ -229,7 +261,7 @@ public class SkystoneAuto extends AutoMethods {
                     .07,
                     4,
                     1.5,
-                    .5
+                    10
             );
         }
 
