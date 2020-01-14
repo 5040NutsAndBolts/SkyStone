@@ -137,8 +137,10 @@ public class SkystonePipeline extends OpenCvPipeline {
             //     Drawn in blue
             Imgproc.rectangle(selectionMask, rect.tl(), rect.br(), new Scalar(0,0,255),2);
 
-            // If the result is better then the previously tracked one, set this rect as the new best
-            if(score < lowestScore && rect.tl().y >= 120 && rect.tl().x > 70){
+            // If the result is better then the previously tracked one,
+            // and the top left coordinates are within the cropped area
+            // set this rect as the new best
+            if(score < lowestScore && rect.tl().y >= 146 && rect.tl().x > 55 && rect.tl().x < 190){
                 lowestScore = score;
                 bestRect = rect;
             }
@@ -154,10 +156,6 @@ public class SkystonePipeline extends OpenCvPipeline {
 
         // Sets the "best fit" rectangle to be the chosen skystone
         skystoneRect = bestRect;
-
-        // Draws rectangles to emulate where the robot can't see due to the crop
-        Imgproc.rectangle();
-        Imgproc.rectangle();
 
         // Sets which viewport render to use
         switch (stageToRenderToViewport) {

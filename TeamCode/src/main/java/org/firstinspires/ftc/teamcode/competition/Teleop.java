@@ -57,7 +57,7 @@ public class Teleop extends OpMode {
         // Initialize servos upon starting teleop
         if (!startTeleop) {
             robot.intakeBlock.setPosition(.5);
-            lift.closeClaw();
+            lift.openClaw();
             lift.retractClaw();
             foundationGrabbers.release();
             startTeleop = true;

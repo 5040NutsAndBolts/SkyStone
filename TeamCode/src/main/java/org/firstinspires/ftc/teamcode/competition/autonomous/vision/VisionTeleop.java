@@ -43,7 +43,7 @@ public class VisionTeleop extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()){
-            telemetry.addData("selected", SkystonePipeline.screenPosition.x > 145 ? (SkystonePipeline.screenPosition.x < 190 ? 2 : 1) : 3);
+            telemetry.addData("selected", SkystonePipeline.screenPosition.x < 90 ? 3 : (SkystonePipeline.screenPosition.x < 145 ? 2 : 1));
             telemetry.addData("X-Position", SkystonePipeline.screenPosition.x);
             telemetry.addData("Y-Position", SkystonePipeline.screenPosition.y);
             telemetry.addData("Viewport stage", SkystonePipeline.stageToRenderToViewport);

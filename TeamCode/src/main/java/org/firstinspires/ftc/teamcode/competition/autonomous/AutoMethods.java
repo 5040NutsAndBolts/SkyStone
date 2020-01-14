@@ -68,9 +68,9 @@ public abstract class AutoMethods extends LinearOpMode {
             robot.resetOdometry(robot.x, -robot.y, robot.theta + Math.PI);
 
         // Keep hardware from unintentionally moving around
-        lift.openClose();
-        lift.extendRetract();
-        foundationGrabbers.grab();
+        lift.openClaw();
+        lift.retractClaw();
+        foundationGrabbers.release();
         robot.intakeBlock.setPosition(1);
 
         // Reset robot position to a specified value
@@ -141,11 +141,12 @@ public abstract class AutoMethods extends LinearOpMode {
             telemetry.addLine("==========");
 
             if (visionAuto) {
-                if (screenPosition.x > 145)
-                    skystonePosition =
-                            (screenPosition.x < 190) ? 2 : 1;
-                else
+                if (screenPosition.x < 90)
                     skystonePosition = 3;
+                else if (screenPosition.x < 145)
+                    skystonePosition = 2;
+                else
+                    skystonePosition = 1;
                 telemetry.addData("Block Selected", skystonePosition);
             }
             telemetry.addLine("==========");

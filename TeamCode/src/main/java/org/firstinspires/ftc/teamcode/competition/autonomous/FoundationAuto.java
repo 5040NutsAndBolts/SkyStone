@@ -18,7 +18,7 @@ public class FoundationAuto extends AutoMethods {
                 wp_foundationGrab,
                 .4,
                 0,
-                .7,
+                1,
                 4,
                 1.5,
                 1.2
