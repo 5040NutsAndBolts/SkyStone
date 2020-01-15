@@ -62,9 +62,7 @@ public class SkystoneAuto extends AutoMethods {
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        while (opModeIsActive() &&
-                (skystonePosition != 3 && timer.seconds() < 1) ||
-                (skystonePosition == 3 && timer.seconds() < 1.1)) {
+        while (opModeIsActive() && (timer.seconds() < 1.1)) {
             drive.drive(.3, 0, 0);
             intake.setPower(-.9);
         }
@@ -88,7 +86,7 @@ public class SkystoneAuto extends AutoMethods {
         // Run to build zone with the skystone
         runPurePursuitPath(
                 cp_depositSkystone,
-                wp_depositSkystone,
+                wp_depositSkystonePos3,
                 4,
                 .75,
                 .25
@@ -150,15 +148,14 @@ public class SkystoneAuto extends AutoMethods {
                     .006,
                     .8,
                     4,
-                    1,
-                    .3
+                    1.5,
+                    .01
             );
         }
 
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        // Position 1 and time 1.25 works
         if (skystonePosition == 1) {
             while(timer.seconds() < .75 && opModeIsActive()) {
                 drive.drive(.25,0,0);
@@ -172,9 +169,11 @@ public class SkystoneAuto extends AutoMethods {
                 intake.setPower(-1);
             }
         }
-        if(skystonePosition!=1&&skystonePosition!=2)
-            intake.setPower(0);
         drive.hardBrakeMotors();
+
+        // If left most skystone, stop the intake
+        if (skystonePosition == 3)
+            intake.setPower(0);
 
         // Drive backwards to be out of way with skystone
         if (skystonePosition == 1) {
@@ -201,22 +200,23 @@ public class SkystoneAuto extends AutoMethods {
                     1
             );
         }
-        if(skystonePosition==1||skystonePosition == 2)
-        {
+
+        // Grab the block so long as it is not the left most position skystone
+        if (skystonePosition != 3) {
             intake.setPower(0);
             lift.closeClaw();
         }
+
         // Run to build zone with the skystone
-
-
-        if(skystonePosition!=1&&skystonePosition != 2) {
+        if (skystonePosition == 3) {
             runPurePursuitPath(
                     cp_depositSkystone_2,
-                    wp_depositSkystone,
+                    wp_depositSkystonePos3,
                     4,
                     .75,
                     .5
             );
+
             // Spit out the block
             timer.reset();
             timer.startTime();
@@ -225,19 +225,25 @@ public class SkystoneAuto extends AutoMethods {
             }
             timer.reset();
             intake.setPower(0);
-        }else
-            {
+        }
+        else {
                 runPurePursuitPath(
                         cp_depositSkystone_2,
-                        wp_depositSkystonePos1,
+                        wp_depositSkystone,
                         4,
                         .65,
                         .5
                 );
+
+                // Drop the block out the back
                 lift.extendClaw();
                 waitTime(1);
                 lift.openClaw();
-            }
+
+                // Pull lift back in so it doesn't hit anything
+                lift.retractClaw();
+                waitTime(.75);
+        }
 
         // Park
         if (parkAgainstBridge) {

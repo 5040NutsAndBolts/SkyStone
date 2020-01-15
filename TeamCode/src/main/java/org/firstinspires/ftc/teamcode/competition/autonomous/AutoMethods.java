@@ -259,7 +259,7 @@ public abstract class AutoMethods extends LinearOpMode {
      * @param checkPoint Checkpoint of Pure Pursuit path
      * @param wayPoints  List of WayPoints of Pure Pursuit path
      */
-    private void flipPurePursuitPath(CheckPoint checkPoint, ArrayList<WayPoint> wayPoints) {
+    private void flipPath(CheckPoint checkPoint, ArrayList<WayPoint> wayPoints) {
         checkPoint.y *= -1;
         for (int i = 0; i < wayPoints.size(); i++)
             wayPoints.get(i).y *= -1;
@@ -282,7 +282,7 @@ public abstract class AutoMethods extends LinearOpMode {
                                    double lookAheadDist, double speed, double turnSpeed) {
         // Flips the path to work for red alliance
         if (onRed)
-            flipPurePursuitPath(checkPoint, path);
+            flipPath(checkPoint, path);
 
         // Initializes the pure pursuit path and declares the followPath() arguments
         purePursuit.initPath(path, P, I, D);
@@ -311,7 +311,7 @@ public abstract class AutoMethods extends LinearOpMode {
 
         // Flips the path back to its original
         if (onRed)
-            flipPurePursuitPath(checkPoint, path);
+            flipPath(checkPoint, path);
     }
 
     public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path,
@@ -329,32 +329,32 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Parking against the wall
-            cp_parkWall = new CheckPoint(9, 70, 2, robot),
+            cp_parkWall = new CheckPoint(8, 70, 2, robot),
             // Parking against the neutral bridge
-            cp_parkBridge = new CheckPoint(21, 70, 2, robot);
+            cp_parkBridge = new CheckPoint(20, 70, 2, robot);
 
     public ArrayList<WayPoint>
             // Robot quickly rotates then moves next to the wall and slides down
             wp_parkWallFromLeft = new ArrayList<>(
             Arrays.asList(
-                    new WayPoint(9, 68, Math.PI / 2),
-                    new WayPoint(9, 70, Math.PI / 2)
+                    new WayPoint(8, 68, Math.PI / 2),
+                    new WayPoint(8, 70, Math.PI / 2)
             )),
             wp_parkWallFromRight = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(9, 90, Math.PI / 2),
-                            new WayPoint(9, 70, Math.PI / 2)
+                            new WayPoint(8, 90, Math.PI / 2),
+                            new WayPoint(8, 70, Math.PI / 2)
                     )),
             // Robot quickly rotates then moves up to near the neutral bridge and over to park
             wp_parkBridgeFromLeft = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(21, 72, 3 * Math.PI / 2),
-                            new WayPoint(21, 70, 3 * Math.PI / 2)
+                            new WayPoint(20, 72, 3 * Math.PI / 2),
+                            new WayPoint(20, 70, 3 * Math.PI / 2)
                     )),
             wp_parkBridgeFromRight = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(21, 90, 3 * Math.PI / 2),
-                            new WayPoint(21, 70, 3 * Math.PI / 2)
+                            new WayPoint(20, 90, 3 * Math.PI / 2),
+                            new WayPoint(20, 70, 3 * Math.PI / 2)
                     ));
 
     // ===============
@@ -365,7 +365,7 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_foundationGrab = new CheckPoint(32, 11, 2, robot),
             cp_foundationPushImproved = new CheckPoint(35, 15, 2, robot),
             cp_foundationParkPrep = new CheckPoint(35, 44, 2, robot),
-            cp_foundationParkWall = new CheckPoint(0, 75, 2, robot),
+            cp_foundationParkWall = new CheckPoint(0, 70, 2, robot),
             cp_foundationParkBridge = new CheckPoint(21, 75, 2, robot);
 
     public ArrayList<WayPoint>
@@ -386,12 +386,12 @@ public abstract class AutoMethods extends LinearOpMode {
             wp_foundationParkWall = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(-1,44,0),
-                            new WayPoint(0,75,0)
+                            new WayPoint(0,70,0)
                     )),
             wp_foundationParkBridge = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(20,44,0),
-                            new WayPoint(30,75,0)
+                            new WayPoint(30,70,0)
                     ));
 
     // =============
@@ -407,7 +407,7 @@ public abstract class AutoMethods extends LinearOpMode {
             // Position to grab the middle skystone closest to the sky bridge
             cp_grabSkystone1_pos2 = new CheckPoint(43, 91, 1.2, robot),
             // Position to grab the middle skystone closest to the wall
-            cp_grabSkystone2_pos2 = new CheckPoint(53, 114, 1.3, robot),
+            cp_grabSkystone2_pos2 = new CheckPoint(53, 113, 1.3, robot),
 
             // Position to grab the left most skystone closest to the sky bridge
             cp_grabSkystone1_pos3 = new CheckPoint(36, 82, 1, robot),
@@ -433,8 +433,8 @@ public abstract class AutoMethods extends LinearOpMode {
             // Right most skystone paths
             wp_grabSkystone1_pos1 = new ArrayList<>(
             Arrays.asList(
-                    new WayPoint(30,90,3*Math.PI/2),
-                    new WayPoint(52, 96, 3*Math.PI/2)
+                    new WayPoint(30, 90, 3 * Math.PI / 2),
+                    new WayPoint(52, 96, 3 * Math.PI / 2)
             )),
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
@@ -448,7 +448,7 @@ public abstract class AutoMethods extends LinearOpMode {
                     )),
             wp_grabSkystone2_pos2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(46,118.25,3*Math.PI/2),
+                            new WayPoint(73, 133, 3 * Math.PI / 2),
                             new WayPoint(53, 113, 3 * Math.PI / 2)
                     )),
             // Left most skystone paths
@@ -466,22 +466,22 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(19, 97, Math.PI)
                     )
             ),
-            wp_prepareForDepositPos1=new ArrayList<>(
+            wp_prepareForDepositPos1 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(20, 100, Math.PI*3/2),
-                            new WayPoint(19, 97, Math.PI*3/2)
+                            new WayPoint(20, 100, Math.PI * 3 / 2),
+                            new WayPoint(19, 97, Math.PI * 3 / 2)
                     )
             ),
-            wp_depositSkystone = new ArrayList<>(
+            wp_depositSkystonePos3 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(24, 106, Math.PI / 2),
                             new WayPoint(33, 57, Math.PI / 2)
                     )
             ),
-            wp_depositSkystonePos1 = new ArrayList<>(
+            wp_depositSkystone = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(24, 106, 3*Math.PI / 2),
-                            new WayPoint(33, 57, 3*Math.PI / 2)
+                            new WayPoint(24, 106, 3 * Math.PI / 2),
+                            new WayPoint(33, 57, 3 * Math.PI / 2)
                     )
             ),
             // Moving to grab the second skystone

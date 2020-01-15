@@ -20,7 +20,7 @@ public class FoundationAuto extends AutoMethods {
                 0,
                 1,
                 4,
-                1.2,
+                1.5,
                 1.2
         );
 
@@ -31,26 +31,14 @@ public class FoundationAuto extends AutoMethods {
         // Pull the foundation backwards for 4 seconds just for redundancy with the odometry
         timer.reset();
         timer.startTime();
-        while (opModeIsActive() && timer.seconds() < 1.2)
-            drive.drive(1-.4*timer.seconds(), 0, 0);
+        while (opModeIsActive() && timer.seconds() < 3)
+            drive.drive(.4, 0, 0);
         drive.hardBrakeMotors();
         robot.resetOdometry(0, robot.y, 0);
 
         // Release the foundation
         foundationGrabbers.release();
         waitTime(1);
-
-        /* Push the foundation back into the wall
-        runPurePursuitPath(
-                cp_foundationPush,
-                wp_foundationPush,
-                .5,
-                .1,
-                .01,
-                4,
-                1.7,
-                1
-        );*/
 
         // Push foundation towards the alliance wall
         runPurePursuitPath(

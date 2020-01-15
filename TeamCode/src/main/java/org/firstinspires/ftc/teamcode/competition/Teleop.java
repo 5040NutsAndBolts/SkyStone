@@ -63,8 +63,13 @@ public class Teleop extends OpMode {
             startTeleop = true;
         }
 
+        telemetry.addData("Slow mode", slowMode);
+        telemetry.addLine();
+        telemetry.addData("Intake speed", intake.intakeSpeed);
         if (debugging) {
             robot.updatePositionRoadRunner();
+            telemetry.addLine();
+            telemetry.addLine("==========");
             telemetry.addData("X Position", robot.x);
             telemetry.addData("Y Position", robot.y);
             telemetry.addData("Rotation", robot.theta);
