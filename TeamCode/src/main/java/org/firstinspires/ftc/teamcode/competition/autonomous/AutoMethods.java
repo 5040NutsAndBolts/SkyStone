@@ -364,7 +364,7 @@ public abstract class AutoMethods extends LinearOpMode {
     public CheckPoint
             cp_foundationGrab = new CheckPoint(32, 11, 2, robot),
             cp_foundationPushImproved = new CheckPoint(35, 15, 2, robot),
-            cp_foundationParkPrep = new CheckPoint(35, 44, 2, robot),
+            cp_foundationParkPrep = new CheckPoint(40, 44, 2, robot),
             cp_foundationParkWall = new CheckPoint(0, 70, 2, robot),
             cp_foundationParkBridge = new CheckPoint(21, 75, 2, robot);
 
@@ -381,7 +381,7 @@ public abstract class AutoMethods extends LinearOpMode {
                     )),
             wp_foundationParkPrep = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(35, 44, 0)
+                            new WayPoint(40, 44, 0)
                     )),
             wp_foundationParkWall = new ArrayList<>(
                     Arrays.asList(
@@ -410,7 +410,7 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_grabSkystone2_pos2 = new CheckPoint(53, 113, 1.3, robot),
 
             // Position to grab the left most skystone closest to the sky bridge
-            cp_grabSkystone1_pos3 = new CheckPoint(36, 82, 1, robot),
+            cp_grabSkystone1_pos3 = new CheckPoint(43, 94, 2, robot),
             // Position to grab the left most skystone closest to the wall
             cp_grabSkystone2_pos3 = new CheckPoint(53, 104, 3, robot),
 
@@ -454,7 +454,8 @@ public abstract class AutoMethods extends LinearOpMode {
             // Left most skystone paths
             wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(36, 82, 3.7637)
+                            new WayPoint(18, 110, 2.3),
+                            new WayPoint(43, 94, 2.3)
                     )),
             wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
@@ -466,16 +467,10 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(19, 97, Math.PI)
                     )
             ),
-            wp_prepareForDepositPos1 = new ArrayList<>(
-                    Arrays.asList(
-                            new WayPoint(20, 100, Math.PI * 3 / 2),
-                            new WayPoint(19, 97, Math.PI * 3 / 2)
-                    )
-            ),
             wp_depositSkystonePos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(24, 106, Math.PI / 2),
-                            new WayPoint(33, 57, Math.PI / 2)
+                            new WayPoint(24, 106, 3 * Math.PI / 2),
+                            new WayPoint(33, 57, 3 * Math.PI / 2)
                     )
             ),
             wp_depositSkystone = new ArrayList<>(

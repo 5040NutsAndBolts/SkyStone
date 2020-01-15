@@ -40,6 +40,11 @@ public class Teleop extends OpMode {
 
     @Override
     public void init_loop() {
+        if (!debugging && gamepad1.y || gamepad2.y)
+            debugging = true;
+        if (debugging && gamepad1.a || gamepad2.a)
+            debugging = false;
+
         telemetry.addData("debugging", debugging);
         if (debugging) {
             telemetry.addData("X Position", robot.x);
@@ -136,7 +141,7 @@ public class Teleop extends OpMode {
         }
 
         // TeleOp debugging
-        if (gamepad1.back)
+        if (gamepad1.back && debugging)
             robot.resetOdometry(9, 9, 3 * Math.PI / 2);
 
         // ===================
