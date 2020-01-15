@@ -418,16 +418,13 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_prepareForDeposit = new CheckPoint(19, 97, 3, robot),
             // Edge case for backing up after grabbing the right most skystone closest to the bridge
             cp_prepareForDepositPos1 = new CheckPoint(19, 97, 3, robot),
+
             // Driving and depositing the skystone
             cp_depositSkystone = new CheckPoint(33, 57, 2, robot),
+            cp_depositSkystone_2 = new CheckPoint(33, 57, 2, robot),
 
             // Backing up and preparing to deposit the second skystone
-            cp_prepareForSecondSkystone = new CheckPoint(19, 97, 3, robot),
-
-            // Same as first preparation and deposits but needs a second checkpoint
-            cp_prepareForDeposit_2 = new CheckPoint(19, 97, 2, robot),
-            cp_prepareForDepositPos1_2 = new CheckPoint(19, 97, 3, robot),
-            cp_depositSkystone_2 = new CheckPoint(33, 57, 2, robot);
+            cp_prepareForSecondSkystone = new CheckPoint(19, 97, 3, robot);
 
     public ArrayList<WayPoint>
             // Right most skystone paths
@@ -484,5 +481,19 @@ public abstract class AutoMethods extends LinearOpMode {
                     Arrays.asList(
                             new WayPoint(24, 97, 3 * Math.PI / 2),
                             new WayPoint(19, 97, 3 * Math.PI / 2)
+                    ));
+
+    // ============================
+    // SKYSTONE AND FOUNDATION AUTO
+    // ============================
+
+    public CheckPoint
+            cp_skystoneToFoundation = new CheckPoint(40, 20, 2, robot);
+
+    public ArrayList<WayPoint>
+            wp_skystoneToFoundation = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(30, 35, 0),
+                            new WayPoint(40, 10, 0)
                     ));
 }

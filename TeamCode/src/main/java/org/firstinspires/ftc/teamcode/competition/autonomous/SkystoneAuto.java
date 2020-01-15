@@ -10,7 +10,7 @@ public class SkystoneAuto extends AutoMethods {
     public void runOpMode() {
         initAuto(true, 9, 135, 3 * Math.PI / 2);
 
-        robot.resetOdometry(9, robot.y, robot.theta);
+        robot.resetOdometry(9, robot.y, 3 * Math.PI / 2);
 
         // Release intake
         robot.intakeBlock.setPosition(.5);
