@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
-@Autonomous(group = "Auto", name = "Skystone Auto")
+@Autonomous(group = "Auto", name = "Skystone+Foundation Auto")
 public class SkystoneFoundationAuto extends AutoMethods {
 
     /**
@@ -49,10 +49,10 @@ public class SkystoneFoundationAuto extends AutoMethods {
                     wp_grabSkystone1_pos2,
                     .155,
                     .006,
-                    0.05,
-                    4,
-                    1.1,
-                    .9
+                    0.15,
+                    8,
+                    1.3,
+                    .2
             );
         }
         else if (skystonePosition == 3) {
@@ -63,19 +63,22 @@ public class SkystoneFoundationAuto extends AutoMethods {
                     .006,
                     0,
                     4,
-                    1.2,
-                    .8
+                    1,
+                    .7
             );
         }
 
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        while (opModeIsActive() && timer.seconds() < 1.2) {
-            drive.drive(.4, 0, 0);
+        while (opModeIsActive() && timer.seconds() < .7) {
+            drive.drive(.35, 0, 0);
             intake.setPower(-1);
         }
         drive.hardBrakeMotors();
+        while (opModeIsActive() && timer.seconds() < .2) {
+            intake.setPower(-1);
+        }
 
         // Drive backwards to be out of way with skystone
         runPurePursuitPath(
@@ -92,22 +95,28 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 wp_skystoneToFoundation,
                 4,
                 .5,
-                .25
+                .2
         );
 
 
 
         // Drop the block out the back
         lift.extendClaw();
+        foundationGrabbers.grab();
         waitTime(1);
         lift.openClaw();
 
         // Pull lift back in so it doesn't hit anything
-        waitTime(.5);
+        waitTime(.4);
         lift.retractClaw();
 
+        timer.reset();
+        while (opModeIsActive() && timer.seconds() < 2)
+            drive.drive(.55, 0, 0);
+
+
         // Park
-        if (parkAgainstBridge) {
+        /*if (parkAgainstBridge) {
             runPurePursuitPath(
                     cp_parkBridge,
                     wp_parkBridgeFromLeft,
@@ -131,7 +140,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
                     10
             );
         }
-
+        */
         displayEndAuto();
     }
 }
