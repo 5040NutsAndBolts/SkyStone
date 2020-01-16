@@ -70,15 +70,11 @@ public class SkystoneFoundationAuto extends AutoMethods {
 
         // Move forward to intake the skystone
         timer.reset();
-        timer.startTime();
         while (opModeIsActive() && timer.seconds() < .7) {
             drive.drive(.35, 0, 0);
             intake.setPower(-1);
         }
         drive.hardBrakeMotors();
-        while (opModeIsActive() && timer.seconds() < .2) {
-            intake.setPower(-1);
-        }
 
         // Drive backwards to be out of way with skystone
         runPurePursuitPath(
@@ -95,10 +91,8 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 wp_skystoneToFoundation,
                 4,
                 .5,
-                .2
+                .1
         );
-
-
 
         // Drop the block out the back
         lift.extendClaw();
@@ -110,10 +104,82 @@ public class SkystoneFoundationAuto extends AutoMethods {
         waitTime(.4);
         lift.retractClaw();
 
+        // Pull the foundation back
         timer.reset();
-        while (opModeIsActive() && timer.seconds() < 2)
-            drive.drive(.55, 0, 0);
+        while (opModeIsActive() && timer.seconds() < 1.5)
+            drive.drive(.5, 0, 0);
+        foundationGrabbers.release();
+        waitTime(.5);
 
+        // Goes to position to grab second skystone
+        if (skystonePosition == 1) {
+            runPurePursuitPath(
+                    cp_grabSkystone2_pos1,
+                    wp_grabSkystone2_pos1,
+                    .17,
+                    0.01,
+                    .1,
+                    4,
+                    .75,
+                    .3
+            );
+        }
+        else if (skystonePosition == 2) {
+            runPurePursuitPath(
+                    cp_grabSkystone2_pos2,
+                    wp_grabSkystone2_pos2,
+                    .17 ,
+                    .006,
+                    0.05,
+                    5,
+                    .75,
+                    .2
+            );
+        }
+        else if (skystonePosition == 3) {
+            runPurePursuitPath(
+                    cp_foundationGrabSkystone2_pos3,
+                    wp_foundationGrabSkystone2_pos3,
+                    .15,
+                    .006,
+                    .8,
+                    4,
+                    .75,
+                    .1
+            );
+        }
+
+        // Move forward to intake the skystone
+        timer.reset();
+        timer.startTime();
+        if (skystonePosition == 1) {
+            while(timer.seconds() < .75 && opModeIsActive()) {
+                drive.drive(.25,0,0);
+                intake.setPower(-.75);
+            }
+        }
+        else {
+            while (((skystonePosition == 2 && timer.seconds() < 1.25) ||
+                    (skystonePosition == 3 && timer.seconds() < 1.1)) && opModeIsActive()) {
+                drive.drive(.25, 0, 0);
+                intake.setPower(-1);
+            }
+        }
+        drive.hardBrakeMotors();
+
+        // Intake for a second then grab the block
+        waitTime(1);
+        intake.setPower(0);
+        lift.closeClaw();
+
+        // Run to build zone with the skystone
+        runPurePursuitPath(
+                cp_skystoneToFoundation_2,
+                wp_skystoneToFoundation_2,
+                4,
+                .65,
+                .5
+        );
 
         // Park
         /*if (parkAgainstBridge) {
@@ -141,6 +207,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             );
         }
         */
+
         displayEndAuto();
     }
 }

@@ -70,31 +70,24 @@ public class SkystoneAuto extends AutoMethods {
             intake.setPower(0);
         }
         else {
-            while (opModeIsActive() && timer.seconds() < 1.2) {
-                drive.drive(.4, 0, 0);
+            while (opModeIsActive() && timer.seconds() < .7) {
+                drive.drive(.35, 0, 0);
                 intake.setPower(-1);
             }
         }
         drive.hardBrakeMotors();
 
         // Drive backwards to be out of way with skystone
-        if (skystonePosition == 1) {
-            runPurePursuitPath(
-                    cp_prepareForDepositPos1,
-                    wp_prepareForDeposit
-            );
-        }
-        else {
-            runPurePursuitPath(
-                    cp_prepareForDeposit,
-                    wp_prepareForDeposit
-            );
-        }
+        runPurePursuitPath(
+                cp_prepareForDeposit,
+                wp_prepareForDeposit
+        );
 
         if (skystonePosition == 3) {
             intake.setPower(0);
             lift.closeClaw();
         }
+
         // Run to build zone with the skystone
         if (skystonePosition != 3) {
             runPurePursuitPath(
