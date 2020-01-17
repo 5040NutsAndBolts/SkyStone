@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline.screenPosition;
+import static org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods.angleWrap;
 import static org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods.inThreshold;
 import static org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool.pool;
 
@@ -104,12 +105,12 @@ public abstract class AutoMethods extends LinearOpMode {
         while (!isStarted() && !isStopRequested()) {
             if (gamepad1.x || gamepad2.x) {
                 if (onRed)
-                    robot.resetOdometry(robot.x, -robot.y, robot.theta);
+                    robot.resetOdometry(-robot.x, robot.y, robot.theta);
                 onRed = false;
             }
             if (gamepad1.b || gamepad2.b) {
                 if (!onRed)
-                    robot.resetOdometry(robot.x, -robot.y, robot.theta);
+                    robot.resetOdometry(-robot.x, robot.y, robot.theta);
                 onRed = true;
             }
 
@@ -140,13 +141,22 @@ public abstract class AutoMethods extends LinearOpMode {
             telemetry.addData("Wait time before auto starts", autoWait);
             telemetry.addLine("==========");
 
-            if (visionAuto) {
+            if (visionAuto && !onRed) {
                 if (screenPosition.x < 90)
                     skystonePosition = 3;
                 else if (screenPosition.x < 145)
                     skystonePosition = 2;
                 else
                     skystonePosition = 1;
+                telemetry.addData("Block Selected", skystonePosition);
+            }
+            else if (visionAuto && onRed) {
+                if (screenPosition.x < 75)
+                    skystonePosition = 1;
+                else if (screenPosition.x < 100)
+                    skystonePosition = 2;
+                else
+                    skystonePosition = 3;
                 telemetry.addData("Block Selected", skystonePosition);
             }
             telemetry.addLine("==========");
@@ -259,10 +269,16 @@ public abstract class AutoMethods extends LinearOpMode {
      * @param checkPoint Checkpoint of Pure Pursuit path
      * @param wayPoints  List of WayPoints of Pure Pursuit path
      */
-    private void flipPath(CheckPoint checkPoint, ArrayList<WayPoint> wayPoints) {
+    private void flipPath(boolean red, CheckPoint checkPoint, ArrayList<WayPoint> wayPoints) {
         checkPoint.y *= -1;
-        for (int i = 0; i < wayPoints.size(); i++)
-            wayPoints.get(i).y *= -1;
+        if (red)
+            for (int i = 0; i < wayPoints.size(); i++) {
+                wayPoints.set(i, new WayPoint(wayPoints.get(i).x, -wayPoints.get(i).y, angleWrap(wayPoints.get(i).angle - Math.PI)));
+            }
+        else
+            for (int i = 0; i < wayPoints.size(); i++) {
+                wayPoints.set(i, new WayPoint(wayPoints.get(i).x, -wayPoints.get(i).y, angleWrap(wayPoints.get(i).angle + Math.PI)));
+            }
     }
 
     /**
@@ -282,7 +298,7 @@ public abstract class AutoMethods extends LinearOpMode {
                                    double lookAheadDist, double speed, double turnSpeed) {
         // Flips the path to work for red alliance
         if (onRed)
-            flipPath(checkPoint, path);
+            flipPath(true, checkPoint, path);
 
         // Initializes the pure pursuit path and declares the followPath() arguments
         purePursuit.initPath(path, P, I, D);
@@ -311,7 +327,7 @@ public abstract class AutoMethods extends LinearOpMode {
 
         // Flips the path back to its original
         if (onRed)
-            flipPath(checkPoint, path);
+            flipPath(false, checkPoint, path);
     }
 
     public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path,
