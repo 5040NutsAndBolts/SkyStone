@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
+
 
 @Autonomous(group = "Auto", name = "Skystone+Foundation Auto")
 public class SkystoneFoundationAuto extends AutoMethods {
@@ -29,6 +31,17 @@ public class SkystoneFoundationAuto extends AutoMethods {
             if (timer.seconds() > .3)
                 intake.setPower(1);
         intake.setPower(0);
+
+        if (onRed) {
+            timer.reset();
+            while (timer.seconds() < .5 && opModeIsActive())
+                drive.drive(0,-.5,0);
+            while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, Math.PI/2, 10)) {
+                robot.updatePositionRoadRunner();
+                drive.drive(0, 0, .75);
+            }
+            drive.hardBrakeMotors();
+        }
 
         // Goes to position to grab skystone
         if (skystonePosition == 1) {
@@ -84,14 +97,21 @@ public class SkystoneFoundationAuto extends AutoMethods {
 
         intake.setPower(0);
         lift.closeClaw();
+        // Point turn to avoid hitting things
+        timer.reset();
+        while (opModeIsActive() && timer.seconds()<.3) {
+            robot.updatePositionRoadRunner();
+            drive.drive(0, 0, .85);
+        }
+        drive.hardBrakeMotors();
 
         // Run to the foundation with skystone
         runPurePursuitPath(
                 cp_skystoneToFoundation,
                 wp_skystoneToFoundation,
                 4,
-                .5,
-                .1
+                .4,
+                .15
         );
 
         // Drop the block out the back
@@ -100,16 +120,42 @@ public class SkystoneFoundationAuto extends AutoMethods {
         waitTime(1);
         lift.openClaw();
 
-        // Pull lift back in so it doesn't hit anything
-        waitTime(.4);
-        lift.retractClaw();
 
         // Pull the foundation back
         timer.reset();
-        while (opModeIsActive() && timer.seconds() < 1.5)
-            drive.drive(.5, 0, 0);
+        while (opModeIsActive() && timer.seconds() < 2) {
+            robot.updatePositionRoadRunner();
+            drive.drive(.6, 0, 0);
+        }
         foundationGrabbers.release();
-        waitTime(.5);
+        // Pull lift back in so it doesn't hit anything
+        lift.retractClaw();
+        waitTime(.45);
+
+        // Run parallel to the wall
+        runPurePursuitPath(
+                cp_awayFromFoundation,
+                wp_awayFromFoundation
+                );
+
+        //
+        runPurePursuitPath(
+                cp_awayFromPartner,
+                wp_awayFromPartner
+        );
+
+        // Point turn to not hit the partner when moving to
+        timer.reset();
+        while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, 3 * Math.PI / 2, 5)) {
+            robot.updatePositionRoadRunner();
+            drive.drive(0, 0, .5);
+        }
+        drive.hardBrakeMotors();
+
+        runPurePursuitPath(
+                cp_awayFromBridge,
+                wp_awayFromBridge
+        );
 
         // Goes to position to grab second skystone
         if (skystonePosition == 1) {
@@ -159,8 +205,8 @@ public class SkystoneFoundationAuto extends AutoMethods {
             }
         }
         else {
-            while (((skystonePosition == 2 && timer.seconds() < 1.25) ||
-                    (skystonePosition == 3 && timer.seconds() < 1.1)) && opModeIsActive()) {
+            while (((skystonePosition == 2 && timer.seconds() < 1.2) ||
+                    (skystonePosition == 3 && timer.seconds() < 1.05)) && opModeIsActive()) {
                 drive.drive(.25, 0, 0);
                 intake.setPower(-1);
             }
@@ -168,21 +214,40 @@ public class SkystoneFoundationAuto extends AutoMethods {
         drive.hardBrakeMotors();
 
         // Intake for a second then grab the block
-        waitTime(1);
-        intake.setPower(0);
-        lift.closeClaw();
+        waitTime(.1);
+        intake.setPower(-.75);
 
-        // Run to build zone with the skystone
+        // Move to be able to sprint to the foundation
         runPurePursuitPath(
                 cp_skystoneToFoundation_2,
                 wp_skystoneToFoundation_2,
                 4,
-                .65,
+                .5,
                 .5
         );
+        lift.closeClaw();
+
+        // Drive backwards to hit the foundation
+        timer.reset();
+        while (opModeIsActive() && timer.seconds() < 2) {
+            robot.updatePositionRoadRunner();
+            drive.drive(-.75, 0, 0);
+        }
+        waitTime(.25);
+        foundationGrabbers.grab();
+        intake.setPower(0);
+        drive.hardBrakeMotors();
+
+        // Drop the block out the back
+        lift.extendClaw();
+        lift.openClaw();
+        waitTime(1);
+        lift.retractClaw();
+        foundationGrabbers.release();
+        waitTime(.25);
 
         // Park
-        /*if (parkAgainstBridge) {
+        if (parkAgainstBridge) {
             runPurePursuitPath(
                     cp_parkBridge,
                     wp_parkBridgeFromLeft,
@@ -190,7 +255,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
                     .005,
                     .07,
                     4,
-                    1.5,
+                    1,
                     10
             );
         }
@@ -202,11 +267,10 @@ public class SkystoneFoundationAuto extends AutoMethods {
                     .005,
                     .07,
                     4,
-                    1.5,
+                    1,
                     10
             );
         }
-        */
 
         displayEndAuto();
     }
