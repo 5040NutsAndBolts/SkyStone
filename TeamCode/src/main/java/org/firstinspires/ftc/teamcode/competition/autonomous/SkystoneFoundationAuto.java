@@ -20,14 +20,6 @@ public class SkystoneFoundationAuto extends AutoMethods {
     public void runOpMode() {
         initAuto(true, 9, 135, 3 * Math.PI / 2);
 
-        if (!onRed)
-            robot.resetOdometry(9, robot.y, 3 * Math.PI / 2);
-        else {
-            robot.resetOdometry(9, -robot.y, Math.PI / 2);
-            timer.reset();
-            while (timer.seconds() < .5)
-                drive.drive(-.5,0,0);
-        }
 
         // Release intake
         robot.intakeBlock.setPosition(.5);

@@ -65,8 +65,7 @@ public abstract class AutoMethods extends LinearOpMode {
         lift = new LiftMech(robot);
         purePursuit = new PurePursuit(robot);
 
-        if (onRed)
-            robot.resetOdometry(robot.x, -robot.y, robot.theta + Math.PI);
+
 
         // Keep hardware from unintentionally moving around
         lift.openClaw();
@@ -103,15 +102,21 @@ public abstract class AutoMethods extends LinearOpMode {
         boolean dpadUpPressed = false, dpadDownPressed = false;
 
         while (!isStarted() && !isStopRequested()) {
+
+
             if (gamepad1.x || gamepad2.x) {
                 if (onRed)
-                    robot.resetOdometry(-robot.x, robot.y, robot.theta);
+                    robot.resetOdometry(robot.x, -robot.y, robot.theta);
                 onRed = false;
             }
             if (gamepad1.b || gamepad2.b) {
                 if (!onRed)
-                    robot.resetOdometry(-robot.x, robot.y, robot.theta);
+                {
+                    robot.resetOdometry(robot.x, -robot.y, robot.theta);
+                }
                 onRed = true;
+
+
             }
 
             if (gamepad1.y || gamepad2.y)
@@ -167,6 +172,7 @@ public abstract class AutoMethods extends LinearOpMode {
         // End streaming for efficiency
         if (visionAuto)
             phoneCamera.stopStreaming();
+
     }
 
     protected void initAuto(boolean visionAuto) {
@@ -271,6 +277,7 @@ public abstract class AutoMethods extends LinearOpMode {
      */
     private void flipPath(boolean red, CheckPoint checkPoint, ArrayList<WayPoint> wayPoints) {
         checkPoint.y *= -1;
+
         if (red)
             for (int i = 0; i < wayPoints.size(); i++) {
                 wayPoints.set(i, new WayPoint(wayPoints.get(i).x, -wayPoints.get(i).y, angleWrap(wayPoints.get(i).angle - Math.PI)));
@@ -476,6 +483,12 @@ public abstract class AutoMethods extends LinearOpMode {
             // Depositing the skystones
             wp_prepareForDeposit = new ArrayList<>(
                     Arrays.asList(
+                            new WayPoint(19, 97, Math.PI)
+                    )
+            ),
+            wp_prepareForPushAndDeposit = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(15, 120, Math.PI),
                             new WayPoint(19, 97, Math.PI)
                     )
             ),
