@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
 
 
-@Autonomous(group = "Auto", name = "Skystone+Foundation Auto")
-public class SkystoneFoundationAuto extends AutoMethods {
+@Autonomous(group = "Auto", name = "1 Skystone & Foundation Auto")
+public class SingleSkystoneFoundationAuto extends AutoMethods {
 
     /**
      * Auto plan:
@@ -140,7 +140,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         }
         else{
             timer.reset();
-            while (opModeIsActive() && timer.seconds() < 2) {
+            while (opModeIsActive() && timer.seconds() < 1) {
                 robot.updatePositionRoadRunner();
                 drive.drive(.4, 0, 0);
             }
@@ -158,130 +158,6 @@ public class SkystoneFoundationAuto extends AutoMethods {
         lift.retractClaw();
         waitTime(.25);
 
-        runPurePursuitPath(
-                cp_awayFromPartner,
-                wp_awayFromPartner
-        );
-
-        // Point turn to not hit the partner when moving to
-        timer.reset();
-        while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, 3 * Math.PI / 2, 5)) {
-            robot.updatePositionRoadRunner();
-            drive.drive(0, 0, .5);
-        }
-        drive.hardBrakeMotors();
-
-        runPurePursuitPath(
-                cp_awayFromBridge,
-                wp_awayFromBridge
-        );
-
-        // Goes to position to grab second skystone
-        if (skystonePosition == 1) {
-            runPurePursuitPath(
-                    cp_grabSkystone2_pos1,
-                    wp_grabSkystone2_pos1,
-                    .17,
-                    0.01,
-                    .1,
-                    4,
-                    .75,
-                    .3
-            );
-        }
-        else if (skystonePosition == 2) {
-            runPurePursuitPath(
-                    cp_grabSkystone2_pos2,
-                    wp_grabSkystone2_pos2,
-                    .17 ,
-                    .006,
-                    0.05,
-                    5,
-                    .75,
-                    .2
-            );
-        }
-        else if (skystonePosition == 3) {
-            runPurePursuitPath(
-                    cp_foundationGrabSkystone2_pos3,
-                    wp_foundationGrabSkystone2_pos3,
-                    .15,
-                    .006,
-                    .8,
-                    4,
-                    .75,
-                    .1
-            );
-        }
-
-        // Move forward to intake the skystone
-        timer.reset();
-        timer.startTime();
-        if (skystonePosition == 1) {
-            while(timer.seconds() < .75 && opModeIsActive()) {
-                drive.drive(.25,0,0);
-                intake.setPower(-.75);
-            }
-        }
-        else {
-            while (((skystonePosition == 2 && timer.seconds() < .8) ||
-                    (skystonePosition == 3 && timer.seconds() < .7)) && opModeIsActive()) {
-                drive.drive(.25, 0, 0);
-                intake.setPower(-1);
-            }
-        }
-        drive.hardBrakeMotors();
-
-        // Intake for a second then grab the block
-        waitTime(.1);
-        intake.setPower(-.75);
-
-        // Move to be able to sprint to the foundation
-        runPurePursuitPath(
-                cp_skystoneToFoundation_2,
-                wp_skystoneToFoundation_2,
-                4,
-                .5,
-                .5
-        );
-        lift.closeClaw();
-
-        // Drive backwards to hit the foundation
-        timer.reset();
-        while (opModeIsActive() && timer.seconds() < 1.9) {
-            robot.updatePositionRoadRunner();
-            drive.drive(-.65, 0, 0);
-        }
-        waitTime(.05);
-        intake.setPower(0);
-        drive.hardBrakeMotors();
-        /*timer.reset();
-        while (opModeIsActive() && timer.seconds() < .6) {
-            robot.updatePositionRoadRunner();
-            drive.drive(0, -1, 0);
-        }
-        timer.reset();
-        while (opModeIsActive() && timer.seconds() < .5) {
-            robot.updatePositionRoadRunner();
-            drive.drive(-1, 0, 0);
-        }
-        timer.reset();
-        while (opModeIsActive() && timer.seconds() < .6) {
-            robot.updatePositionRoadRunner();
-            drive.drive(0, 1, 0);
-        }*/
-        // Drop the block out the back
-        lift.extendClaw();
-        lift.openClaw();
-        waitTime(.8);
-        timer.reset();
-        while(timer.seconds()<.4)
-            drive.drive(0,-.6,0);
-        waitTime(.1);
-
-        foundationGrabbers.release();
-        waitTime(.3);
-        lift.retractClaw();
         // Park
         if (parkAgainstBridge) {
             runPurePursuitPath(

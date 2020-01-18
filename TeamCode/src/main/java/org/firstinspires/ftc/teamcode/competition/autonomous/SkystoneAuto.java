@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
+
 
 @Autonomous(group = "Auto", name = "Skystone Auto")
 public class SkystoneAuto extends AutoMethods {
@@ -20,6 +22,17 @@ public class SkystoneAuto extends AutoMethods {
             if (timer.seconds() > .3)
                 intake.setPower(1);
         intake.setPower(0);
+
+        if (onRed) {
+            timer.reset();
+            while (timer.seconds() < .5 && opModeIsActive())
+                drive.drive(0,-.5,0);
+            while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, Math.PI/2, 10)) {
+                robot.updatePositionRoadRunner();
+                drive.drive(0, 0, .75);
+            }
+            drive.hardBrakeMotors();
+        }
 
         // Goes to position to grab skystone
         if (skystonePosition == 1) {
@@ -41,7 +54,7 @@ public class SkystoneAuto extends AutoMethods {
                     .155,
                     .006,
                     0.05,
-                    4,
+                    6,
                     1.1,
                     .9
             );
@@ -67,7 +80,7 @@ public class SkystoneAuto extends AutoMethods {
                 drive.drive(.3, 0, 0);
                 intake.setPower(-1);
             }
-            intake.setPower(0);
+
         }
         else {
             while (opModeIsActive() && timer.seconds() < .7) {
@@ -82,7 +95,7 @@ public class SkystoneAuto extends AutoMethods {
                 cp_prepareForDeposit,
                 wp_prepareForDeposit
         );
-
+        intake.setPower(0);
         if (skystonePosition == 3) {
             intake.setPower(0);
             lift.closeClaw();
@@ -109,15 +122,7 @@ public class SkystoneAuto extends AutoMethods {
         }
 
         // Spit out the block
-        if (skystonePosition != 3) {
-            timer.reset();
-            timer.startTime();
-            while (opModeIsActive() && timer.seconds() < .75)
-                intake.setPower(1);
-            timer.reset();
-            intake.setPower(0);
-        }
-        else {
+
             // Drop the block out the back
             lift.extendClaw();
             waitTime(1);
@@ -126,7 +131,23 @@ public class SkystoneAuto extends AutoMethods {
             // Pull lift back in so it doesn't hit anything
             waitTime(.5);
             lift.retractClaw();
+
+        // Point turn to get out of way
+        while (opModeIsActive() && timer.seconds()<.3) {
+            robot.updatePositionRoadRunner();
+            drive.drive(0, 0, .85);
         }
+        drive.hardBrakeMotors();
+
+        // Point turn to be oriented correctly
+
+        timer.reset();
+        while (opModeIsActive() && timer.seconds()<.3) {
+            robot.updatePositionRoadRunner();
+            drive.drive(0, 0, .85);
+        }
+        drive.hardBrakeMotors();
+
 
         // Drive back to the quarry
         runPurePursuitPath(

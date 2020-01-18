@@ -24,9 +24,7 @@ public class LiftMech {
         robot.claw.setPosition(.1);
     }
 
-    public void closeClaw() {
-        robot.claw.setPosition(1);
-    }
+    public void closeClaw() { robot.claw.setPosition(1); }
 
     /**
      * Extends or retracts the claw
@@ -35,13 +33,13 @@ public class LiftMech {
         clawExtended = !clawExtended;
 
         if (clawExtended)
-            robot.clawExtension.setPosition(1);
+            robot.clawExtension.setPosition(0.5);
         else
             robot.clawExtension.setPosition(0);
     }
 
     public void extendClaw() {
-        robot.clawExtension.setPosition(1);
+        robot.clawExtension.setPosition(.5);
     }
 
     public void retractClaw() {

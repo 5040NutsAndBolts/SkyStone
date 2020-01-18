@@ -43,11 +43,11 @@ public class TimePark extends AutoMethods {
                 dPadPressed = true;
             }
 
-            if (gamepad1.dpad_left) {
+            if (gamepad1.dpad_left && !dPadPressed) {
                 movingRight = false;
                 dPadPressed = true;
             }
-            if (gamepad1.dpad_right) {
+            if (gamepad1.dpad_right && !dPadPressed) {
                 movingRight = true;
                 dPadPressed = true;
             }
@@ -64,8 +64,11 @@ public class TimePark extends AutoMethods {
                 waitTime = 25;
             if (waitTime < 0)
                 waitTime = 0;
-        }        long endTime = System.currentTimeMillis() + (int)(waitTime * 1000);
-        while (opModeIsActive() && System.currentTimeMillis() < endTime);
+        }
+
+        waitTime(waitTime);
+
+        long endTime;
 
         if (!parkingAgainstWall) {
             endTime = System.currentTimeMillis() + 1250;
