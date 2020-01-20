@@ -68,7 +68,7 @@ public class SkystoneAuto extends AutoMethods {
                     0,
                     4,
                     1.2,
-                    .8
+                    .2
             );
         }
         drive.hardBrakeMotors();
@@ -100,6 +100,10 @@ public class SkystoneAuto extends AutoMethods {
             );
         }
         else {
+            timer.reset();
+            while(timer.seconds()<1)
+                intake.setPower(1);
+            waitTime(1);
             runPurePursuitPath(
                     cp_depositSkystone,
                     wp_depositSkystonePos3,
