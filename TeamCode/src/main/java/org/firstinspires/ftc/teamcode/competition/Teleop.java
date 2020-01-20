@@ -142,7 +142,7 @@ public class Teleop extends OpMode {
 
         // TeleOp debugging
         if (gamepad1.back && debugging)
-            robot.resetOdometry(9, 9, 3 * Math.PI / 2);
+            robot.resetOdometry(9, 135, 3 * Math.PI / 2);
 
         // ===================
         // UPDATE CONTROLLERS

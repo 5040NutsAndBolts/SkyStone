@@ -75,18 +75,9 @@ public class SkystoneAuto extends AutoMethods {
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        if (skystonePosition != 3) {
-            while (opModeIsActive() && timer.seconds() < 1.2) {
-                drive.drive(.3, 0, 0);
-                intake.setPower(-1);
-            }
-
-        }
-        else {
-            while (opModeIsActive() && timer.seconds() < .7) {
-                drive.drive(.35, 0, 0);
-                intake.setPower(-1);
-            }
+        while (opModeIsActive() && timer.seconds() < .5) {
+            drive.drive(.3, 0, 0);
+            intake.setPower(-1);
         }
         drive.hardBrakeMotors();
 
@@ -199,18 +190,9 @@ public class SkystoneAuto extends AutoMethods {
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        if (skystonePosition == 1) {
-            while(timer.seconds() < .75 && opModeIsActive()) {
-                drive.drive(.25,0,0);
-                intake.setPower(-.75);
-            }
-        }
-        else {
-            while (((skystonePosition == 2 && timer.seconds() < 1.25) ||
-                    (skystonePosition == 3 && timer.seconds() < 1.1)) && opModeIsActive()) {
-                drive.drive(.25, 0, 0);
-                intake.setPower(-1);
-            }
+        while(timer.seconds() < .5 && opModeIsActive()) {
+            drive.drive(.3,0,0);
+            intake.setPower(-1);
         }
         drive.hardBrakeMotors();
 

@@ -65,8 +65,6 @@ public abstract class AutoMethods extends LinearOpMode {
         lift = new LiftMech(robot);
         purePursuit = new PurePursuit(robot);
 
-
-
         // Keep hardware from unintentionally moving around
         lift.openClaw();
         lift.retractClaw();
@@ -102,8 +100,6 @@ public abstract class AutoMethods extends LinearOpMode {
         boolean dpadUpPressed = false, dpadDownPressed = false;
 
         while (!isStarted() && !isStopRequested()) {
-
-
             if (gamepad1.x || gamepad2.x) {
                 if (onRed)
                     robot.resetOdometry(robot.x, -robot.y, robot.theta);
@@ -115,8 +111,6 @@ public abstract class AutoMethods extends LinearOpMode {
                     robot.resetOdometry(robot.x, -robot.y, robot.theta);
                 }
                 onRed = true;
-
-
             }
 
             if (gamepad1.y || gamepad2.y)
@@ -225,8 +219,9 @@ public abstract class AutoMethods extends LinearOpMode {
      * @param threshold Threshold the the robot angle must be within
      */
     protected void pointTurnToAngle(double angle, double threshold) {
-        while (!inThreshold(angle, robot.theta, threshold) && opModeIsActive()) {
+        while (opModeIsActive() && !inThreshold(angle, robot.theta, threshold)) {
             double movementTurn = robot.theta - angle;
+
             if (movementTurn > Math.PI)
                 movementTurn = Math.PI - movementTurn;
             else if (movementTurn < -Math.PI)
@@ -242,8 +237,10 @@ public abstract class AutoMethods extends LinearOpMode {
             if (Math.abs(movementTurn) < .5)
                 movementTurn *= 1.1;
 
+            updateOdometryTelemetry();
             drive.drive(0, 0, movementTurn);
         }
+        drive.hardBrakeMotors();
     }
 
 
