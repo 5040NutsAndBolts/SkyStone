@@ -422,9 +422,9 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Position to grab the right most skystone closest to the sky bridge
-            cp_grabSkystone1_pos1 = new CheckPoint(51.5-0.7874016, 96, 3, robot),
+            cp_grabSkystone1_pos1 = new CheckPoint(49.75, 96, .9, robot),
             // Position to grab the right most skystone closest to the wall
-            cp_grabSkystone2_pos1 = new CheckPoint(52-0.7874016, 122, 1.5, robot),
+            cp_grabSkystone2_pos1 = new CheckPoint(52, 122, 1, robot),
 
             // Position to grab the middle skystone closest to the sky bridge
             cp_grabSkystone1_pos2 = new CheckPoint(52-0.7874016, 89, 1.2, robot),
@@ -437,26 +437,26 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_grabSkystone2_pos3 = new CheckPoint(53-0.7874016, 104, 3, robot),
 
             // Backing up and preparing to deposit the first skystone
-            cp_prepareForDeposit = new CheckPoint(37, 97, 3, robot),
+            cp_prepareForDeposit = new CheckPoint(41, 97, 3, robot),
 
             // Driving and depositing the skystone
             cp_depositSkystone = new CheckPoint(33, 57, 2, robot),
             cp_depositSkystone_2 = new CheckPoint(33, 57, 2, robot),
 
             // Backing up and preparing to deposit the second skystone
-            cp_prepareForSecondSkystone = new CheckPoint(19, 97, 3, robot);
+            cp_prepareForSecondSkystone = new CheckPoint(21, 103, 3, robot);
 
     public ArrayList<WayPoint>
             // Right most skystone paths
             wp_grabSkystone1_pos1 = new ArrayList<>(
             Arrays.asList(
-                    new WayPoint(30-0.7874016, 90-0.7874016, 3 * Math.PI / 2),
-                    new WayPoint(51.5-0.7874016, 96-0.7874016, 3 * Math.PI / 2)
+                    new WayPoint(40, 96, 3 * Math.PI / 2),
+                    new WayPoint(49.75, 96, 3 * Math.PI / 2)
             )),
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(40-0.7874016, 120, 3 * Math.PI / 2),
-                            new WayPoint(52-0.7874016, 122, 3 * Math.PI / 2)
+                            new WayPoint(40.5-0.7874016, 120, 3 * Math.PI / 2),
+                            new WayPoint(52, 122, 3 * Math.PI / 2)
                     )),
             // Middle skystone paths
             wp_grabSkystone1_pos2 = new ArrayList<>(
@@ -482,7 +482,7 @@ public abstract class AutoMethods extends LinearOpMode {
             // Depositing the skystones
             wp_prepareForDeposit = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(37, 97, Math.PI)
+                            new WayPoint(41, 97, Math.PI)
                     )
             ),
             wp_prepareForPushAndDeposit = new ArrayList<>(
@@ -493,20 +493,27 @@ public abstract class AutoMethods extends LinearOpMode {
             ),
             wp_depositSkystonePos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(34, 106, 3 * Math.PI / 2),
+                            new WayPoint(39, 90, 3 * Math.PI / 2),
                             new WayPoint(33, 57, 3 * Math.PI / 2)
                     )
             ),
             wp_depositSkystone = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(34, 106, 3 * Math.PI / 2),
-                            new WayPoint(33, 57, 3 * Math.PI / 2)
+                            new WayPoint(39, 90, 3 * Math.PI / 2),
+                            new WayPoint(34, 57, 3 * Math.PI / 2)
+                    )
+            ),
+            wp_depositSkystone_2 = new ArrayList<>(
+                    Arrays.asList(
+                            new WayPoint(35, 90, 3 * Math.PI / 2),
+                            new WayPoint(34, 57, 3 * Math.PI / 2)
                     )
             ),
             // Moving to grab the second skystone
             wp_prepareForSecondSkystone = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(19, 97, 3 * Math.PI / 2)
+                            new WayPoint(31, 98, 3 * Math.PI / 2),
+                            new WayPoint(21, 102, 3 * Math.PI / 2)
                     ));
 
     // ============================
