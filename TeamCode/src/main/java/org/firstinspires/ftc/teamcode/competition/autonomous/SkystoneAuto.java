@@ -63,12 +63,12 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos3,
                     wp_grabSkystone1_pos3,
-                    .15,
+                    .4,
                     .006,
                     0,
                     4,
-                    1.2,
-                    .2
+                    2,
+                    .1
             );
         }
         drive.hardBrakeMotors();
@@ -76,9 +76,10 @@ public class SkystoneAuto extends AutoMethods {
         timer.reset();
         timer.startTime();
         while (opModeIsActive() && timer.seconds() < .5) {
-            drive.drive(.3, 0, 0);
-            intake.setPower(-1);
+                drive.drive(.3, 0, 0);
+                intake.setPower(-1);
         }
+
         drive.hardBrakeMotors();
 
         // Drive backwards to be out of way with skystone
@@ -100,16 +101,12 @@ public class SkystoneAuto extends AutoMethods {
             );
         }
         else {
-            timer.reset();
-            while(timer.seconds()<1)
-                intake.setPower(1);
-            waitTime(1);
             runPurePursuitPath(
                     cp_depositSkystone,
                     wp_depositSkystonePos3,
                     4,
-                    .75,
-                    .25
+                    1.2,
+                    .15
             );
         }
         intake.setPower(0);
@@ -146,7 +143,7 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos1,
                     wp_grabSkystone2_pos1,
-                    .3,
+                    .4,
                     0.01,
                     .1,
                     4,
@@ -170,9 +167,9 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos3,
                     wp_grabSkystone2_pos3,
-                    .15,
+                    .4,
                     .006,
-                    .8,
+                    .5,
                     4,
                     1.5,
                     .1
@@ -182,16 +179,25 @@ public class SkystoneAuto extends AutoMethods {
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        while(timer.seconds() < .5 && opModeIsActive()) {
-            drive.drive(.3,0,0);
-            intake.setPower(-1);
+        if(skystonePosition!=3) {
+            while (opModeIsActive() && timer.seconds() < .5) {
+                drive.drive(.3, 0, 0);
+                intake.setPower(-1);
+            }
+        }
+        else
+        {
+
+            while (opModeIsActive() && timer.seconds() < .9) {
+                drive.drive(.3, 0, 0);
+                intake.setPower(-1);
+            }
         }
         drive.hardBrakeMotors();
 
         // Intake for a second then grab the block
         waitTime(1);
-        intake.setPower(0);
-        lift.closeClaw();
+
 
 
         // Run to build zone with the skystone
@@ -202,7 +208,9 @@ public class SkystoneAuto extends AutoMethods {
                 .65,
                 .5
         );
-
+        intake.setPower(0);
+        lift.closeClaw();
+        waitTime(.9);
         // Drop the block out the back
         lift.extendClaw();
         waitTime(1);
