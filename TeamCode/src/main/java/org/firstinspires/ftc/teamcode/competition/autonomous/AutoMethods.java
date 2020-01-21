@@ -422,26 +422,26 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Position to grab the right most skystone closest to the sky bridge
-            cp_grabSkystone1_pos1 = new CheckPoint(49.75, 96, .9, robot),
+            cp_grabSkystone1_pos1 = new CheckPoint(50.75, 96, .5, robot),
             // Position to grab the right most skystone closest to the wall
-            cp_grabSkystone2_pos1 = new CheckPoint(52, 122, 1, robot),
+            cp_grabSkystone2_pos1 = new CheckPoint(52, 122, .5, robot),
 
             // Position to grab the middle skystone closest to the sky bridge
-            cp_grabSkystone1_pos2 = new CheckPoint(52-0.7874016, 89, 1.2, robot),
+            cp_grabSkystone1_pos2 = new CheckPoint(52-0.7874016, 89, 1, robot),
             // Position to grab the middle skystone closest to the wall
-            cp_grabSkystone2_pos2 = new CheckPoint(52.5, 113, 1, robot),
+            cp_grabSkystone2_pos2 = new CheckPoint(52.5, 113, .6, robot),
 
             // Position to grab the left most skystone closest to the sky bridge
-            cp_grabSkystone1_pos3 = new CheckPoint(52, 117, .9, robot),
+            cp_grabSkystone1_pos3 = new CheckPoint(51.5, 117, .6, robot),
             // Position to grab the left most skystone closest to the wall
-            cp_grabSkystone2_pos3 = new CheckPoint(63.5, 107.5, .75, robot),
+            cp_grabSkystone2_pos3 = new CheckPoint(64.75, 107.5, .5, robot),
 
             // Backing up and preparing to deposit the first skystone
             cp_prepareForDeposit = new CheckPoint(41, 97, 3, robot),
 
             // Driving and depositing the skystone
-            cp_depositSkystone = new CheckPoint(33, 57, 2, robot),
-            cp_depositSkystone_2 = new CheckPoint(33, 57, 2, robot),
+            cp_depositSkystone = new CheckPoint(34, 57, 1, robot),
+            cp_depositSkystone_2 = new CheckPoint(33.75, 57, 1, robot),
 
             // Backing up and preparing to deposit the second skystone
             cp_prepareForSecondSkystone = new CheckPoint(21, 103, 3, robot);
@@ -451,7 +451,7 @@ public abstract class AutoMethods extends LinearOpMode {
             wp_grabSkystone1_pos1 = new ArrayList<>(
             Arrays.asList(
                     new WayPoint(40, 96, 3 * Math.PI / 2),
-                    new WayPoint(49.75, 96, 3 * Math.PI / 2)
+                    new WayPoint(50.75, 96, 3 * Math.PI / 2)
             )),
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
@@ -473,11 +473,11 @@ public abstract class AutoMethods extends LinearOpMode {
             wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(18-0.7874016, 111.5, Math.PI/2),
-                            new WayPoint(52, 117, Math.PI/2)
+                            new WayPoint(51.5, 117, Math.PI/2)
                     )),
             wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(63.5, 107.5, 3 * Math.PI / 2)
+                            new WayPoint(64.75, 107.5, 3 * Math.PI / 2)
                     )),
             // Depositing the skystones
             wp_prepareForDeposit = new ArrayList<>(
@@ -505,8 +505,8 @@ public abstract class AutoMethods extends LinearOpMode {
             ),
             wp_depositSkystone_2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(35, 90, 3 * Math.PI / 2),
-                            new WayPoint(34, 57, 3 * Math.PI / 2)
+                            new WayPoint(34.25, 90, 3 * Math.PI / 2),
+                            new WayPoint(33.75, 57, 3 * Math.PI / 2)
                     )
             ),
             // Moving to grab the second skystone

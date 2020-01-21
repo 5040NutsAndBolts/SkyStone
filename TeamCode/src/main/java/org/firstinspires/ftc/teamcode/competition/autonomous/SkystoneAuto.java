@@ -25,12 +25,14 @@ public class SkystoneAuto extends AutoMethods {
 
         if (onRed) {
             timer.reset();
-            while (timer.seconds() < .5 && opModeIsActive())
-                drive.drive(0,-.5,0);
+            while (timer.seconds() < .6 && opModeIsActive())
+                drive.drive(0,-.45,0);
             while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, Math.PI/2, 10)) {
                 robot.updatePositionRoadRunner();
                 drive.drive(0, 0, .75);
             }
+            while (timer.seconds() < .5 && opModeIsActive())
+                drive.drive(0,-.5,0);
             drive.hardBrakeMotors();
         }
 
@@ -39,7 +41,7 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos1,
                     wp_grabSkystone1_pos1,
-                    .6,
+                    .9,
                     .009,
                     .3,
                     6,
@@ -63,8 +65,8 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos3,
                     wp_grabSkystone1_pos3,
-                    .4,
-                    .006,
+                    .55,
+                    .01,
                     0,
                     4,
                     2,
@@ -76,10 +78,29 @@ public class SkystoneAuto extends AutoMethods {
         timer.reset();
         timer.startTime();
         while (opModeIsActive() && timer.seconds() < .5) {
+            intake.setPower(-timer.seconds()*1.5+.25);
+        }
+        if(skystonePosition!=3) {
+            timer.reset();
+            timer.startTime();
+            while (opModeIsActive() && timer.seconds() < .5) {
                 drive.drive(.3, 0, 0);
                 intake.setPower(-1);
+            }
         }
-
+        else {
+            timer.reset();
+            timer.startTime();
+            while (opModeIsActive() && timer.seconds() < .9) {
+                drive.drive(.3, 0, 0);
+                intake.setPower(-1);
+            }
+            timer.reset();
+            timer.startTime();
+            while (opModeIsActive() && timer.seconds() < .4) {
+                drive.drive(-.3, 0, 0);
+            }
+        }
         drive.hardBrakeMotors();
 
         // Drive backwards to be out of way with skystone
@@ -167,9 +188,9 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos3,
                     wp_grabSkystone2_pos3,
-                    .4,
-                    .006,
-                    .5,
+                    .8,
+                    .07,
+                    .05,
                     4,
                     1.5,
                     .1
