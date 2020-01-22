@@ -60,10 +60,10 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos2,
                     wp_grabSkystone1_pos2,
-                    .155,
+                    .5,
                     .006,
                     0.15,
-                    8,
+                    9,
                     1.3,
                     .2
             );

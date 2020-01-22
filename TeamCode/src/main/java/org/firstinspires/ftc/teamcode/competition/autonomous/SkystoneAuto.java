@@ -53,12 +53,12 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos2,
                     wp_grabSkystone1_pos2,
-                    .65,
-                    .016,
-                    0.05,
-                    6,
-                    1.1,
-                    .9
+                    .6,
+                    .018,
+                    0.1,
+                    8,
+                    1.2,
+                    .4
             );
         }
         else if (skystonePosition == 3) {
@@ -154,7 +154,7 @@ public class SkystoneAuto extends AutoMethods {
                 .25,
                 .003,
                 .125,
-                9,
+                8,
                 .75,
                 .5
         );
