@@ -53,8 +53,8 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos2,
                     wp_grabSkystone1_pos2,
-                    .155,
-                    .006,
+                    .65,
+                    .016,
                     0.05,
                     6,
                     1.1,
@@ -176,7 +176,7 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos2,
                     wp_grabSkystone2_pos2,
-                    .17 ,
+                    .6 ,
                     .006,
                     0.05,
                     5,
