@@ -41,9 +41,9 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos1,
                     wp_grabSkystone1_pos1,
-                    .9,
+                    .85,
                     .009,
-                    .3,
+                    .175,
                     6,
                     1,
                     .2
@@ -135,14 +135,14 @@ public class SkystoneAuto extends AutoMethods {
         waitTime(1);
         // Spit out the block
 
-            // Drop the block out the back
-            lift.extendClaw();
-            waitTime(1);
-            lift.openClaw();
+        // Drop the block out the back
+        lift.extendClaw();
+        waitTime(1);
+        lift.openClaw();
 
-            // Pull lift back in so it doesn't hit anything
-            waitTime(.5);
-            lift.retractClaw();
+        // Pull lift back in so it doesn't hit anything
+        waitTime(.5);
+        lift.retractClaw();
 
 
 
@@ -164,9 +164,9 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos1,
                     wp_grabSkystone2_pos1,
-                    .4,
-                    0.01,
-                    .1,
+                    .75,
+                    0.02,
+                    .07,
                     4,
                     1.5,
                     .3

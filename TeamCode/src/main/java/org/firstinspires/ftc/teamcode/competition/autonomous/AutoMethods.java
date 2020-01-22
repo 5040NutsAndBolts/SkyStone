@@ -434,7 +434,7 @@ public abstract class AutoMethods extends LinearOpMode {
             // Position to grab the left most skystone closest to the sky bridge
             cp_grabSkystone1_pos3 = new CheckPoint(51.5, 117.7, .5, robot),
             // Position to grab the left most skystone closest to the wall
-            cp_grabSkystone2_pos3 = new CheckPoint(64.75, 107, .5, robot),
+            cp_grabSkystone2_pos3 = new CheckPoint(64.75, 108, .5, robot),
 
             // Backing up and preparing to deposit the first skystone
             cp_prepareForDeposit = new CheckPoint(41, 97, 3, robot),
