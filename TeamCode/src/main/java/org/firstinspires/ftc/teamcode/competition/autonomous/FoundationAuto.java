@@ -18,11 +18,15 @@ public class FoundationAuto extends AutoMethods {
                 wp_foundationGrab,
                 .4,
                 0,
-                1,
+                1.1,
                 4,
                 1.5,
                 1.2
         );
+
+        timer.reset();
+        while(timer.seconds()<.2)
+            drive.drive(-.25,0,0);
 
         // Grab foundation
         foundationGrabbers.grab();
@@ -45,6 +49,9 @@ public class FoundationAuto extends AutoMethods {
                 cp_foundationPushImproved,
                 wp_foundationPushImproved
         );
+        timer.reset();
+        while(timer.seconds()<1)
+            drive.drive(.4,0,0);
 
         // Move to be in position to park
         runPurePursuitPath(

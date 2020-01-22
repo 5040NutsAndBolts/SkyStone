@@ -384,8 +384,8 @@ public abstract class AutoMethods extends LinearOpMode {
     // ===============
 
     public CheckPoint
-            cp_foundationGrab = new CheckPoint(32, 11, 2, robot),
-            cp_foundationPushImproved = new CheckPoint(35, 15, 2, robot),
+            cp_foundationGrab = new CheckPoint(31.5, 11, 2, robot),
+            cp_foundationPushImproved = new CheckPoint(36, 11, 2.5, robot),
             cp_foundationParkPrep = new CheckPoint(40, 44, 2, robot),
             cp_foundationParkWall = new CheckPoint(0, 70, 2, robot),
             cp_foundationParkBridge = new CheckPoint(21, 75, 2, robot);
@@ -393,13 +393,13 @@ public abstract class AutoMethods extends LinearOpMode {
     public ArrayList<WayPoint>
             wp_foundationGrab = new ArrayList<>(
             Arrays.asList(
-                    new WayPoint(32, 11, 0)
+                    new WayPoint(31.5, 11, 0)
             )),
             wp_foundationPushImproved = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(0, 44, 0),
                             new WayPoint(45,44,0),
-                            new WayPoint(35,15,0)
+                            new WayPoint(36,11,0)
                     )),
             wp_foundationParkPrep = new ArrayList<>(
                     Arrays.asList(
