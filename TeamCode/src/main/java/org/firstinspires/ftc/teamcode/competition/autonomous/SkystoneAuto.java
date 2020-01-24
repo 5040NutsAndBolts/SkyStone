@@ -12,8 +12,11 @@ public class SkystoneAuto extends AutoMethods {
     public void runOpMode() {
 
 
-        initAuto(true, 9, 135,  3*Math.PI / 2);
-
+        initAuto(true);
+        if (onRed)
+            robot.resetOdometry(9,-103.5,3*Math.PI/2);
+        else
+            robot.resetOdometry(9,103.5,3*Math.PI/2);
         // Release intake
         robot.intakeBlock.setPosition(.5);
         timer.reset();
@@ -26,14 +29,12 @@ public class SkystoneAuto extends AutoMethods {
         if (onRed) {
             timer.reset();
             while (timer.seconds() < .6 && opModeIsActive())
+                robot.updatePositionRoadRunner();
                 drive.drive(0,-.45,0);
             while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, Math.PI/2, 10)) {
                 robot.updatePositionRoadRunner();
                 drive.drive(0, 0, .75);
             }
-            while (timer.seconds() < .5 && opModeIsActive())
-                drive.drive(0,-.5,0);
-            drive.hardBrakeMotors();
         }
 
         // Goes to position to grab skystone
@@ -41,11 +42,11 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos1,
                     wp_grabSkystone1_pos1,
-                    .85,
-                    .009,
-                    .175,
-                    6,
                     1,
+                    .009,
+                    .225,
+                    6,
+                    1.3,
                     .2
             );
         }
@@ -65,12 +66,12 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos3,
                     wp_grabSkystone1_pos3,
-                    .55,
-                    .01,
-                    0,
+                    .85,
+                    .04,
+                    0.4,
                     4,
-                    2,
-                    .1
+                    2.5,
+                    .15
             );
         }
         drive.hardBrakeMotors();
@@ -123,7 +124,7 @@ public class SkystoneAuto extends AutoMethods {
         }
         else {
             runPurePursuitPath(
-                    cp_depositSkystone,
+                    cp_depositSkystonePos3,
                     wp_depositSkystonePos3,
                     4,
                     1.2,
@@ -176,11 +177,11 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos2,
                     wp_grabSkystone2_pos2,
-                    .6 ,
-                    .006,
-                    0.05,
+                    .7,
+                    .01,
+                    0.2,
                     5,
-                    1,
+                    1.3,
                     .2
             );
         }
@@ -188,11 +189,11 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos3,
                     wp_grabSkystone2_pos3,
-                    .8,
-                    .07,
-                    .05,
+                    .9,
+                    .1,
+                    .35,
                     4,
-                    1.5,
+                    1.75,
                     .1
             );
         }
@@ -222,13 +223,30 @@ public class SkystoneAuto extends AutoMethods {
 
 
         // Run to build zone with the skystone
-        runPurePursuitPath(
-                cp_depositSkystone_2,
-                wp_depositSkystone_2,
-                4,
-                .65,
-                .5
-        );
+        if(skystonePosition!=3)
+        {
+            runPurePursuitPath(
+                    cp_depositSkystone_2,
+                    wp_depositSkystone_2,
+                    4,
+                    .5,
+                    .5
+            );
+        }
+        else
+            {
+                runPurePursuitPath(
+                        cp_depositSkystone_2Pos3,
+                        wp_depositSkystone_2Pos3,
+                        .5,
+                        .02,
+                        .2,
+                        4,
+                        .5,
+                        .5
+                );
+            }
+        drive.hardBrakeMotors();
         intake.setPower(0);
         lift.closeClaw();
         waitTime(.9);
