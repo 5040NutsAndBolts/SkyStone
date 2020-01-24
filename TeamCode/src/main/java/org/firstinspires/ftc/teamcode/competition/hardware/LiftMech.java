@@ -46,6 +46,10 @@ public class LiftMech {
         robot.clawExtension.setPosition(0);
     }
 
+    public void holdCapstone() { robot.capstone.setPosition(0); }
+
+    public void releaseCapstone() { robot.capstone.setPosition(1); }
+
     /**
      * Raises or lowers the lift mechanism with a specific power
      *

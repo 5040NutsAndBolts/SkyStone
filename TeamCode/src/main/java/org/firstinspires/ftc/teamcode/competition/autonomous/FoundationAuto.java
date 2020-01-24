@@ -24,8 +24,9 @@ public class FoundationAuto extends AutoMethods {
                 1.2
         );
 
+        // Ensure robot reaches the foundation
         timer.reset();
-        while(timer.seconds()<.2)
+        while(opModeIsActive() && timer.seconds() < .2)
             drive.drive(-.25,0,0);
 
         // Grab foundation
@@ -50,7 +51,7 @@ public class FoundationAuto extends AutoMethods {
                 wp_foundationPushImproved
         );
         timer.reset();
-        while(timer.seconds()<1)
+        while(opModeIsActive() && timer.seconds() < 1)
             drive.drive(.4,0,0);
 
         // Move to be in position to park

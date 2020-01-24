@@ -87,7 +87,7 @@ public class Hardware {
 
     // Lift
     public DcMotor liftMotor1, liftMotor2;
-    public Servo claw, clawExtension;
+    public Servo claw, clawExtension, capstone;
 
     /**
      * Initialization of hardware
@@ -162,6 +162,8 @@ public class Hardware {
         clawExtension = hwMap.servo.get("clawExtension");
         // Claw grabber
         claw = hwMap.servo.get("claw");
+        // Capstone swiper
+        capstone = hwMap.servo.get("capstone");
     }
 
     /**

@@ -65,6 +65,7 @@ public class Teleop extends OpMode {
             lift.openClaw();
             lift.retractClaw();
             foundationGrabbers.release();
+            lift.holdCapstone();
             startTeleop = true;
         }
 
@@ -99,6 +100,10 @@ public class Teleop extends OpMode {
             lift.closeClaw();
         if (gamepad2.y)
             lift.openClaw();
+
+        // Spin out the capstone device
+        if (gamepad2.back)
+            lift.releaseCapstone();
 
         // =======================
         // Bottom Half (Gamepad 1) - Intake, Drive, Foundation Grabbers

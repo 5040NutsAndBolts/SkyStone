@@ -70,6 +70,7 @@ public abstract class AutoMethods extends LinearOpMode {
         lift.retractClaw();
         foundationGrabbers.release();
         robot.intakeBlock.setPosition(1);
+        lift.holdCapstone();
 
         // Reset robot position to a specified value
         robot.resetOdometry(robotX, robotY, robotTheta);
