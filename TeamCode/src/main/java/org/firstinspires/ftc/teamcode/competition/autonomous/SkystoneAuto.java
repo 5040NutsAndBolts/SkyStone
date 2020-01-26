@@ -10,13 +10,13 @@ public class SkystoneAuto extends AutoMethods {
 
     @Override
     public void runOpMode() {
-
-
         initAuto(true);
+
         if (onRed)
             robot.resetOdometry(9,-103.5,3*Math.PI/2);
         else
             robot.resetOdometry(9,103.5,3*Math.PI/2);
+
         // Release intake
         robot.intakeBlock.setPosition(.5);
         timer.reset();
@@ -113,7 +113,7 @@ public class SkystoneAuto extends AutoMethods {
 
 
         // Run to build zone with the skystone
-        if (skystonePosition != 3) {
+        if (skystonePosition!=3) {
             runPurePursuitPath(
                     cp_depositSkystone,
                     wp_depositSkystone,
@@ -145,18 +145,15 @@ public class SkystoneAuto extends AutoMethods {
         waitTime(.5);
         lift.retractClaw();
 
-
-
-
         // Drive back to the quarry
         runPurePursuitPath(
                 cp_prepareForSecondSkystone,
                 wp_prepareForSecondSkystone,
                 .25,
                 .003,
-                .125,
+                .15,
                 8,
-                .75,
+                1,
                 .5
         );
 
@@ -201,15 +198,13 @@ public class SkystoneAuto extends AutoMethods {
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        if(skystonePosition!=3) {
+        if (skystonePosition!=3) {
             while (opModeIsActive() && timer.seconds() < .5) {
                 drive.drive(.3, 0, 0);
                 intake.setPower(-1);
             }
         }
-        else
-        {
-
+        else {
             while (opModeIsActive() && timer.seconds() < .9) {
                 drive.drive(.3, 0, 0);
                 intake.setPower(-1);
@@ -220,11 +215,8 @@ public class SkystoneAuto extends AutoMethods {
         // Intake for a second then grab the block
         waitTime(1);
 
-
-
         // Run to build zone with the skystone
-        if(skystonePosition!=3)
-        {
+        if(skystonePosition != 3) {
             runPurePursuitPath(
                     cp_depositSkystone_2,
                     wp_depositSkystone_2,
@@ -233,8 +225,7 @@ public class SkystoneAuto extends AutoMethods {
                     .5
             );
         }
-        else
-            {
+        else {
                 runPurePursuitPath(
                         cp_depositSkystone_2Pos3,
                         wp_depositSkystone_2Pos3,
@@ -250,6 +241,7 @@ public class SkystoneAuto extends AutoMethods {
         intake.setPower(0);
         lift.closeClaw();
         waitTime(.9);
+
         // Drop the block out the back
         lift.extendClaw();
         waitTime(1);
