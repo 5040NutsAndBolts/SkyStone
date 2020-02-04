@@ -66,7 +66,7 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos3,
                     wp_grabSkystone1_pos3,
-                    .85,
+                    1.5,
                     .04,
                     0.4,
                     4,
@@ -75,6 +75,7 @@ public class SkystoneAuto extends AutoMethods {
             );
         }
         drive.hardBrakeMotors();
+
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
@@ -110,8 +111,6 @@ public class SkystoneAuto extends AutoMethods {
                 wp_prepareForDeposit
         );
 
-
-
         // Run to build zone with the skystone
         if (skystonePosition!=3) {
             runPurePursuitPath(
@@ -131,10 +130,11 @@ public class SkystoneAuto extends AutoMethods {
                     .15
             );
         }
+
+        // Grab the block
         intake.setPower(0);
         lift.closeClaw();
         waitTime(1);
-        // Spit out the block
 
         // Drop the block out the back
         lift.extendClaw();
@@ -153,7 +153,7 @@ public class SkystoneAuto extends AutoMethods {
                 .003,
                 .15,
                 8,
-                1,
+                .1,
                 .5
         );
 

@@ -433,7 +433,7 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_grabSkystone2_pos2 = new CheckPoint(52.5, 113, .5, robot),
 
             // Position to grab the left most skystone closest to the sky bridge
-            cp_grabSkystone1_pos3 = new CheckPoint(52, 114, .5, robot),
+            cp_grabSkystone1_pos3 = new CheckPoint(52, 116, .5, robot),
             // Position to grab the left most skystone closest to the wall
             cp_grabSkystone2_pos3 = new CheckPoint(64, 104.5, .5, robot),
 
@@ -446,8 +446,8 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_depositSkystone_2 = new CheckPoint(34, 56, 1.5, robot),
             cp_depositSkystone_2Pos3 = new CheckPoint(35, 56, 1.5, robot),
 
-            // Backing up and preparing to deposit the second skystone
-            cp_prepareForSecondSkystone = new CheckPoint(21, 103, 5, robot);
+            // Driving back to the quarry
+            cp_prepareForSecondSkystone = new CheckPoint(22, 103, 6, robot);
 
     public ArrayList<WayPoint>
             // Right most skystone paths
@@ -475,8 +475,8 @@ public abstract class AutoMethods extends LinearOpMode {
             // Left most skystone paths
             wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(18-0.7874016, 116.5, Math.PI/2),
-                            new WayPoint(52, 114, Math.PI/2)
+                            new WayPoint(18-0.7874016, 118.5, Math.PI/2),
+                            new WayPoint(52, 116, Math.PI/2)
                     )),
             wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
