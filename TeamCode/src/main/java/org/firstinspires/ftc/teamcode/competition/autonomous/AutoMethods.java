@@ -244,7 +244,6 @@ public abstract class AutoMethods extends LinearOpMode {
         drive.hardBrakeMotors();
     }
 
-
     /**
      * Displays position data for the end of autonomous
      */
@@ -257,6 +256,28 @@ public abstract class AutoMethods extends LinearOpMode {
             updateOdometryTelemetry();
             drive.hardBrakeMotors();
         }
+    }
+
+    /**
+     * Grabs the block then places it
+     */
+    protected void placeBlock() {
+        // Stop the robot
+        drive.hardBrakeMotors();
+        intake.setPower(0);
+
+        // Grab the block
+        lift.closeClaw();
+        waitTime(.25);
+
+        // Drop the block out the back
+        lift.extendClaw();
+        waitTime(.75);
+        lift.openClaw();
+
+        // Pull claw back in so it doesn't hit anything
+        waitTime(.5);
+        lift.retractClaw();
     }
 
 

@@ -100,7 +100,7 @@ public class SkystoneAuto extends AutoMethods {
             timer.reset();
             timer.startTime();
             while (opModeIsActive() && timer.seconds() < .4) {
-                drive.drive(-.3, 0, 0);
+                drive.drive(-.3, -.05, 0);
             }
         }
         drive.hardBrakeMotors();
@@ -131,19 +131,8 @@ public class SkystoneAuto extends AutoMethods {
             );
         }
 
-        // Grab the block
-        intake.setPower(0);
-        lift.closeClaw();
-        waitTime(1);
-
-        // Drop the block out the back
-        lift.extendClaw();
-        waitTime(1);
-        lift.openClaw();
-
-        // Pull lift back in so it doesn't hit anything
-        waitTime(.5);
-        lift.retractClaw();
+        // Places the block out the robot
+        placeBlock();
 
         // Drive back to the quarry
         runPurePursuitPath(
@@ -205,14 +194,14 @@ public class SkystoneAuto extends AutoMethods {
             }
         }
         else {
-            while (opModeIsActive() && timer.seconds() < .9) {
+            while (opModeIsActive() && timer.seconds() < .75) {
                 drive.drive(.3, 0, 0);
                 intake.setPower(-1);
             }
         }
         drive.hardBrakeMotors();
 
-        // Intake for a second then grab the block
+        // Intake for a second to ensure the block is grabbed
         waitTime(1);
 
         // Run to build zone with the skystone
@@ -239,17 +228,9 @@ public class SkystoneAuto extends AutoMethods {
             }
         drive.hardBrakeMotors();
         intake.setPower(0);
-        lift.closeClaw();
-        waitTime(.9);
 
-        // Drop the block out the back
-        lift.extendClaw();
-        waitTime(1);
-        lift.openClaw();
-
-        // Pull lift back in so it doesn't hit anything
-        waitTime(.5);
-        lift.retractClaw();
+        // Places the block out the back
+        placeBlock();
 
         // Park
         if (parkAgainstBridge) {
