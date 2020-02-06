@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.PurePursuit.*;
+import org.firstinspires.ftc.teamcode.purepursuit.*;
 import org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline;
 import org.firstinspires.ftc.teamcode.competition.hardware.*;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool;
+import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline.screenPosition;
-import static org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods.angleWrap;
-import static org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods.inThreshold;
-import static org.firstinspires.ftc.teamcode.competition.helperclasses.ThreadPool.pool;
+import static org.firstinspires.ftc.teamcode.helperclasses.HelperMethods.angleWrap;
+import static org.firstinspires.ftc.teamcode.helperclasses.HelperMethods.inThreshold;
+import static org.firstinspires.ftc.teamcode.helperclasses.ThreadPool.pool;
 
 public abstract class AutoMethods extends LinearOpMode {
 
@@ -259,7 +259,7 @@ public abstract class AutoMethods extends LinearOpMode {
     }
 
     /**
-     * Grabs the block then places it
+     * Grabs the block then places it outside the robot
      */
     protected void placeBlock() {
         // Stop the robot
@@ -272,11 +272,13 @@ public abstract class AutoMethods extends LinearOpMode {
 
         // Drop the block out the back
         lift.extendClaw();
-        waitTime(.75);
+        waitTime(.5);
+
+        // Drop block
         lift.openClaw();
 
         // Pull claw back in so it doesn't hit anything
-        waitTime(.5);
+        waitTime(.25);
         lift.retractClaw();
     }
 
@@ -449,7 +451,7 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_grabSkystone2_pos1 = new CheckPoint(51.5, 122, .5, robot),
 
             // Position to grab the middle skystone closest to the sky bridge
-            cp_grabSkystone1_pos2 = new CheckPoint(50, 87.5, .5, robot),
+            cp_grabSkystone1_pos2 = new CheckPoint(50, 88, .5, robot),
             // Position to grab the middle skystone closest to the wall
             cp_grabSkystone2_pos2 = new CheckPoint(52.5, 113, .5, robot),
 
@@ -468,7 +470,7 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_depositSkystone_2Pos3 = new CheckPoint(35, 56, 1.5, robot),
 
             // Driving back to the quarry
-            cp_prepareForSecondSkystone = new CheckPoint(22, 103, 6, robot);
+            cp_prepareForSecondSkystone = new CheckPoint(22, 103, 8, robot);
 
     public ArrayList<WayPoint>
             // Right most skystone paths

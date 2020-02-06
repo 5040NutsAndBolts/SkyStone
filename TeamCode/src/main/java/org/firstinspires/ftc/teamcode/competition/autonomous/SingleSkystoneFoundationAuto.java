@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 
-
+@Disabled
 @Autonomous(group = "Auto", name = "1 Skystone & Foundation Auto")
 public class SingleSkystoneFoundationAuto extends AutoMethods {
 

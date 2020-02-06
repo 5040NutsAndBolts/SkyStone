@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.competition.helperclasses;
+package org.firstinspires.ftc.teamcode.helperclasses;
 
 public class HelperMethods {
 
     // Makes class unable to be instantiated
-    private HelperMethods() {
-    }
+    private HelperMethods() {}
 
     /**
      * Easy way of determining if a VALUE1 is within THRESHOLD PERCENT of a VALUE2
@@ -23,6 +22,12 @@ public class HelperMethods {
         return withinUpperThreshold && withinLowerThreshold;
     }
 
+    /**
+     * Determines the quadrant an angle is in
+     * Doesn't work if angle is between two quadrants
+     * @param angle Angle in question
+     * @return The quadrant the given angle is within
+     */
     public static int getQuadrant(double angle) {
         if (angle > 0 && angle < Math.PI / 2.0)
             return 1;
@@ -33,18 +38,26 @@ public class HelperMethods {
         return 4;
     }
 
+    /**
+     * Returns the value of the angle within 2 Pi
+     * @param angle Angle in question
+     * @return Value of angle within 2 Pi
+     */
     public static double angleWrap(double angle) {
+        return angle % (Math.PI * 2);
+    }
 
-        while (angle >= 2 * Math.PI) {
-            angle -= 2 * Math.PI;
-        }
-
-        while (angle < 0) {
-            angle += 2 * Math.PI;
-        }
-
-        return angle;
-
+    /**
+     * Returns if a point is within a given circle
+     * @param otherPoint Point in question
+     * @param centerPoint Center point of the circle
+     * @param radius Radius of the circle
+     * @return If the point in question is within the circle
+     */
+    public static boolean withinCircle(Point otherPoint, Point centerPoint, double radius) {
+        return
+                Math.pow(otherPoint.x - centerPoint.x, 2) + Math.pow(otherPoint.y - centerPoint.y, 2)
+                        <= Math.pow(radius, 2);
     }
 
     public static void main(String[] args) {

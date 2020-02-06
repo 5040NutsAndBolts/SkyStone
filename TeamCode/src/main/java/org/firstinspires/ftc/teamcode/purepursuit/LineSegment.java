@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PurePursuit;
+package org.firstinspires.ftc.teamcode.purepursuit;
 
 public class LineSegment {
     private double x1;

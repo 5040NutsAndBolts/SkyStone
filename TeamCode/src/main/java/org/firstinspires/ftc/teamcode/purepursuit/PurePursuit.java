@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.PurePursuit;
+package org.firstinspires.ftc.teamcode.purepursuit;
 
 
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.competition.hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.PID;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.Point;
+import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.helperclasses.PID;
+import org.firstinspires.ftc.teamcode.helperclasses.Point;
 
 import java.util.ArrayList;
 

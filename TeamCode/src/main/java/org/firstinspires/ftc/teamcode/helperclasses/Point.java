@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.competition.helperclasses;
+package org.firstinspires.ftc.teamcode.helperclasses;
 
 
 public class Point {

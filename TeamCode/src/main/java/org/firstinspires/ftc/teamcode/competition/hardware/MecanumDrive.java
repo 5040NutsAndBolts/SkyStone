@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
-import org.firstinspires.ftc.teamcode.competition.helperclasses.Point;
+import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.helperclasses.Point;
 
 
 import static java.lang.Math.abs;

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.competition.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 
 
 @Autonomous(group = "Auto", name = "Skystone Auto")
@@ -126,7 +126,7 @@ public class SkystoneAuto extends AutoMethods {
                     cp_depositSkystonePos3,
                     wp_depositSkystonePos3,
                     4,
-                    1.2,
+                    .75,
                     .15
             );
         }
@@ -142,7 +142,7 @@ public class SkystoneAuto extends AutoMethods {
                 .003,
                 .15,
                 8,
-                .1,
+                .01,
                 .5
         );
 
@@ -215,17 +215,17 @@ public class SkystoneAuto extends AutoMethods {
             );
         }
         else {
-                runPurePursuitPath(
-                        cp_depositSkystone_2Pos3,
-                        wp_depositSkystone_2Pos3,
-                        .5,
-                        .02,
-                        .2,
-                        4,
-                        .5,
-                        .5
-                );
-            }
+            runPurePursuitPath(
+                    cp_depositSkystone_2Pos3,
+                    wp_depositSkystone_2Pos3,
+                    .5,
+                    .02,
+                    .2,
+                    4,
+                    .5,
+                    .5
+            );
+        }
         drive.hardBrakeMotors();
         intake.setPower(0);
 
@@ -241,7 +241,7 @@ public class SkystoneAuto extends AutoMethods {
                     .005,
                     .07,
                     4,
-                    1.5,
+                    1,
                     10
             );
         }
@@ -253,7 +253,7 @@ public class SkystoneAuto extends AutoMethods {
                     .005,
                     .07,
                     4,
-                    1.5,
+                    1,
                     10
             );
         }

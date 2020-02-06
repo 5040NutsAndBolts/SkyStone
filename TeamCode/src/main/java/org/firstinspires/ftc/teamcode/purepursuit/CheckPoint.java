@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.PurePursuit;
+package org.firstinspires.ftc.teamcode.purepursuit;
 
 
 import org.firstinspires.ftc.teamcode.competition.hardware.Hardware;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.helperclasses.Point;
 
 public class CheckPoint extends Thread {
 
@@ -25,7 +25,8 @@ public class CheckPoint extends Thread {
     }
 
     public void run() {
-        while (!(robot.x > x - r && robot.x < x + r && robot.y > y - r && robot.y < y + r && !terminate)) {
+        while (!HelperMethods.withinCircle(new Point(robot.x, robot.y), new Point(x, y), r)
+                && !terminate) {
             robot.updatePositionRoadRunner();
 
             try {
