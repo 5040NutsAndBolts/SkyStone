@@ -19,6 +19,7 @@ public class OpenCVSkyStoneAutoPurePursuit extends AutoMethods {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+        robot.resetOdometry(0,-40, Math.PI/2);
         OpenCvCamera phoneCamera = new OpenCvInternalCamera(
                 // Sets if using front or back of camera
                 OpenCvInternalCamera.CameraDirection.FRONT,
@@ -56,12 +57,12 @@ public class OpenCVSkyStoneAutoPurePursuit extends AutoMethods {
         }
         if(blockPosition == 1){
             ArrayList<WayPoint> path1pos1 = new ArrayList();
-            path1pos1.add(new WayPoint(30,-10 , -Math.PI/2));
-            CheckPoint check1pos1 = new CheckPoint(30, -10, 2, robot);
+            path1pos1.add(new WayPoint(40,-40 , Math.PI/2));
+            CheckPoint check1pos1 = new CheckPoint(40, -40, 2, robot);
             ArrayList<WayPoint> path2pos1 = new ArrayList();
-            path2pos1.add(new WayPoint(15,-10,-Math.PI/2));
-            path2pos1.add(new WayPoint(15, -60, -Math.PI/2));
-            CheckPoint check2pos1 = new CheckPoint(15,-60,2,robot);
+            path2pos1.add(new WayPoint(15,-40,Math.PI/2));
+            path2pos1.add(new WayPoint(15, -80, Math.PI/2));
+            CheckPoint check2pos1 = new CheckPoint(15,-80,2,robot);
             purePursuit.initPath(path1pos1);
             pool.submit(check1pos1);
             while (!isStarted() && opModeIsActive()) {
@@ -84,12 +85,12 @@ public class OpenCVSkyStoneAutoPurePursuit extends AutoMethods {
         }
         if(blockPosition == 2){
             ArrayList<WayPoint> path1pos2 = new ArrayList();
-            path1pos2.add(new WayPoint(30,-12 , -Math.PI/2));
+            path1pos2.add(new WayPoint(30,-12 , Math.PI/2));
             CheckPoint check1pos2 = new CheckPoint(30, -12, 2, robot);
 
             ArrayList<WayPoint> path2pos2 = new ArrayList();
-            path2pos2.add(new WayPoint(15,0,-Math.PI/2));
-            path2pos2.add(new WayPoint(15, -50, -Math.PI/2));
+            path2pos2.add(new WayPoint(15,0,Math.PI/2));
+            path2pos2.add(new WayPoint(15, -50, Math.PI/2));
             CheckPoint check2pos2 = new CheckPoint(15,-50,2,robot);
 
             while (opModeIsActive() && !isStarted()) {
