@@ -12,11 +12,6 @@ public class SkystoneAuto extends AutoMethods {
     public void runOpMode() {
         initAuto(true);
 
-        if (onRed)
-            robot.resetOdometry(9,-103.5,3*Math.PI/2);
-        else
-            robot.resetOdometry(9,103.5,3*Math.PI/2);
-
         // Release intake
         robot.intakeBlock.setPosition(.5);
         timer.reset();
@@ -27,6 +22,7 @@ public class SkystoneAuto extends AutoMethods {
         intake.setPower(0);
 
         if (onRed) {
+            robot.resetOdometry(9,-103.5,3*Math.PI/2);
             timer.reset();
             while (timer.seconds() < .6 && opModeIsActive())
                 robot.updatePositionRoadRunner();
@@ -36,6 +32,7 @@ public class SkystoneAuto extends AutoMethods {
                 drive.drive(0, 0, .75);
             }
         }
+        else robot.resetOdometry(9,103.5,3 * Math.PI / 2);
 
         // Goes to position to grab skystone
         if (skystonePosition == 1) {
@@ -82,7 +79,7 @@ public class SkystoneAuto extends AutoMethods {
         while (opModeIsActive() && timer.seconds() < .5) {
             intake.setPower(-timer.seconds()*1.5+.25);
         }
-        if(skystonePosition!=3) {
+        if(skystonePosition != 3) {
             timer.reset();
             timer.startTime();
             while (opModeIsActive() && timer.seconds() < .5) {
@@ -132,7 +129,7 @@ public class SkystoneAuto extends AutoMethods {
         }
 
         // Places the block out the robot
-        placeBlock();
+        placeBlock(5.8, 10);
 
         // Drive back to the quarry
         runPurePursuitPath(
@@ -187,7 +184,7 @@ public class SkystoneAuto extends AutoMethods {
         // Move forward to intake the skystone
         timer.reset();
         timer.startTime();
-        if (skystonePosition!=3) {
+        if (skystonePosition != 3) {
             while (opModeIsActive() && timer.seconds() < .5) {
                 drive.drive(.3, 0, 0);
                 intake.setPower(-1);
@@ -230,7 +227,7 @@ public class SkystoneAuto extends AutoMethods {
         intake.setPower(0);
 
         // Places the block out the back
-        placeBlock();
+        placeBlock(5.8, 10);
 
         // Park
         if (parkAgainstBridge) {

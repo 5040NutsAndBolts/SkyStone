@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.helperclasses.PID;
 import org.firstinspires.ftc.teamcode.purepursuit.*;
 import org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline;
 import org.firstinspires.ftc.teamcode.competition.hardware.*;
@@ -217,29 +218,31 @@ public abstract class AutoMethods extends LinearOpMode {
      * Does a point turn to reach a specific angle
      *
      * @param angle     Angle in radians to turn to
-     * @param threshold Threshold the the robot angle must be within
+     * @param thresholdPercent Threshold the the robot angle must be within
      */
-    protected void pointTurnToAngle(double angle, double threshold) {
-        while (opModeIsActive() && !inThreshold(angle, robot.theta, threshold)) {
-            double movementTurn = robot.theta - angle;
+    protected void pointTurnToAngle(double angle, double thresholdPercent) {
+        angle = angleWrap(angle);
 
-            if (movementTurn > Math.PI)
-                movementTurn = Math.PI - movementTurn;
-            else if (movementTurn < -Math.PI)
-                movementTurn = -movementTurn - Math.PI;
+        double error = robot.theta - angle;
 
-            // Cap the turning speed
-            if (movementTurn > 1.5)
-                movementTurn = 1.5;
-            else if (movementTurn < -1.5)
-                movementTurn = -1.5;
+        if (error > Math.PI)
+            error = Math.PI - error;
+        else if (error < -Math.PI)
+            error = -error - Math.PI;
 
-            // If the robot is sufficiently close to the goal angle increase the speed to allow the robot to hit the angle
-            if (Math.abs(movementTurn) < .5)
-                movementTurn *= 1.1;
+        PID pid = new PID(error,1,0,.2);
+        while (opModeIsActive() && !inThreshold(angle, robot.theta, thresholdPercent)) {
+            error = robot.theta - angle;
+
+            if (error > Math.PI)
+                error = Math.PI - error;
+            else if (error < -Math.PI)
+                error = -error - Math.PI;
+
+            pid.update(error);
 
             updateOdometryTelemetry();
-            drive.drive(0, 0, movementTurn);
+            drive.drive(0, 0, pid.getPID());
         }
         drive.hardBrakeMotors();
     }
@@ -259,16 +262,20 @@ public abstract class AutoMethods extends LinearOpMode {
     }
 
     /**
-     * Grabs the block then places it outside the robot
+     * Grabs the block then places it outside the robot after turning to a specified angle
+     * @param goToAngle angle to rotate to when placing the block
+     * @param thresholdPercent threshold of turning to the angle
      */
-    protected void placeBlock() {
+    protected void placeBlock(double goToAngle, double thresholdPercent) {
         // Stop the robot
         drive.hardBrakeMotors();
         intake.setPower(0);
 
         // Grab the block
         lift.closeClaw();
-        waitTime(.25);
+
+        // Turn to drop the block
+        pointTurnToAngle(goToAngle, thresholdPercent);
 
         // Drop the block out the back
         lift.extendClaw();
@@ -280,6 +287,13 @@ public abstract class AutoMethods extends LinearOpMode {
         // Pull claw back in so it doesn't hit anything
         waitTime(.25);
         lift.retractClaw();
+    }
+
+    /**
+     * Grabs the block then places it outside the robot at its current position
+     */
+    protected void placeBlock() {
+        placeBlock(robot.theta, 10);
     }
 
 
