@@ -22,7 +22,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
      */
     @Override
     public void runOpMode() {
-        initAuto(true, 9, 135, 3 * Math.PI / 2);
+        initAuto(true, false, 9, 135, 3 * Math.PI / 2);
         lift.openClaw();
 
         // Release intake

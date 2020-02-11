@@ -7,7 +7,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
@@ -87,7 +89,8 @@ public class Hardware {
 
     // Lift
     public DcMotor liftMotor1, liftMotor2;
-    public Servo claw, clawExtension, capstone;
+    public Servo claw, clawExtension;
+    public ServoImplEx capstoneDropper;
 
     /**
      * Initialization of hardware
@@ -124,7 +127,7 @@ public class Hardware {
         rightEncoder = hwMap.get(DcMotorEx.class, "rightFront");
         centerEncoder = hwMap.get(DcMotorEx.class, "rightRear");
 
-        // Rev ExpansionHub Bulk Data
+        // Rev Expansions DLC
         expansionHub = hwMap.get(ExpansionHubEx.class, "Expansion Hub 1");
         leftOdom = (ExpansionHubMotor) hwMap.dcMotor.get("leftFront");
         rightOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightFront");
@@ -162,8 +165,10 @@ public class Hardware {
         clawExtension = hwMap.servo.get("clawExtension");
         // Claw grabber
         claw = hwMap.servo.get("claw");
-        // Capstone swiper
-        capstone = hwMap.servo.get("capstone");
+
+        // Capstone dropper
+        capstoneDropper = hwMap.get(ServoImplEx.class, "capstoneDropper");
+        capstoneDropper.setPwmRange(new PwmControl.PwmRange(650, 2502));
     }
 
     /**

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.competition.autonomous;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -32,6 +33,7 @@ public abstract class AutoMethods extends LinearOpMode {
     protected IntakeMech intake;
     protected FoundationGrabbers foundationGrabbers;
     protected LiftMech lift;
+    protected CapstoneDropper capstoneDropper;
     protected PurePursuit purePursuit;
     protected OpenCvCamera phoneCamera;
     protected ElapsedTime timer = new ElapsedTime();
@@ -52,11 +54,18 @@ public abstract class AutoMethods extends LinearOpMode {
         telemetry.update();
     }
 
+    protected void enableDashboard() {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = dashboard.getTelemetry();
+    }
+
     /**
      * Initializes all the hardware and pure pursuit for auto
      * Also has instructions for alliance and parking selection
      */
-    protected void initAuto(boolean visionAuto, double robotX, double robotY, double robotTheta) {
+    protected void initAuto(boolean visionAuto, boolean dashboardEnabled, double robotX, double robotY, double robotTheta) {
+        enableDashboard();
+
         // Initialize all the hardware
         robot.init(hardwareMap);
         drive = new MecanumDrive(robot);
@@ -71,7 +80,7 @@ public abstract class AutoMethods extends LinearOpMode {
         lift.retractClaw();
         foundationGrabbers.release();
         robot.intakeBlock.setPosition(1);
-        lift.holdCapstone();
+        capstoneDropper.reset();
 
         // Reset robot position to a specified value
         robot.resetOdometry(robotX, robotY, robotTheta);
@@ -174,7 +183,11 @@ public abstract class AutoMethods extends LinearOpMode {
     }
 
     protected void initAuto(boolean visionAuto) {
-        initAuto(visionAuto, 0, 0, 0);
+        initAuto(visionAuto, false, 0, 0, 0);
+    }
+
+    protected void initAuto(boolean visionAuto, boolean dashboardEnabled) {
+        initAuto(visionAuto, dashboardEnabled, 0, 0, 0);
     }
 
     /**
@@ -199,7 +212,7 @@ public abstract class AutoMethods extends LinearOpMode {
             telemetry.update();
         }
 
-        initAuto(visionAuto, 0, 0, 0);
+        initAuto(visionAuto, false, 0, 0, 0);
     }
 
     /**

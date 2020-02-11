@@ -14,6 +14,7 @@ public class Teleop extends OpMode {
     private IntakeMech intake;
     private FoundationGrabbers foundationGrabbers;
     private LiftMech lift;
+    private CapstoneDropper capstoneDropper;
 
     private boolean gamepad1PressedB, gamepad1PressedA, gamepad1PressedY, gamepad1PressedX;
     private boolean startTeleop;
@@ -65,7 +66,7 @@ public class Teleop extends OpMode {
             lift.openClaw();
             lift.retractClaw();
             foundationGrabbers.release();
-            lift.holdCapstone();
+            capstoneDropper.reset();
             startTeleop = true;
         }
 
@@ -83,7 +84,7 @@ public class Teleop extends OpMode {
         telemetry.update();
 
         // ====================
-        // Top Half (Gamepad 2) - Lift, Claw Grabber/Extension
+        // Top Half (Gamepad 2) - Lift, Claw, Capstone
         // ====================
 
         // Raising the lift mechanism
@@ -101,9 +102,10 @@ public class Teleop extends OpMode {
         if (gamepad2.y)
             lift.openClaw();
 
-        // Spin out the capstone device
+        // Release the capstone
         if (gamepad2.back)
-            lift.releaseCapstone();
+            capstoneDropper.dropping = true;
+        capstoneDropper.run();
 
         // =======================
         // Bottom Half (Gamepad 1) - Intake, Drive, Foundation Grabbers
