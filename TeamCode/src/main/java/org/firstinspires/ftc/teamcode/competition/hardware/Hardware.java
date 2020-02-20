@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -89,7 +90,8 @@ public class Hardware {
 
     // Lift
     public DcMotor liftMotor1, liftMotor2;
-    public Servo claw, clawExtension;
+    public Servo claw;
+    public CRServo clawExtension1, clawExtension2;
     public ServoImplEx capstoneDropper;
 
     /**
@@ -134,7 +136,7 @@ public class Hardware {
         centerOdom = (ExpansionHubMotor) hwMap.dcMotor.get("rightRear");
 
         // Intake motor setup
-        // Left intake
+        // Left intake AKA Encoder for the lift
         intakeLeft = hwMap.dcMotor.get("intakeLeft");
         intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -152,17 +154,19 @@ public class Hardware {
         foundationGrabber2.setDirection(Servo.Direction.REVERSE);
 
         // Lift mechanism
-        // Lift motor 1
+        // Lift motor 1 AKA Carriage encoder
         liftMotor1 = hwMap.dcMotor.get("liftMotor1");
-        liftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Lift motor 2
         liftMotor2 = hwMap.dcMotor.get("liftMotor2");
         liftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        liftMotor2.setDirection(DcMotor.Direction.REVERSE);
         liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Claw extension
-        clawExtension = hwMap.servo.get("clawExtension");
+        clawExtension1 = hwMap.crservo.get("clawExtension1");
+        clawExtension2 = hwMap.crservo.get("clawExtension2");
         // Claw grabber
         claw = hwMap.servo.get("claw");
 

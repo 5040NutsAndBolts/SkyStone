@@ -34,6 +34,7 @@ public abstract class AutoMethods extends LinearOpMode {
     protected FoundationGrabbers foundationGrabbers;
     protected LiftMech lift;
     protected CapstoneDropper capstoneDropper;
+    protected Carriage carriage;
     protected PurePursuit purePursuit;
     protected OpenCvCamera phoneCamera;
     protected ElapsedTime timer = new ElapsedTime();
@@ -73,14 +74,15 @@ public abstract class AutoMethods extends LinearOpMode {
         intake = new IntakeMech(robot);
         foundationGrabbers = new FoundationGrabbers(robot);
         lift = new LiftMech(robot);
+        capstoneDropper = new CapstoneDropper(robot);
+        carriage = new Carriage(robot);
         purePursuit = new PurePursuit(robot);
 
         // Keep hardware from unintentionally moving around
         lift.openClaw();
-        lift.retractClaw();
+        carriage.retract();
         foundationGrabbers.release();
         robot.intakeBlock.setPosition(1);
-        capstoneDropper.reset();
 
         // Reset robot position to a specified value
         robot.resetOdometry(robotX, robotY, robotTheta);
@@ -291,7 +293,7 @@ public abstract class AutoMethods extends LinearOpMode {
         pointTurnToAngle(goToAngle, thresholdPercent);
 
         // Drop the block out the back
-        lift.extendClaw();
+        carriage.extend();
         waitTime(.5);
 
         // Drop block
@@ -299,7 +301,7 @@ public abstract class AutoMethods extends LinearOpMode {
 
         // Pull claw back in so it doesn't hit anything
         waitTime(.25);
-        lift.retractClaw();
+        carriage.retract();
     }
 
     /**

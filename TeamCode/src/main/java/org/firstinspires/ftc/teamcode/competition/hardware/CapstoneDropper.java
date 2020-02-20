@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.competition.hardware;
 
+import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
+
 public class CapstoneDropper {
 
     private Hardware robot;
@@ -9,20 +11,32 @@ public class CapstoneDropper {
 
     public CapstoneDropper(Hardware robot) {
         this.robot = robot;
+        initThread();
     }
 
-    public void reset() {
+    /**
+     * Create a new thread for the dropping mechanism
+     */
+    private void initThread() {
         currentPWM = 1450;
         robot.capstoneDropper.setPosition(1);
-    }
 
-    public void run() {
-        if (dropping) {
-            robot.capstoneDropper.setPosition(currentPWM-- / 2502.0);
-        }
-        if (currentPWM < 1050) {
-            dropping = false;
-            currentPWM = 1450;
-        }
+        Thread claw = new Thread() {
+            @Override
+            public void run() {
+                while(true) {
+                    if (dropping) {
+                        robot.capstoneDropper.setPosition(currentPWM-- / 2502.0);
+                    }
+                    if (currentPWM < 1000) {
+                        dropping = false;
+                        currentPWM = 1450;
+                        robot.capstoneDropper.setPosition(1);
+                    }
+                }
+            }
+        };
+
+        ThreadPool.pool.submit(claw);
     }
 }

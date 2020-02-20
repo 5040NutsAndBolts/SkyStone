@@ -60,6 +60,17 @@ public class HelperMethods {
                         <= Math.pow(radius, 2);
     }
 
+    /**
+     * Clamps a value between a minimum and a maximum
+     * @param min Minimum value of the clamp
+     * @param value value to be clamp
+     * @param max Maximum value of the clamp
+     * @return Returns the clamped value
+     */
+    public static double clamp(double min, double value, double max) {
+        return Math.max(Math.min(value, max), min);
+    }
+
     public static void main(String[] args) {
         System.out.println(inThreshold(0, -24, 4));
     }
