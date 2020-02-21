@@ -125,7 +125,7 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
         );
 
         // Drop the block out the back
-        lift.extendClaw();
+        carriage.extend();
         foundationGrabbers.grab();
         waitTime(1);
         lift.openClaw();
@@ -156,7 +156,7 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
                 );
 
         // Pull lift back in so it doesn't hit anything
-        lift.retractClaw();
+        carriage.retract();
         waitTime(.25);
 
         // Park

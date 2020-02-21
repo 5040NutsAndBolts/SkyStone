@@ -126,7 +126,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         );
 
         // Drop the block out the back
-        lift.extendClaw();
+        carriage.extend();
         foundationGrabbers.grab();
         waitTime(1);
         lift.openClaw();
@@ -157,7 +157,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 );
 
         // Pull lift back in so it doesn't hit anything
-        lift.retractClaw();
+        carriage.retract();
         waitTime(.25);
 
         runPurePursuitPath(
@@ -257,23 +257,9 @@ public class SkystoneFoundationAuto extends AutoMethods {
         waitTime(.05);
         intake.setPower(0);
         drive.hardBrakeMotors();
-        /*timer.reset();
-        while (opModeIsActive() && timer.seconds() < .6) {
-            robot.updatePositionRoadRunner();
-            drive.drive(0, -1, 0);
-        }
-        timer.reset();
-        while (opModeIsActive() && timer.seconds() < .5) {
-            robot.updatePositionRoadRunner();
-            drive.drive(-1, 0, 0);
-        }
-        timer.reset();
-        while (opModeIsActive() && timer.seconds() < .6) {
-            robot.updatePositionRoadRunner();
-            drive.drive(0, 1, 0);
-        }*/
+
         // Drop the block out the back
-        lift.extendClaw();
+        carriage.extend();
         lift.openClaw();
         waitTime(.8);
         timer.reset();
@@ -283,7 +269,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
 
         foundationGrabbers.release();
         waitTime(.3);
-        lift.retractClaw();
+        carriage.retract();
         // Park
         if (parkAgainstBridge) {
             runPurePursuitPath(
