@@ -138,11 +138,11 @@ public class Hardware {
         // Intake motor setup
         // Left intake AKA Encoder for the lift
         intakeLeft = hwMap.dcMotor.get("intakeLeft");
-        intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // Right intake
+        // Right intake AKA Carriage encoder
         intakeRight = hwMap.dcMotor.get("intakeRight");
-        intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeRight.setDirection(DcMotor.Direction.REVERSE);
         intakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Intake blocker
@@ -154,11 +154,10 @@ public class Hardware {
         foundationGrabber2.setDirection(Servo.Direction.REVERSE);
 
         // Lift mechanism
-        // Lift motor 1 AKA Carriage encoder
+        // Lift motor 1
         liftMotor1 = hwMap.dcMotor.get("liftMotor1");
-        liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor1.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Lift motor 2
         liftMotor2 = hwMap.dcMotor.get("liftMotor2");

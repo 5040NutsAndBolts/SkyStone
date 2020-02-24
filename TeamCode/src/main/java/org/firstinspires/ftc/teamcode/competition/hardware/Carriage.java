@@ -33,7 +33,7 @@ public class Carriage {
      */
     private void initThread() {
         Thread carriageThread = new Thread() {
-            PID carriagePID = new PID(goalPosition - robot.liftMotor1.getCurrentPosition(), .4, 3, .2);
+            PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .4, 3, .2);
             CarriagePosition lastState = carriageState;
 
             @Override
@@ -44,14 +44,16 @@ public class Carriage {
                     if (carriageState != CarriagePosition.Manual) {
                         // If the state has changed since the last run, update the PID accordingly
                         if (lastState != carriageState)
-                            carriagePID = new PID(goalPosition - robot.liftMotor1.getCurrentPosition(), .4, 3, .2);
+                            carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .4, 3, .2);
 
                         // If the motor isn't within 3% of the goal position, move the claw
-                        if (!HelperMethods.inThreshold(robot.liftMotor1.getCurrentPosition(), goalPosition, 3)) {
+                        if (!HelperMethods.inThreshold(robot.intakeRight.getCurrentPosition(), goalPosition, 3)) {
                             manual(carriagePID.getPID());
 
-                            carriagePID.update(goalPosition - robot.liftMotor1.getCurrentPosition());
+                            carriagePID.update(goalPosition - robot.intakeRight.getCurrentPosition());
                         }
+                        else
+                            manual(0);
                     }
 
                     lastState = carriageState;
@@ -97,8 +99,8 @@ public class Carriage {
      * Resets the carriage encoder
      */
     public void reset() {
-        robot.liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.liftMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.intakeRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.intakeRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.intakeRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

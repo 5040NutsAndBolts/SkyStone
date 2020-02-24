@@ -85,10 +85,9 @@ public class Teleop extends LinearOpMode {
             // ====================
 
             // Manual control over the lift
-            if (gamepad2.left_stick_y != 0) {
-                lift.manual(gamepad2.left_stick_y);
+            lift.manual(gamepad2.left_stick_y);
+            if (gamepad2.left_stick_y != 0)
                 lift.currentState = LiftMech.LiftState.Manual;
-            }
 
             // Automatic control over the lift
             if (!gamepad2PressedDPad && gamepad2.dpad_up)     // Raises to current level then increases level
@@ -105,12 +104,10 @@ public class Teleop extends LinearOpMode {
             // Ensuring the currentStackLevel cannot be too low/high
             currentStackLevel = (int)HelperMethods.clamp(1, currentStackLevel, 15);
 
-            // Manual control over the carriage
-            if (gamepad2.right_stick_y != 0) {
-                // Ensures carriage power cannot be 1 because 100% power is weird for the servo
-                carriage.manual((int)HelperMethods.clamp(-.999, gamepad2.right_stick_y, .999));
+            // Ensures carriage power cannot be 1 because 100% power is weird for the servo
+            carriage.manual((int)HelperMethods.clamp(-.999, gamepad2.right_stick_y, .999));
+            if (gamepad2.right_stick_y != 0)
                 carriage.carriageState = Carriage.CarriagePosition.Manual;
-            }
 
             // Extending the carriage
             if (gamepad2.x)
