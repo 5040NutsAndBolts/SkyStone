@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.competition.hardware;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 import org.firstinspires.ftc.teamcode.helperclasses.PID;
 import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
@@ -100,5 +102,14 @@ public class LiftMech {
     public void moveToLevel(int level) {
         stackLevel = level;
         currentState = LiftState.Moving;
+    }
+
+    /**
+     * Resets the carriage encoder
+     */
+    public void reset() {
+        robot.intakeLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.intakeLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.intakeLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

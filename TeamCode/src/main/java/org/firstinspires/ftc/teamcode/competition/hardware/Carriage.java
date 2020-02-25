@@ -69,6 +69,7 @@ public class Carriage {
      * @param power Power to be put into the carriage
      */
     public void manual(double power) {
+        power = HelperMethods.clamp(-.85, power, .85);
         robot.clawExtension1.setPower(power);
         robot.clawExtension2.setPower(power);
     }

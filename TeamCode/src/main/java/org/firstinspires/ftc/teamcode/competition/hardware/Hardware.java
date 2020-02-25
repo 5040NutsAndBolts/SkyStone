@@ -7,6 +7,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -165,7 +166,9 @@ public class Hardware {
         liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Claw extension
         clawExtension1 = hwMap.crservo.get("clawExtension1");
+        clawExtension1.setDirection(CRServo.Direction.REVERSE);
         clawExtension2 = hwMap.crservo.get("clawExtension2");
+        clawExtension2.setDirection(CRServo.Direction.REVERSE);
         // Claw grabber
         claw = hwMap.servo.get("claw");
 
