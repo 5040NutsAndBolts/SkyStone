@@ -105,7 +105,7 @@ public class Teleop extends LinearOpMode {
             currentStackLevel = (int)HelperMethods.clamp(1, currentStackLevel, 15);
 
             // Ensures carriage power cannot be 1 because 100% power is weird for the servo
-            carriage.manual((int)HelperMethods.clamp(-.999, gamepad2.right_stick_y, .999));
+            carriage.manual(HelperMethods.clamp(-.999, gamepad2.right_stick_y, .999));
             if (gamepad2.right_stick_y != 0)
                 carriage.carriageState = Carriage.CarriagePosition.Manual;
 
