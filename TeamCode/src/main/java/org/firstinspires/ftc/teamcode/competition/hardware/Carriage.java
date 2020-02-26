@@ -10,8 +10,8 @@ public class Carriage {
 
     private Hardware robot;
     private double
-            extendedPosition1 = 0,
-            extendedPosition2 = 0,
+            extendedPosition1 = -5050,
+            extendedPosition2 = -9100,
             retractedPosition = 0,
             goalPosition = 0;
 
@@ -46,14 +46,15 @@ public class Carriage {
                         if (lastState != carriageState)
                             carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .001, 0, 0);
 
-                        // If the motor isn't within 3% of the goal position, move the claw
-                        if (robot.intakeRight.getCurrentPosition()+200> goalPosition&&robot.intakeRight.getCurrentPosition()-200< goalPosition) {
-                            manual(carriagePID.getPID());
+                        // If the motor isn't within 200 ticks of the goal position, move the claw
+                        if (!(robot.intakeRight.getCurrentPosition()+50 > goalPosition &&
+                                robot.intakeRight.getCurrentPosition()-50 < goalPosition)) {
+                            setPower(carriagePID.getPID());
 
                             carriagePID.update(goalPosition - robot.intakeRight.getCurrentPosition());
                         }
                         else
-                            manual(0);
+                            setPower(0);
                     }
 
                     lastState = carriageState;
@@ -64,18 +65,19 @@ public class Carriage {
         ThreadPool.pool.submit(carriageThread);
     }
 
-    public void setExtendedPosition()
-    {
-
-        extendedPosition1=robot.intakeRight.getCurrentPosition();
-
-    }
-
     /**
      * Manual power control over the carriage
      * @param power Power to be put into the carriage
      */
     public void manual(double power) {
+        if (carriageState == CarriagePosition.Manual) {
+            power = HelperMethods.clamp(-.85, power, .85);
+            robot.clawExtension1.setPower(power);
+            robot.clawExtension2.setPower(power);
+        }
+    }
+
+    private void setPower(double power) {
         power = HelperMethods.clamp(-.85, power, .85);
         robot.clawExtension1.setPower(power);
         robot.clawExtension2.setPower(power);

@@ -13,10 +13,10 @@ public class LiftMech {
     private int stackLevel = 0;
     private int[] goalPosition = {
             0,
-            -3600,
-            -10000,
-            -20000,
-            -30000,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -94,22 +94,16 @@ public class LiftMech {
      * Manual control over the lift
      * @param power Motor power that will be given to the lift mechanism
      */
-    public void manual(double power)
-    {
-        if (currentState == LiftState.Manual)
-        {
+    public void manual(double power) {
+        if (currentState == LiftState.Manual) {
             robot.liftMotor1.setPower(power);
             robot.liftMotor2.setPower(power);
-
         }
     }
 
-    public void setPower(double power)
-    {
-
+    public void setPower(double power) {
         robot.liftMotor1.setPower(power);
         robot.liftMotor2.setPower(power);
-
     }
 
     /**

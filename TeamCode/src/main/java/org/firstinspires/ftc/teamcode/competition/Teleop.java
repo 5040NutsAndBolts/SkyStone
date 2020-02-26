@@ -68,11 +68,11 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Lift level", currentStackLevel);
             telemetry.addLine();
-            telemetry.addData("Carriage encoder?", robot.intakeRight.getCurrentPosition());
-            telemetry.addData("Lift State:",lift.currentState);
+            telemetry.addData("Carriage state", carriage.carriageState);
+            telemetry.addData("Carriage encoder", robot.intakeRight.getCurrentPosition());
             telemetry.addLine();
-            telemetry.addData("Lift encoder?", robot.intakeLeft.getCurrentPosition());
-            telemetry.addData("lift",gamepad2.left_stick_y);
+            telemetry.addData("Lift State", lift.currentState);
+            telemetry.addData("Lift encoder", robot.intakeLeft.getCurrentPosition());
             if (debugging) {
                 robot.updatePositionRoadRunner();
                 telemetry.addLine();
@@ -88,9 +88,9 @@ public class Teleop extends LinearOpMode {
             // ====================
 
             // Manual control over the lift
-            lift.manual(gamepad2.left_stick_y);
             if (gamepad2.left_stick_y != 0)
                 lift.currentState = LiftMech.LiftState.Manual;
+            lift.manual(gamepad2.left_stick_y);
 
             // Automatic control over the lift
             if (!gamepad2PressedDPad && gamepad2.dpad_up)     // Raises to current level then increases level
@@ -122,9 +122,6 @@ public class Teleop extends LinearOpMode {
             // Retracting the carriage
             if (gamepad2.b)
                 carriage.retract();
-
-            if(gamepad2.right_bumper)
-                carriage.setExtendedPosition();
 
             // Reset carriage encoder
             if (gamepad2.right_trigger > .05)
