@@ -35,6 +35,7 @@ public class Teleop extends LinearOpMode {
         intake = new IntakeMech(robot);
         foundationGrabbers = new FoundationGrabbers(robot);
         lift = new LiftMech(robot);
+
         capstoneDropper = new CapstoneDropper(robot);
         carriage = new Carriage(robot);
 
@@ -67,9 +68,11 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Lift level", currentStackLevel);
             telemetry.addLine();
-            telemetry.addData("Carriage encoder?", robot.liftMotor1.getCurrentPosition());
+            telemetry.addData("Carriage encoder?", robot.intakeRight.getCurrentPosition());
+            telemetry.addData("Lift State:",lift.currentState);
             telemetry.addLine();
             telemetry.addData("Lift encoder?", robot.intakeLeft.getCurrentPosition());
+            telemetry.addData("lift",gamepad2.left_stick_y);
             if (debugging) {
                 robot.updatePositionRoadRunner();
                 telemetry.addLine();
@@ -119,6 +122,9 @@ public class Teleop extends LinearOpMode {
             // Retracting the carriage
             if (gamepad2.b)
                 carriage.retract();
+
+            if(gamepad2.right_bumper)
+                carriage.setExtendedPosition();
 
             // Reset carriage encoder
             if (gamepad2.right_trigger > .05)

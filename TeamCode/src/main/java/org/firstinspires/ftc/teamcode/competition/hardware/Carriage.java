@@ -33,21 +33,21 @@ public class Carriage {
      */
     private void initThread() {
         Thread carriageThread = new Thread() {
-            PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .4, 3, .2);
+            PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .001, 0, 0);
             CarriagePosition lastState = carriageState;
 
             @Override
             public void run() {
                 // Essentially the same as while(opModeIsActive())
-                while(this.isAlive()) {
+                while(!this.isInterrupted()) {
                     // Don't use PID if we are manually controlling it
                     if (carriageState != CarriagePosition.Manual) {
                         // If the state has changed since the last run, update the PID accordingly
                         if (lastState != carriageState)
-                            carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .4, 3, .2);
+                            carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .001, 0, 0);
 
                         // If the motor isn't within 3% of the goal position, move the claw
-                        if (!HelperMethods.inThreshold(robot.intakeRight.getCurrentPosition(), goalPosition, 3)) {
+                        if (robot.intakeRight.getCurrentPosition()+200> goalPosition&&robot.intakeRight.getCurrentPosition()-200< goalPosition) {
                             manual(carriagePID.getPID());
 
                             carriagePID.update(goalPosition - robot.intakeRight.getCurrentPosition());
@@ -62,6 +62,13 @@ public class Carriage {
         };
 
         ThreadPool.pool.submit(carriageThread);
+    }
+
+    public void setExtendedPosition()
+    {
+
+        extendedPosition1=robot.intakeRight.getCurrentPosition();
+
     }
 
     /**

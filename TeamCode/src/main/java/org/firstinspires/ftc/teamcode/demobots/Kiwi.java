@@ -34,8 +34,8 @@ public class Kiwi extends OpMode {
     @Override
     public void loop() {
         // Controller values
-        double r = -gamepad1.right_stick_x / 3;
-        double r2 = -gamepad2.right_stick_x / 3;
+        double r = gamepad1.right_stick_x / 2;
+        double r2 = gamepad2.right_stick_x / 2;
         boolean leftBumper = gamepad2.left_bumper;
         boolean rightBumper = gamepad2.right_bumper;
         double leftStickX1 = gamepad1.left_stick_x;
