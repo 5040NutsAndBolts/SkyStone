@@ -83,12 +83,12 @@ public class LiftMech {
     /**
      * Opens the claw
      */
-    public void openClaw() { robot.claw.setPosition(.1); }
+    public void openClaw() { robot.claw.setPosition(1); }
 
     /**
      * Closes the claw
      */
-    public void closeClaw() { robot.claw.setPosition(1); }
+    public void closeClaw() { robot.claw.setPosition(0); }
 
     /**
      * Manual control over the lift

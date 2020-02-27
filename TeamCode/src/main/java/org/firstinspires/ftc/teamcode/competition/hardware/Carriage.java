@@ -46,9 +46,9 @@ public class Carriage {
                         if (lastState != carriageState)
                             carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .001, 0, 0);
 
-                        // If the motor isn't within 200 ticks of the goal position, move the claw
-                        if (!(robot.intakeRight.getCurrentPosition()+50 > goalPosition &&
-                                robot.intakeRight.getCurrentPosition()-50 < goalPosition)) {
+                        // If the motor isn't within 25 ticks of the goal position, move the claw
+                        if (!(robot.intakeRight.getCurrentPosition()+25 > goalPosition &&
+                                robot.intakeRight.getCurrentPosition()-25 < goalPosition)) {
                             setPower(carriagePID.getPID());
 
                             carriagePID.update(goalPosition - robot.intakeRight.getCurrentPosition());
@@ -93,8 +93,8 @@ public class Carriage {
                 CarriagePosition.Extended1;
         // Changing the goalPosition
         goalPosition = (carriageState == CarriagePosition.Extended1) ?
-                extendedPosition2 :
-                extendedPosition1;
+                extendedPosition1:
+                extendedPosition2;
     }
 
     /**

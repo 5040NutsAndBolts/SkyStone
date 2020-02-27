@@ -21,7 +21,8 @@ public class Teleop extends LinearOpMode {
     private Carriage carriage;
 
     private boolean
-            gamepad1PressedB, gamepad1PressedA, gamepad1PressedY, gamepad1PressedX, gamepad2PressedDPad,
+            gamepad1PressedB, gamepad1PressedA, gamepad1PressedY, gamepad1PressedX,
+            gamepad2PressedB, gamepad2PressedA, gamepad2PressedY, gamepad2PressedX, gamepad2PressedDPad,
             slowMode = false,
             debugging = false;
     private int currentStackLevel = 1;
@@ -117,7 +118,7 @@ public class Teleop extends LinearOpMode {
                 carriage.carriageState = Carriage.CarriagePosition.Manual;
 
             // Extending the carriage
-            if (gamepad2.x)
+            if (!gamepad2PressedX && gamepad2.x)
                 carriage.extend();
             // Retracting the carriage
             if (gamepad2.b)
@@ -193,12 +194,15 @@ public class Teleop extends LinearOpMode {
 
             // Gamepad 2
             gamepad2PressedDPad = gamepad2.dpad_right || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_down;
+            gamepad2PressedA = gamepad2.a;
+            gamepad2PressedB = gamepad2.b;
+            gamepad2PressedY = gamepad2.y;
+            gamepad2PressedX = gamepad2.x;
 
-            // ======================================================
-            // LAST RESORT - DO NOT PRESS UNLESS ABSOLUTELY NECESSARY
-            //                  KILL THREAD POOL
-            // ======================================================
-            if (gamepad1.guide || gamepad2.guide)
+            // =====================================
+            // THE BIG RED BUTTON - KILL ALL THREADS
+            // =====================================
+            if ((gamepad1.back && gamepad1.start) || (gamepad2.back && gamepad2.start))
                 ThreadPool.renewPool();
         }
 
