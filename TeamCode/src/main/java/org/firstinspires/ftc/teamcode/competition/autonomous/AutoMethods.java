@@ -56,8 +56,7 @@ public abstract class AutoMethods extends LinearOpMode {
     }
 
     protected void enableDashboard() {
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = dashboard.getTelemetry();
+        telemetry = FtcDashboard.getInstance().getTelemetry();
     }
 
     /**
@@ -65,7 +64,8 @@ public abstract class AutoMethods extends LinearOpMode {
      * Also has instructions for alliance and parking selection
      */
     protected void initAuto(boolean visionAuto, boolean dashboardEnabled, double robotX, double robotY, double robotTheta) {
-        enableDashboard();
+        if (dashboardEnabled)
+            telemetry = FtcDashboard.getInstance().getTelemetry();
 
         // Initialize all the hardware
         robot.init(hardwareMap);

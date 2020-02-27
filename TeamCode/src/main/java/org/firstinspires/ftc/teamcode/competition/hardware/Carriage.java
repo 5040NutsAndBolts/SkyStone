@@ -1,19 +1,26 @@
 package org.firstinspires.ftc.teamcode.competition.hardware;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 import org.firstinspires.ftc.teamcode.helperclasses.PID;
 import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
 
+@Config
 public class Carriage {
 
     private Hardware robot;
     private double
-            extendedPosition1 = -5050,
+            extendedPosition1 = -4300,
             extendedPosition2 = -9100,
             retractedPosition = 0,
             goalPosition = 0;
+
+    public static double
+        P = 0,
+        I = 0,
+        D = 0;
 
     public enum CarriagePosition {
         Manual,
@@ -33,7 +40,7 @@ public class Carriage {
      */
     private void initThread() {
         Thread carriageThread = new Thread() {
-            PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .001, 0, 0);
+            PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
             CarriagePosition lastState = carriageState;
 
             @Override
@@ -44,7 +51,7 @@ public class Carriage {
                     if (carriageState != CarriagePosition.Manual) {
                         // If the state has changed since the last run, update the PID accordingly
                         if (lastState != carriageState)
-                            carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), .001, 0, 0);
+                            carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
 
                         // If the motor isn't within 25 ticks of the goal position, move the claw
                         if (!(robot.intakeRight.getCurrentPosition()+25 > goalPosition &&

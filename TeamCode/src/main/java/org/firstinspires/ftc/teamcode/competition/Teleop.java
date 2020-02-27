@@ -25,7 +25,7 @@ public class Teleop extends LinearOpMode {
             gamepad2PressedB, gamepad2PressedA, gamepad2PressedY, gamepad2PressedX, gamepad2PressedDPad,
             slowMode = false,
             debugging = false;
-    private int currentStackLevel = 1;
+    private int currentStackLevel = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,6 +49,7 @@ public class Teleop extends LinearOpMode {
 
             telemetry.addData("debugging", debugging);
             if (debugging) {
+                telemetry =  FtcDashboard.getInstance().getTelemetry();
                 telemetry.addData("X Position", robot.x);
                 telemetry.addData("Y Position", robot.y);
                 telemetry.addData("Rotation", robot.theta);
@@ -67,7 +68,7 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Intake speed", intake.intakeSpeed);
             telemetry.addLine();
-            telemetry.addData("Lift level", currentStackLevel);
+            telemetry.addData("Stack height", currentStackLevel);
             telemetry.addLine();
             telemetry.addData("Carriage state", carriage.carriageState);
             telemetry.addData("Carriage encoder", robot.intakeRight.getCurrentPosition());
@@ -89,13 +90,13 @@ public class Teleop extends LinearOpMode {
             // ====================
 
             // Manual control over the lift
+            lift.manual(gamepad2.left_stick_y);
             if (gamepad2.left_stick_y != 0)
                 lift.currentState = LiftMech.LiftState.Manual;
-            lift.manual(gamepad2.left_stick_y);
 
             // Automatic control over the lift
             if (!gamepad2PressedDPad && gamepad2.dpad_up)     // Raises to current level then increases level
-                lift.moveToLevel(currentStackLevel++);
+                lift.moveToLevel(++currentStackLevel);
             if (!gamepad2PressedDPad && gamepad2.dpad_down)   // Takes the lift all the way back down
                 lift.moveToLevel(0);
             if (!gamepad2PressedDPad && gamepad2.dpad_left)   // Decreases the current stack level w/o moving the lift
@@ -105,7 +106,7 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.left_bumper)                         // Sets stack level to first level (tower knocked down)
                 currentStackLevel = 1;
 
-            // Ensuring the currentStackLevel cannot be too low/high
+            // Ensuring the stack height cannot be too low/high
             currentStackLevel = (int)HelperMethods.clamp(1, currentStackLevel, 15);
 
             // Resetting the carriage

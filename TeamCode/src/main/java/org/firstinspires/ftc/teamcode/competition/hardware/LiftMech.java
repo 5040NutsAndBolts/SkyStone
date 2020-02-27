@@ -1,22 +1,26 @@
 package org.firstinspires.ftc.teamcode.competition.hardware;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 import org.firstinspires.ftc.teamcode.helperclasses.PID;
 import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
 
+@Config
 public class LiftMech {
 
     private Hardware robot;
-    public double telemPid=0;
     private int stackLevel = 0;
-    private int[] goalPosition = {
+    public static double
+        P = 0,
+        I = 0,
+        D = 0;
+    public static int[] goalPosition = {
             0,
-            0,
-            0,
-            0,
-            0,
+            -7000,
+            -1100,
+            -1600,
+            -2100,
             0,
             0,
             0,
@@ -49,24 +53,23 @@ public class LiftMech {
             public void run() {
                 PID liftPID = new PID(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition(), 0.005, 0, 0);
                 LiftState lastState = LiftState.Holding;
-                telemPid=.1;
+
                 // Essentially the same as while(opModeIsActive())
                 while(!this.isInterrupted()) {
-                    telemPid=.5;
                     // If not running manual mode
                     if (currentState != LiftState.Manual) {
                         // If state == holding or the lift is within 3% of its goal position, then hold its current position
                         if (currentState == LiftState.Holding ||
-                                HelperMethods.inThreshold(robot.intakeLeft.getCurrentPosition(), goalPosition[stackLevel], 3)) {
+                                (robot.intakeLeft.getCurrentPosition()+100 > goalPosition[stackLevel] &&
+                                        robot.intakeLeft.getCurrentPosition()-100 < goalPosition[stackLevel])) {
                             currentState = LiftState.Holding;
-                            setPower(0);
+                            setPower(0.01);
                         }
                         else { // Otherwise, state == Moving
                             if (lastState != currentState) // If state just became moving, reset the PID
                                 liftPID = new PID(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition(), .005, 0, 0);
 
                             setPower(liftPID.getPID());
-                            telemPid=1;
 
                             liftPID.update(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition());
                         }
