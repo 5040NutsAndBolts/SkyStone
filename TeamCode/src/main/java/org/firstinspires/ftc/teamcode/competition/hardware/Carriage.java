@@ -11,14 +11,14 @@ import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
 public class Carriage {
 
     private Hardware robot;
-    private double
-            extendedPosition1 = -4300,
+    public static double
+            extendedPosition1 = -4500,
             extendedPosition2 = -9100,
             retractedPosition = 0,
             goalPosition = 0;
 
     public static double
-        P = 0,
+        P = 0.003,
         I = 0,
         D = 0;
 

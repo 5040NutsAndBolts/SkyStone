@@ -63,6 +63,8 @@ public class Teleop extends LinearOpMode {
         foundationGrabbers.release();
 
         while(opModeIsActive()) {
+            lift.updateHeights();
+
             // Telemetry
             telemetry.addData("Slow mode", slowMode);
             telemetry.addLine();
