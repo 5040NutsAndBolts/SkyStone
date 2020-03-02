@@ -256,6 +256,8 @@ public abstract class AutoMethods extends LinearOpMode {
 
             pid.update(error);
 
+            telemetry.addData("Turning to point", angle);
+            
             updateOdometryTelemetry();
             drive.drive(0, 0, pid.getPID());
         }
@@ -294,7 +296,7 @@ public abstract class AutoMethods extends LinearOpMode {
 
         // Drop the block out the back
         carriage.extend();
-        waitTime(.5);
+        while(opModeIsActive() && !carriage.atPosition);
 
         // Drop block
         carriage.openClaw();
@@ -302,6 +304,8 @@ public abstract class AutoMethods extends LinearOpMode {
         // Pull claw back in so it doesn't hit anything
         waitTime(.25);
         carriage.retract();
+        waitTime(.05);
+        while(opModeIsActive() && !carriage.atPosition);
     }
 
     /**

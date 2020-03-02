@@ -30,6 +30,7 @@ public class Carriage {
         Retracted
     }
     public Carriage.CarriagePosition carriageState = Carriage.CarriagePosition.Manual;
+    public boolean atPosition;
 
     public Carriage(Hardware robot) {
         this.robot = robot;
@@ -55,18 +56,22 @@ public class Carriage {
                     // Don't use PID if we are manually controlling it
                     if (carriageState != CarriagePosition.Manual) {
                         // If the state has changed since the last run, update the PID accordingly
-                        if (lastState != carriageState)
+                        if (lastState != carriageState) {
                             carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
+                            atPosition = false;
+                        }
 
                         // If the motor isn't within 25 ticks of the goal position, move the claw
                         if (!(robot.intakeRight.getCurrentPosition()+25 > goalPosition &&
                                 robot.intakeRight.getCurrentPosition()-25 < goalPosition)) {
                             setPower(carriagePID.getPID());
-
+                            atPosition = false;
                             carriagePID.update(goalPosition - robot.intakeRight.getCurrentPosition());
                         }
-                        else
+                        else {
                             setPower(0);
+                            atPosition = true;
+                        }
                     }
 
                     lastState = carriageState;

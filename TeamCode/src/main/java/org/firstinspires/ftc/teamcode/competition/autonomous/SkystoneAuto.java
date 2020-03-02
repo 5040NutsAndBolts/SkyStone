@@ -129,7 +129,7 @@ public class SkystoneAuto extends AutoMethods {
         }
 
         // Places the block out the robot
-        placeBlock(Math.PI/8, 10);
+        placeBlock(Math.PI/2, 10);
 
         // Drive back to the quarry
         runPurePursuitPath(
@@ -227,7 +227,7 @@ public class SkystoneAuto extends AutoMethods {
         intake.setPower(0);
 
         // Places the block out the back
-        placeBlock(Math.PI/8, 10);
+        placeBlock(Math.PI/2, 10);
 
         // Park
         if (parkAgainstBridge) {
