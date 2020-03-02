@@ -79,7 +79,7 @@ public abstract class AutoMethods extends LinearOpMode {
         purePursuit = new PurePursuit(robot);
 
         // Keep hardware from unintentionally moving around
-        lift.openClaw();
+        carriage.openClaw();
         carriage.retract();
         foundationGrabbers.release();
         robot.intakeBlock.setPosition(1);
@@ -287,7 +287,7 @@ public abstract class AutoMethods extends LinearOpMode {
         intake.setPower(0);
 
         // Grab the block
-        lift.closeClaw();
+        carriage.closeClaw();
 
         // Turn to drop the block
         pointTurnToAngle(goToAngle, thresholdPercent);
@@ -297,7 +297,7 @@ public abstract class AutoMethods extends LinearOpMode {
         waitTime(.5);
 
         // Drop block
-        lift.openClaw();
+        carriage.openClaw();
 
         // Pull claw back in so it doesn't hit anything
         waitTime(.25);

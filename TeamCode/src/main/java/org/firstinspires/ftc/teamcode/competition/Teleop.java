@@ -21,8 +21,7 @@ public class Teleop extends LinearOpMode {
     private Carriage carriage;
 
     private boolean
-            gamepad1PressedB, gamepad1PressedA, gamepad1PressedY, gamepad1PressedX,
-            gamepad2PressedB, gamepad2PressedA, gamepad2PressedY, gamepad2PressedX, gamepad2PressedDPad,
+            intakeSpeedToggle, slowModeToggle, carriageToggle, liftToggle,
             slowMode = false,
             debugging = false;
     private int currentStackLevel = 0;
@@ -59,7 +58,7 @@ public class Teleop extends LinearOpMode {
 
         // Initialize servos upon starting teleop
         robot.intakeBlock.setPosition(.5);
-        lift.openClaw();
+        carriage.openClaw();
         foundationGrabbers.release();
 
         while(opModeIsActive()) {
@@ -74,6 +73,9 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Carriage state", carriage.carriageState);
             telemetry.addData("Carriage encoder", robot.intakeRight.getCurrentPosition());
+            telemetry.addData("x", gamepad2.x);
+            telemetry.addData("xPressed", carriageToggle);
+            telemetry.addData("Carriage Thread Elapsed Time", carriage.elapTime);
             telemetry.addLine();
             telemetry.addData("Lift State", lift.currentState);
             telemetry.addData("Lift encoder", robot.intakeLeft.getCurrentPosition());
@@ -97,16 +99,26 @@ public class Teleop extends LinearOpMode {
                 lift.currentState = LiftMech.LiftState.Manual;
 
             // Automatic control over the lift
-            if (!gamepad2PressedDPad && gamepad2.dpad_up)     // Raises to current level then increases level
+            if (!liftToggle && gamepad2.dpad_up) {     // Raises to current level then increases level
                 lift.moveToLevel(++currentStackLevel);
-            if (!gamepad2PressedDPad && gamepad2.dpad_down)   // Takes the lift all the way back down
+                liftToggle = true;
+            }
+            if (!liftToggle && gamepad2.dpad_down) {  // Takes the lift all the way back down
                 lift.moveToLevel(0);
-            if (!gamepad2PressedDPad && gamepad2.dpad_left)   // Decreases the current stack level w/o moving the lift
+                liftToggle = true;
+            }
+            if (!liftToggle && gamepad2.dpad_left) {  // Decreases the current stack level w/o moving the lift
                 currentStackLevel--;
-            if (!gamepad2PressedDPad && gamepad2.dpad_right)  // Increases the current stack level w/o moving the lift
+                liftToggle = true;
+            }
+            if (!liftToggle && gamepad2.dpad_right) { // Increases the current stack level w/o moving the lift
                 currentStackLevel++;
+                liftToggle = true;
+            }
             if (gamepad2.left_bumper)                         // Sets stack level to first level (tower knocked down)
                 currentStackLevel = 1;
+            if (!(gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_right || gamepad2.dpad_up))
+                liftToggle = false;
 
             // Ensuring the stack height cannot be too low/high
             currentStackLevel = (int)HelperMethods.clamp(1, currentStackLevel, 15);
@@ -121,8 +133,13 @@ public class Teleop extends LinearOpMode {
                 carriage.carriageState = Carriage.CarriagePosition.Manual;
 
             // Extending the carriage
-            if (!gamepad2PressedX && gamepad2.x)
+            if (!carriageToggle && gamepad2.x) {
                 carriage.extend();
+                carriageToggle = true;
+            }
+            else if (!gamepad2.x)
+                carriageToggle = false;
+
             // Retracting the carriage
             if (gamepad2.b)
                 carriage.retract();
@@ -133,9 +150,9 @@ public class Teleop extends LinearOpMode {
 
             // Open/close the claw
             if (gamepad2.a)
-                lift.closeClaw();
+                carriage.closeClaw();
             if (gamepad2.y)
-                lift.openClaw();
+                carriage.openClaw();
 
             // Release the capstone
             if (gamepad2.back)
@@ -146,12 +163,20 @@ public class Teleop extends LinearOpMode {
             // =======================
 
             // Controlling the speed of the intake
-            if (!gamepad1PressedA && gamepad1.a)
+            if (!intakeSpeedToggle && gamepad1.a) {
                 intake.intakeSpeed = .25;
-            else if (!gamepad1PressedB && gamepad1.b)
+                intakeSpeedToggle = false;
+            }
+            else if (!intakeSpeedToggle && gamepad1.b) {
                 intake.intakeSpeed = .5;
-            else if (!gamepad1PressedY && gamepad1.y)
+                intakeSpeedToggle = false;
+            }
+            else if (!intakeSpeedToggle && gamepad1.y) {
                 intake.intakeSpeed = 1;
+                intakeSpeedToggle = false;
+            }
+            else if (!(gamepad1.a || gamepad1.b || gamepad1.y))
+                intakeSpeedToggle = true;
 
             // Intake/Outtake
             if (gamepad1.right_trigger > .01)
@@ -168,8 +193,12 @@ public class Teleop extends LinearOpMode {
                 foundationGrabbers.grab();
 
             // Slow mode for the drive train
-            if (!gamepad1PressedX && gamepad1.x)
+            if (!slowModeToggle && gamepad1.x) {
+                slowModeToggle = true;
                 slowMode = !slowMode;
+            }
+            else if (!gamepad1.x)
+                slowModeToggle = false;
 
             // Drive Train
             if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0 && gamepad1.right_stick_x == 0)
@@ -184,23 +213,6 @@ public class Teleop extends LinearOpMode {
             // TeleOp debugging
             if (debugging && gamepad1.back)
                 robot.resetOdometry(9, 135, 3 * Math.PI / 2);
-
-            // ===================
-            // UPDATE CONTROLLERS
-            // ===================
-
-            // Gamepad 1
-            gamepad1PressedA = gamepad1.a;
-            gamepad1PressedB = gamepad1.b;
-            gamepad1PressedY = gamepad1.y;
-            gamepad1PressedX = gamepad1.x;
-
-            // Gamepad 2
-            gamepad2PressedDPad = gamepad2.dpad_right || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_down;
-            gamepad2PressedA = gamepad2.a;
-            gamepad2PressedB = gamepad2.b;
-            gamepad2PressedY = gamepad2.y;
-            gamepad2PressedX = gamepad2.x;
 
             // =====================================
             // THE BIG RED BUTTON - KILL ALL THREADS

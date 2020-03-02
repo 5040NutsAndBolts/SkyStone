@@ -64,7 +64,7 @@ public class LiftMech {
                                 (robot.intakeLeft.getCurrentPosition()+100 > goalPosition[stackLevel] &&
                                         robot.intakeLeft.getCurrentPosition()-100 < goalPosition[stackLevel])) {
                             currentState = LiftState.Holding;
-                            setPower(0.01);
+                            setPower(0);
                         }
                         else { // Otherwise, state == Moving
                             if (lastState != currentState) // If state just became moving, reset the PID
@@ -84,15 +84,7 @@ public class LiftMech {
         ThreadPool.pool.submit(liftThread);
     }
 
-    /**
-     * Opens the claw
-     */
-    public void openClaw() { robot.claw.setPosition(1); }
 
-    /**
-     * Closes the claw
-     */
-    public void closeClaw() { robot.claw.setPosition(0); }
 
     /**
      * Manual control over the lift

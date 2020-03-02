@@ -22,7 +22,7 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
     @Override
     public void runOpMode() {
         initAuto(true, false, 9, 135, 3 * Math.PI / 2);
-        lift.openClaw();
+        carriage.openClaw();
 
         // Release intake
         robot.intakeBlock.setPosition(.5);
@@ -110,7 +110,7 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
             drive.drive(0, 0, .85);
         }
         drive.hardBrakeMotors();
-        lift.closeClaw();
+        carriage.closeClaw();
 
         // Run to the foundation with skystone
         runPurePursuitPath(
@@ -128,7 +128,7 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
         carriage.extend();
         foundationGrabbers.grab();
         waitTime(1);
-        lift.openClaw();
+        carriage.openClaw();
 
 
         // Pull the foundation back

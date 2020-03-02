@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 import org.firstinspires.ftc.teamcode.helperclasses.PID;
@@ -12,15 +13,15 @@ public class Carriage {
 
     private Hardware robot;
     public static double
-            extendedPosition1 = -4500,
+            extendedPosition1 = -4700,
             extendedPosition2 = -9100,
             retractedPosition = 0,
             goalPosition = 0;
 
     public static double
-        P = 0.003,
-        I = 0,
-        D = 0;
+        P = 0.002,
+        I = 0.000001,
+        D = 0.00009;
 
     public enum CarriagePosition {
         Manual,
@@ -38,6 +39,7 @@ public class Carriage {
     /**
      * Create a new thread for the carriage mechanism
      */
+    public double elapTime=0;
     private void initThread() {
         Thread carriageThread = new Thread() {
             PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
@@ -45,6 +47,9 @@ public class Carriage {
 
             @Override
             public void run() {
+                double lastTime=0;
+                ElapsedTime time = new ElapsedTime();
+                time.startTime();
                 // Essentially the same as while(opModeIsActive())
                 while(!this.isInterrupted()) {
                     // Don't use PID if we are manually controlling it
@@ -65,7 +70,10 @@ public class Carriage {
                     }
 
                     lastState = carriageState;
+                    elapTime=time.milliseconds()-lastTime;
+                    lastTime=time.milliseconds();
                 }
+
             }
         };
 
@@ -111,6 +119,16 @@ public class Carriage {
         carriageState = CarriagePosition.Retracted;
         goalPosition = retractedPosition;
     }
+
+    /**
+     * Opens the claw
+     */
+    public void openClaw() { robot.claw.setPosition(.5); }
+
+    /**
+     * Closes the claw
+     */
+    public void closeClaw() { robot.claw.setPosition(0); }
 
     /**
      * Resets the carriage encoder
