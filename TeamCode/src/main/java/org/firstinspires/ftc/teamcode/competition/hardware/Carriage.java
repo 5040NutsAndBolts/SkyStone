@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 import org.firstinspires.ftc.teamcode.helperclasses.PID;
@@ -40,7 +39,6 @@ public class Carriage {
     /**
      * Create a new thread for the carriage mechanism
      */
-    public double elapTime=0;
     private void initThread() {
         Thread carriageThread = new Thread() {
             PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
@@ -48,9 +46,6 @@ public class Carriage {
 
             @Override
             public void run() {
-                double lastTime=0;
-                ElapsedTime time = new ElapsedTime();
-                time.startTime();
                 // Essentially the same as while(opModeIsActive())
                 while(!this.isInterrupted()) {
                     // Don't use PID if we are manually controlling it
@@ -75,8 +70,6 @@ public class Carriage {
                     }
 
                     lastState = carriageState;
-                    elapTime=time.milliseconds()-lastTime;
-                    lastTime=time.milliseconds();
                 }
 
             }

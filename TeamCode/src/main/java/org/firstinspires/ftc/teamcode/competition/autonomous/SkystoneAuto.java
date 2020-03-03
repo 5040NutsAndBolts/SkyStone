@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.competition.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
+import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
 
 
 @Autonomous(group = "Auto", name = "Skystone Auto")
@@ -129,7 +130,7 @@ public class SkystoneAuto extends AutoMethods {
         }
 
         // Places the block out the robot
-        placeBlock(Math.PI/2, 10);
+        placeBlock(0, .16);
 
         // Drive back to the quarry
         runPurePursuitPath(
@@ -227,7 +228,7 @@ public class SkystoneAuto extends AutoMethods {
         intake.setPower(0);
 
         // Places the block out the back
-        placeBlock(Math.PI/2, 10);
+        placeBlock(0, .16);
 
         // Park
         if (parkAgainstBridge) {
@@ -256,5 +257,8 @@ public class SkystoneAuto extends AutoMethods {
         }
 
         displayEndAuto();
+
+        // Kill all the threads
+        ThreadPool.renewPool();
     }
 }

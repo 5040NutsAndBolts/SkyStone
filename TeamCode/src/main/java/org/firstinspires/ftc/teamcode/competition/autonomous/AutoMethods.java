@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.competition.autonomous.vision.SkystonePipeline.screenPosition;
 import static org.firstinspires.ftc.teamcode.helperclasses.HelperMethods.angleWrap;
-import static org.firstinspires.ftc.teamcode.helperclasses.HelperMethods.inThreshold;
+import static org.firstinspires.ftc.teamcode.helperclasses.HelperMethods.nearAngle;
 import static org.firstinspires.ftc.teamcode.helperclasses.ThreadPool.pool;
 
 public abstract class AutoMethods extends LinearOpMode {
@@ -233,9 +233,9 @@ public abstract class AutoMethods extends LinearOpMode {
      * Does a point turn to reach a specific angle
      *
      * @param angle     Angle in radians to turn to
-     * @param thresholdPercent Threshold the the robot angle must be within
+     * @param tolerance Tolerance the the robot angle must be within
      */
-    protected void pointTurnToAngle(double angle, double thresholdPercent) {
+    protected void pointTurnToAngle(double angle, double tolerance) {
         angle = angleWrap(angle);
 
         double error = robot.theta - angle;
@@ -246,7 +246,7 @@ public abstract class AutoMethods extends LinearOpMode {
             error = -error - Math.PI;
 
         PID pid = new PID(error,1,0,.2);
-        while (opModeIsActive() && !inThreshold(angle, robot.theta, thresholdPercent)) {
+        while (opModeIsActive() && !nearAngle(robot.theta, angle, tolerance)) {
             error = robot.theta - angle;
 
             if (error > Math.PI)
@@ -281,9 +281,9 @@ public abstract class AutoMethods extends LinearOpMode {
     /**
      * Grabs the block then places it outside the robot after turning to a specified angle
      * @param goToAngle angle to rotate to when placing the block
-     * @param thresholdPercent threshold of turning to the angle
+     * @param proximityTolerance threshold of turning to the angle
      */
-    protected void placeBlock(double goToAngle, double thresholdPercent) {
+    protected void placeBlock(double goToAngle, double proximityTolerance) {
         // Stop the robot
         drive.hardBrakeMotors();
         intake.setPower(0);
@@ -292,10 +292,11 @@ public abstract class AutoMethods extends LinearOpMode {
         carriage.closeClaw();
 
         // Turn to drop the block
-        pointTurnToAngle(goToAngle, thresholdPercent);
+        pointTurnToAngle(goToAngle, proximityTolerance);
 
         // Drop the block out the back
         carriage.extend();
+        waitTime(.1);
         while(opModeIsActive() && !carriage.atPosition);
 
         // Drop block
@@ -304,7 +305,7 @@ public abstract class AutoMethods extends LinearOpMode {
         // Pull claw back in so it doesn't hit anything
         waitTime(.25);
         carriage.retract();
-        waitTime(.05);
+        waitTime(.1);
         while(opModeIsActive() && !carriage.atPosition);
     }
 

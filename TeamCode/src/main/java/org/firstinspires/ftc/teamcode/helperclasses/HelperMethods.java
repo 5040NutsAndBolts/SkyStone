@@ -44,7 +44,14 @@ public class HelperMethods {
      * @return Value of angle within 2 Pi
      */
     public static double angleWrap(double angle) {
-        return angle % (Math.PI * 2);
+        if (angle >= 0)
+            return angle % (Math.PI * 2);
+        else {
+            while (angle < 0) {
+                angle += Math.PI * 2;
+            }
+            return angle;
+        }
     }
 
     /**
@@ -71,7 +78,22 @@ public class HelperMethods {
         return Math.max(Math.min(value, max), min);
     }
 
+    /**
+     * Determines if a given angle is within proximity of another angle
+     * @param robotAngle Angle in question
+     * @param angle Angle to be moved to
+     * @param proximity Proximity allowance of angle (Tolerance)
+     * @return If the given angle is in proximity of another
+     */
+    public static boolean nearAngle(double robotAngle, double angle, double proximity) {
+        if (angle == 0 || angle-proximity<=0 || angle+proximity>=2*Math.PI) {
+            return (robotAngle > angleWrap(angle-proximity) && robotAngle < 2*Math.PI) ||
+                    (robotAngle > 0 && robotAngle < proximity);
+        }
+        return robotAngle > angleWrap(angle-proximity) && robotAngle < angleWrap(angle+proximity);
+    }
+
     public static void main(String[] args) {
-        System.out.println(inThreshold(0, -24, 4));
+        System.out.println(nearAngle(Math.PI*2-.0802, Math.PI*2-.0001, .08));
     }
 }

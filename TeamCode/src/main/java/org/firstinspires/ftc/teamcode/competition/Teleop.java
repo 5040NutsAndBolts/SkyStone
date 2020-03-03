@@ -73,9 +73,6 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Carriage state", carriage.carriageState);
             telemetry.addData("Carriage encoder", robot.intakeRight.getCurrentPosition());
-            telemetry.addData("x", gamepad2.x);
-            telemetry.addData("xPressed", carriageToggle);
-            telemetry.addData("Carriage Thread Elapsed Time", carriage.elapTime);
             telemetry.addLine();
             telemetry.addData("Lift State", lift.currentState);
             telemetry.addData("Lift encoder", robot.intakeLeft.getCurrentPosition());
