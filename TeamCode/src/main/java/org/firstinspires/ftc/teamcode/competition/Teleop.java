@@ -91,7 +91,7 @@ public class Teleop extends LinearOpMode {
             // ====================
 
             // Manual control over the lift
-            lift.manual(gamepad2.left_stick_y);
+            lift.manual(gamepad2.left_stick_y != 0 ? gamepad2.left_stick_y : LiftMech.liftHoldPower);
             if (gamepad2.left_stick_y != 0)
                 lift.currentState = LiftMech.LiftState.Manual;
 

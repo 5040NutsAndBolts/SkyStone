@@ -11,20 +11,21 @@ public class LiftMech {
 
     private Hardware robot;
     private int stackLevel = 0;
+    public static double liftHoldPower = -.05;
     public static double
-        P = 0,
+        P = .001,
         I = 0,
         D = 0;
     public static int
             height0 = 0,
             height1 = 0,
-            height2 = 0,
-            height3 = 0,
-            height4 = 0,
-            height5 = 0,
-            height6 = 0,
-            height7 = 0,
-            height8 = 0,
+            height2 = -3600,
+            height3 = -7200,
+            height4 = -10800,
+            height5 = -14400,
+            height6 = -18000,
+            height7 = -21600,
+            height8 = -25200,
             height9 = 0,
             height10 = 0,
             height11 = 0,
@@ -64,7 +65,7 @@ public class LiftMech {
                                 (robot.intakeLeft.getCurrentPosition()+100 > goalPosition[stackLevel] &&
                                         robot.intakeLeft.getCurrentPosition()-100 < goalPosition[stackLevel])) {
                             currentState = LiftState.Holding;
-                            setPower(0);
+                            setPower(liftHoldPower);
                         }
                         else { // Otherwise, state == Moving
                             if (lastState != currentState) // If state just became moving, reset the PID
