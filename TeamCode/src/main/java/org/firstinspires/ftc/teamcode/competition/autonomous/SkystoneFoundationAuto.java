@@ -274,7 +274,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         if (parkAgainstBridge) {
             runPurePursuitPath(
                     cp_parkBridge,
-                    wp_parkBridgeFromLeft,
+                    wp_parkBridge,
                     .06,
                     .005,
                     .07,
@@ -286,7 +286,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         else {
             runPurePursuitPath(
                     cp_parkWall,
-                    wp_parkWallFromLeft,
+                    wp_ParkWall,
                     .06,
                     .005,
                     .07,

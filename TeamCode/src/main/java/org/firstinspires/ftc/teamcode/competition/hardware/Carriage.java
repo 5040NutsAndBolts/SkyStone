@@ -18,9 +18,9 @@ public class Carriage {
             goalPosition = 0;
 
     public static double
-        P = 0.002,
-        I = 0.000001,
-        D = 0.00009;
+        P = 0.0005,
+        I = 0,
+        D = 0.00005;
 
     public enum CarriagePosition {
         Manual,

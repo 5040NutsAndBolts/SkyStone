@@ -411,30 +411,20 @@ public abstract class AutoMethods extends LinearOpMode {
             // Parking against the wall
             cp_parkWall = new CheckPoint(8, 70, 2, robot),
             // Parking against the neutral bridge
-            cp_parkBridge = new CheckPoint(36, 70, 2, robot);
+            cp_parkBridge = new CheckPoint(35, 70, 2, robot);
 
     public ArrayList<WayPoint>
             // Robot quickly rotates then moves next to the wall and slides down
-            wp_parkWallFromLeft = new ArrayList<>(
+            wp_ParkWall = new ArrayList<>(
             Arrays.asList(
                     new WayPoint(8, 60, Math.PI / 2),
                     new WayPoint(8, 70, Math.PI / 2)
             )),
-            wp_parkWallFromRight = new ArrayList<>(
-                    Arrays.asList(
-                            new WayPoint(8, 90, Math.PI / 2),
-                            new WayPoint(8, 70, Math.PI / 2)
-                    )),
             // Robot quickly rotates then moves up to near the neutral bridge and over to park
-            wp_parkBridgeFromLeft = new ArrayList<>(
+            wp_parkBridge = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(38, 72, 3 * Math.PI / 2),
-                            new WayPoint(36, 70, 3 * Math.PI / 2)
-                    )),
-            wp_parkBridgeFromRight = new ArrayList<>(
-                    Arrays.asList(
-                            new WayPoint(20, 90, 3 * Math.PI / 2),
-                            new WayPoint(20, 70, 3 * Math.PI / 2)
+                            new WayPoint(37, 72, 3 * Math.PI / 2),
+                            new WayPoint(35, 70, 3 * Math.PI / 2)
                     ));
 
     // ===============
