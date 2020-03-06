@@ -24,7 +24,7 @@ public class Teleop extends LinearOpMode {
             intakeSpeedToggle, slowModeToggle, carriageToggle, liftToggle,
             slowMode = false,
             debugging = false;
-    private int currentStackLevel = 0;
+    private int currentStackLevel = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -48,6 +48,9 @@ public class Teleop extends LinearOpMode {
 
             telemetry.addData("debugging", debugging);
             if (debugging) {
+                telemetry.clearAll();
+                telemetry.addLine("Dashboard Active");
+                telemetry.update();
                 telemetry =  FtcDashboard.getInstance().getTelemetry();
                 telemetry.addData("X Position", robot.x);
                 telemetry.addData("Y Position", robot.y);
@@ -62,8 +65,6 @@ public class Teleop extends LinearOpMode {
         foundationGrabbers.release();
 
         while(opModeIsActive()) {
-            lift.updateHeights();
-
             // Telemetry
             telemetry.addData("Slow mode", slowMode);
             telemetry.addLine();
@@ -76,6 +77,8 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Lift State", lift.currentState);
             telemetry.addData("Lift encoder", robot.intakeLeft.getCurrentPosition());
+            telemetry.addData("Lift Speed", lift.speed);
+            telemetry.addData("Left Y-Stick", gamepad2.left_stick_y);
             if (debugging) {
                 robot.updatePositionRoadRunner();
                 telemetry.addLine();
@@ -101,7 +104,7 @@ public class Teleop extends LinearOpMode {
                 liftToggle = true;
             }
             if (!liftToggle && gamepad2.dpad_down) {  // Takes the lift all the way back down
-                lift.moveToLevel(0);
+                lift.moveToLevel(1);
                 liftToggle = true;
             }
             if (!liftToggle && gamepad2.dpad_left) {  // Decreases the current stack level w/o moving the lift

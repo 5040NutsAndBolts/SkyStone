@@ -34,6 +34,7 @@ public class LiftMech {
             height14 = 0,
             height15 = 0;
     private int[] goalPosition = new int[16];
+    public double speed = 0;
     public enum LiftState {
         Manual,
         Holding,
@@ -85,28 +86,33 @@ public class LiftMech {
         ThreadPool.pool.submit(liftThread);
     }
 
-
-
     /**
      * Manual control over the lift
-     * @param power Motor power that will be given to the lift mechanism
+     * @param power Motor power for the lift mechanism
      */
     public void manual(double power) {
         if (currentState == LiftState.Manual) {
             robot.liftMotor1.setPower(power);
             robot.liftMotor2.setPower(power);
+            speed = power;
         }
     }
 
+    /**
+     * Sets the power of the lift for automatic control
+     * @param power Motor power for the lift mechanism
+     */
     public void setPower(double power) {
         robot.liftMotor1.setPower(power);
         robot.liftMotor2.setPower(power);
+        speed = power;
     }
 
     /**
      * Raises the lift of the robot to a specified level
      */
     public void moveToLevel(int level) {
+        updateHeights();
         stackLevel = level;
         currentState = LiftState.Moving;
     }
