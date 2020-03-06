@@ -13,15 +13,15 @@ public class Carriage {
 
     private Hardware robot;
     public static double
-            extendedPosition1 = -4700,
+            extendedPosition1 = -5000,
             extendedPosition2 = -9100,
             retractedPosition = 0,
             goalPosition = 0;
 
     public static double
-        P = 0.0005,
-        I = 0,
-        D = 0.00005;
+            P = 0.0005,
+            I = 0,
+            D = 0.00005;
 
     public enum CarriagePosition {
         Manual,
@@ -29,6 +29,7 @@ public class Carriage {
         Extended2,
         Retracted
     }
+
     public Carriage.CarriagePosition carriageState = Carriage.CarriagePosition.Manual;
     public boolean atPosition;
 
@@ -48,7 +49,7 @@ public class Carriage {
             @Override
             public void run() {
                 // Essentially the same as while(opModeIsActive())
-                while(!this.isInterrupted()) {
+                while (!this.isInterrupted()) {
                     // Don't use PID if we are manually controlling it
                     if (carriageState != CarriagePosition.Manual) {
                         // If the state has changed since the last run, update the PID accordingly
@@ -58,13 +59,12 @@ public class Carriage {
                         }
 
                         // If the motor isn't within 25 ticks of the goal position, move the claw
-                        if (!(robot.intakeRight.getCurrentPosition()+25 > goalPosition &&
-                                robot.intakeRight.getCurrentPosition()-25 < goalPosition)) {
+                        if (!(robot.intakeRight.getCurrentPosition() + 25 > goalPosition &&
+                                robot.intakeRight.getCurrentPosition() - 25 < goalPosition)) {
                             setPower(carriagePID.getPID());
                             atPosition = false;
                             carriagePID.update(goalPosition - robot.intakeRight.getCurrentPosition());
-                        }
-                        else {
+                        } else {
                             setPower(0);
                             atPosition = true;
                         }
@@ -81,6 +81,7 @@ public class Carriage {
 
     /**
      * Manual power control over the carriage
+     *
      * @param power Power to be put into the carriage
      */
     public void manual(double power) {
@@ -107,7 +108,7 @@ public class Carriage {
                 CarriagePosition.Extended1;
         // Changing the goalPosition
         goalPosition = (carriageState == CarriagePosition.Extended1) ?
-                extendedPosition1:
+                extendedPosition1 :
                 extendedPosition2;
     }
 

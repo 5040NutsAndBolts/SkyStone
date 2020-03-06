@@ -51,7 +51,7 @@ public class Teleop extends LinearOpMode {
                 telemetry.clearAll();
                 telemetry.addLine("Dashboard Active");
                 telemetry.update();
-                telemetry =  FtcDashboard.getInstance().getTelemetry();
+                telemetry = FtcDashboard.getInstance().getTelemetry();
                 telemetry.addData("X Position", robot.x);
                 telemetry.addData("Y Position", robot.y);
                 telemetry.addData("Rotation", robot.theta);
@@ -64,7 +64,7 @@ public class Teleop extends LinearOpMode {
         carriage.openClaw();
         foundationGrabbers.release();
 
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             // Telemetry
             telemetry.addData("Slow mode", slowMode);
             telemetry.addLine();
@@ -72,14 +72,14 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Stack height", currentStackLevel);
             telemetry.addLine();
-            telemetry.addData("Carriage Speed",robot.clawExtension1.getPower());
-            telemetry.addData("Carriage Speed vs Controller",robot.clawExtension1.getPower()-gamepad2.left_stick_y);
+            telemetry.addData("Carriage Speed", robot.clawExtension1.getPower());
+            telemetry.addData("Carriage Speed vs Controller", robot.clawExtension1.getPower() - gamepad2.left_stick_y);
             telemetry.addData("Carriage state", carriage.carriageState);
             telemetry.addData("Carriage encoder", robot.intakeRight.getCurrentPosition());
             telemetry.addLine();
             telemetry.addData("Lift State", lift.currentState);
-            telemetry.addData("Lift Speed",robot.liftMotor1.getPower());
-            telemetry.addData("Gamepad2 Left Stick Y",gamepad2.left_stick_y);
+            telemetry.addData("Lift Speed", robot.liftMotor1.getPower());
+            telemetry.addData("Gamepad2 Left Stick Y", gamepad2.left_stick_y);
             telemetry.addData("Lift encoder", robot.intakeLeft.getCurrentPosition());
             telemetry.addData("Lift Speed", lift.speed);
             telemetry.addData("Left Y-Stick", gamepad2.left_stick_y);
@@ -123,7 +123,7 @@ public class Teleop extends LinearOpMode {
                 liftToggle = false;
 
             // Ensuring the stack height cannot be too low/high
-            currentStackLevel = (int)HelperMethods.clamp(1, currentStackLevel, 15);
+            currentStackLevel = (int) HelperMethods.clamp(1, currentStackLevel, 15);
 
             // Resetting the carriage
             if (gamepad2.left_trigger > .05)
@@ -138,8 +138,7 @@ public class Teleop extends LinearOpMode {
             if (!carriageToggle && gamepad2.x) {
                 carriage.extend();
                 carriageToggle = true;
-            }
-            else if (!gamepad2.x)
+            } else if (!gamepad2.x)
                 carriageToggle = false;
 
             // Retracting the carriage
@@ -168,16 +167,13 @@ public class Teleop extends LinearOpMode {
             if (!intakeSpeedToggle && gamepad1.a) {
                 intake.intakeSpeed = .25;
                 intakeSpeedToggle = false;
-            }
-            else if (!intakeSpeedToggle && gamepad1.b) {
+            } else if (!intakeSpeedToggle && gamepad1.b) {
                 intake.intakeSpeed = .5;
                 intakeSpeedToggle = false;
-            }
-            else if (!intakeSpeedToggle && gamepad1.y) {
+            } else if (!intakeSpeedToggle && gamepad1.y) {
                 intake.intakeSpeed = 1;
                 intakeSpeedToggle = false;
-            }
-            else if (!(gamepad1.a || gamepad1.b || gamepad1.y))
+            } else if (!(gamepad1.a || gamepad1.b || gamepad1.y))
                 intakeSpeedToggle = true;
 
             // Intake/Outtake
@@ -198,8 +194,7 @@ public class Teleop extends LinearOpMode {
             if (!slowModeToggle && gamepad1.x) {
                 slowModeToggle = true;
                 slowMode = !slowMode;
-            }
-            else if (!gamepad1.x)
+            } else if (!gamepad1.x)
                 slowModeToggle = false;
 
             // Drive Train

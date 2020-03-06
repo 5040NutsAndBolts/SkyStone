@@ -14,56 +14,60 @@ public class LiftMech {
     private int stackLevel = 0;
     public static double liftHoldPower = -.05;
     public static double
-        P = .001,
-        I = 0,
-        D = 0;
+            P = .001,
+            I = 0,
+            D = 0;
     public static int
             height0 = 0,
             height1 = 0,
-            height2 = -3600,
-            height3 = -7200,
-            height4 = -10800,
-            height5 = -14400,
-            height6 = -18000,
-            height7 = -21600,
-            height8 = -25200,
-            height9 = 0,
-            height10 = 0,
-            height11 = 0,
-            height12 = 0,
-            height13 = 0,
-            height14 = 0,
-            height15 = 0;
+            height2 = -4800,
+            height3 = -9600,
+            height4 = -14400,
+            height5 = -19200,
+            height6 = -24000,
+            height7 = -28800,
+            height8 = -33600,
+            height9 = -38400,
+            height10 = -43200,
+            height11 = -48000,
+            height12 = -52800,
+            height13 = -57600,
+            height14 = -62400,
+            height15 = -67200;
     private int[] goalPosition = new int[16];
     public double speed = 0;
+
     public enum LiftState {
         Manual,
         Holding,
         Moving
     }
+
     public PID pid;
     public LiftState currentState = LiftState.Holding;
 
     public LiftMech(Hardware robot) {
         this.robot = robot;
-        pid = new PID(0,P,I,D);
+        pid = new PID(0, P, I, D);
     }
 
+    /**
+     * Runs the lift based on the
+     * @param g Gamepad to get left stick value from
+     */
     public void run(Gamepad g) {
-        if(g.left_stick_y!=0) {
+        if (g.left_stick_y != 0) {
             currentState = LiftState.Manual;
             setPower(g.left_stick_y);
-        }
-        else if(currentState==LiftState.Moving) {
-            if(pid == null)
-                pid = new PID(goalPosition[stackLevel]-robot.intakeLeft.getCurrentPosition(),P,I,D);
-            pid.update(goalPosition[stackLevel]-robot.intakeLeft.getCurrentPosition());
+        } else if (currentState == LiftState.Moving) {
+            if (pid == null)
+                pid = new PID(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition(), P, I, D);
+            pid.update(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition());
             setPower(pid.getPID());
-            if(Math.abs(goalPosition[stackLevel]-robot.intakeLeft.getCurrentPosition())<30)
-                currentState=LiftState.Holding;
-        }
-        else {
-            currentState=LiftState.Holding;
+            if (Math.abs(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition()) < 30)
+                currentState = LiftState.Holding;
+        } else {
+            currentState = LiftState.Holding;
             setPower(liftHoldPower);
         }
     }
@@ -80,7 +84,7 @@ public class LiftMech {
         updateHeights();
         stackLevel = level;
         currentState = LiftState.Moving;
-        pid=null;
+        pid = null;
     }
 
     /**
