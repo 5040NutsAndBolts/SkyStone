@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.helperclasses.PID;
 import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
@@ -40,72 +41,36 @@ public class LiftMech {
         Holding,
         Moving
     }
+    public PID pid;
     public LiftState currentState = LiftState.Holding;
 
     public LiftMech(Hardware robot) {
         this.robot = robot;
-        initThread();
+        pid = new PID(0,P,I,D);
     }
 
-    /**
-     * Creates a new thread for the lift mechanism
-     */
-    private void initThread() {
-        Thread liftThread = new Thread() {
-            @Override
-            public void run() {
-                PID liftPID = new PID(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition(), P, I, D);
-                LiftState lastState = LiftState.Holding;
-
-                // Essentially the same as while(opModeIsActive())
-                while(!this.isInterrupted()) {
-                    // If not running manual mode
-                    if (currentState != LiftState.Manual) {
-                        // If state == holding or the lift is within 3% of its goal position, then hold its current position
-                        if (currentState == LiftState.Holding ||
-                                (robot.intakeLeft.getCurrentPosition()+100 > goalPosition[stackLevel] &&
-                                        robot.intakeLeft.getCurrentPosition()-100 < goalPosition[stackLevel])) {
-                            currentState = LiftState.Holding;
-                            setPower(liftHoldPower);
-                        }
-                        else { // Otherwise, state == Moving
-                            if (lastState != currentState) // If state just became moving, reset the PID
-                                liftPID = new PID(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition(), P, I, D);
-
-                            setPower(liftPID.getPID());
-
-                            liftPID.update(goalPosition[stackLevel] - robot.intakeLeft.getCurrentPosition());
-                        }
-                    }
-
-                    lastState = currentState;
-                }
-            }
-        };
-
-        ThreadPool.pool.submit(liftThread);
-    }
-
-    /**
-     * Manual control over the lift
-     * @param power Motor power for the lift mechanism
-     */
-    public void manual(double power) {
-        if (currentState == LiftState.Manual) {
-            robot.liftMotor1.setPower(power);
-            robot.liftMotor2.setPower(power);
-            speed = power;
+    public void run(Gamepad g) {
+        if(g.left_stick_y!=0) {
+            currentState = LiftState.Manual;
+            setPower(g.left_stick_y);
+        }
+        else if(currentState==LiftState.Moving) {
+            if(pid == null)
+                pid = new PID(goalPosition[stackLevel]-robot.intakeLeft.getCurrentPosition(),P,I,D);
+            pid.update(goalPosition[stackLevel]-robot.intakeLeft.getCurrentPosition());
+            setPower(pid.getPID());
+            if(Math.abs(goalPosition[stackLevel]-robot.intakeLeft.getCurrentPosition())<30)
+                currentState=LiftState.Holding;
+        }
+        else {
+            currentState=LiftState.Holding;
+            setPower(liftHoldPower);
         }
     }
 
-    /**
-     * Sets the power of the lift for automatic control
-     * @param power Motor power for the lift mechanism
-     */
     public void setPower(double power) {
         robot.liftMotor1.setPower(power);
         robot.liftMotor2.setPower(power);
-        speed = power;
     }
 
     /**
@@ -115,6 +80,7 @@ public class LiftMech {
         updateHeights();
         stackLevel = level;
         currentState = LiftState.Moving;
+        pid=null;
     }
 
     /**

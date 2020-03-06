@@ -72,10 +72,14 @@ public class Teleop extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Stack height", currentStackLevel);
             telemetry.addLine();
+            telemetry.addData("Carriage Speed",robot.clawExtension1.getPower());
+            telemetry.addData("Carriage Speed vs Controller",robot.clawExtension1.getPower()-gamepad2.left_stick_y);
             telemetry.addData("Carriage state", carriage.carriageState);
             telemetry.addData("Carriage encoder", robot.intakeRight.getCurrentPosition());
             telemetry.addLine();
             telemetry.addData("Lift State", lift.currentState);
+            telemetry.addData("Lift Speed",robot.liftMotor1.getPower());
+            telemetry.addData("Gamepad2 Left Stick Y",gamepad2.left_stick_y);
             telemetry.addData("Lift encoder", robot.intakeLeft.getCurrentPosition());
             telemetry.addData("Lift Speed", lift.speed);
             telemetry.addData("Left Y-Stick", gamepad2.left_stick_y);
@@ -94,9 +98,7 @@ public class Teleop extends LinearOpMode {
             // ====================
 
             // Manual control over the lift
-            lift.manual(gamepad2.left_stick_y != 0 ? gamepad2.left_stick_y : LiftMech.liftHoldPower);
-            if (gamepad2.left_stick_y != 0)
-                lift.currentState = LiftMech.LiftState.Manual;
+            lift.run(gamepad2);
 
             // Automatic control over the lift
             if (!liftToggle && gamepad2.dpad_up) {     // Raises to current level then increases level
