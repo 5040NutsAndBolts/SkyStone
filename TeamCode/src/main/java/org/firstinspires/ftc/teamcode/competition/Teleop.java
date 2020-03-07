@@ -125,7 +125,7 @@ public class Teleop extends LinearOpMode {
                 carriage.setExtendedPosition(currentStackLevel);
 
             // Ensuring the stack height cannot be too low/high
-            currentStackLevel = (int) HelperMethods.clamp(1, currentStackLevel, 15);
+            currentStackLevel = (int) HelperMethods.clamp(1, currentStackLevel, 14);
 
             // Resetting the carriage
             if (gamepad2.left_trigger > .05)

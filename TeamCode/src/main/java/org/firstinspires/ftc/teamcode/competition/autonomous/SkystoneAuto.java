@@ -14,7 +14,7 @@ public class SkystoneAuto extends AutoMethods {
         initAuto(true);
 
         // Release intake
-        robot.intakeBlock.setPosition(.5);
+        robot.intakeBlock.setPosition(0);
         timer.reset();
         timer.startTime();
         while (timer.seconds() < .5 && opModeIsActive())

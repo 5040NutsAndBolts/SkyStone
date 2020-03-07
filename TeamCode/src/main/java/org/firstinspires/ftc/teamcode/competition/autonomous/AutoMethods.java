@@ -82,7 +82,7 @@ public abstract class AutoMethods extends LinearOpMode {
         carriage.openClaw();
         carriage.retract();
         foundationGrabbers.release();
-        robot.intakeBlock.setPosition(1);
+        robot.intakeBlock.setPosition(.5);
 
         // Reset robot position to a specified value
         robot.resetOdometry(robotX, robotY, robotTheta);
@@ -295,18 +295,18 @@ public abstract class AutoMethods extends LinearOpMode {
         pointTurnToAngle(goToAngle, proximityTolerance);
 
         // Drop the block out the back
-        carriage.extend();
-        waitTime(.1);
-        while(opModeIsActive() && !carriage.atPosition);
+        carriage.carriageState = Carriage.CarriagePosition.Extended1;
+        while(opModeIsActive() && carriage.carriageState != Carriage.CarriagePosition.Manual)
+            carriage.run(gamepad2);
 
         // Drop block
         carriage.openClaw();
 
         // Pull claw back in so it doesn't hit anything
-        waitTime(.25);
-        carriage.retract();
         waitTime(.1);
-        while(opModeIsActive() && !carriage.atPosition);
+        carriage.carriageState = Carriage.CarriagePosition.Retracted;
+        while(opModeIsActive() && carriage.carriageState != Carriage.CarriagePosition.Manual)
+            carriage.run(gamepad2);
     }
 
     /**
