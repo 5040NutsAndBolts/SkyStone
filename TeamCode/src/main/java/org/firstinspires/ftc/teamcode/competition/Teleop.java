@@ -121,6 +121,8 @@ public class Teleop extends LinearOpMode {
                 currentStackLevel = 1;
             if (!(gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_right || gamepad2.dpad_up))
                 liftToggle = false;
+            if(gamepad2.dpad_up||gamepad2.dpad_right||gamepad2.dpad_left)
+                carriage.setExtendedPosition(currentStackLevel);
 
             // Ensuring the stack height cannot be too low/high
             currentStackLevel = (int) HelperMethods.clamp(1, currentStackLevel, 15);
@@ -130,9 +132,7 @@ public class Teleop extends LinearOpMode {
                 lift.reset();
 
             // Ensures carriage power cannot be 1 because 100% power is weird for the servo
-            carriage.manual(gamepad2.right_stick_y);
-            if (gamepad2.right_stick_y != 0)
-                carriage.carriageState = Carriage.CarriagePosition.Manual;
+            carriage.run(gamepad2);
 
             // Extending the carriage
             if (!carriageToggle && gamepad2.x) {

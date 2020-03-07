@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.competition.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
 import org.firstinspires.ftc.teamcode.helperclasses.PID;
@@ -17,6 +18,45 @@ public class Carriage {
             extendedPosition2 = -9100,
             retractedPosition = 0,
             goalPosition = 0;
+
+    public static final double[] extensions1 = new double[]
+            {
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000,
+                    -5000
+            };
+    public static final double[] extensions2 = new double[]
+            {
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100,
+                    -9100
+            };
 
     public static double
             P = 0.0005,
@@ -33,63 +73,47 @@ public class Carriage {
     public Carriage.CarriagePosition carriageState = Carriage.CarriagePosition.Manual;
     public boolean atPosition;
 
+    PID pid;
+
     public Carriage(Hardware robot) {
         this.robot = robot;
-        initThread();
+        pid = new PID(0,P,I,D);
     }
 
-    /**
-     * Create a new thread for the carriage mechanism
-     */
-    private void initThread() {
-        Thread carriageThread = new Thread() {
-            PID carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
-            CarriagePosition lastState = carriageState;
 
-            @Override
-            public void run() {
-                // Essentially the same as while(opModeIsActive())
-                while (!this.isInterrupted()) {
-                    // Don't use PID if we are manually controlling it
-                    if (carriageState != CarriagePosition.Manual) {
-                        // If the state has changed since the last run, update the PID accordingly
-                        if (lastState != carriageState) {
-                            carriagePID = new PID(goalPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
-                            atPosition = false;
-                        }
-
-                        // If the motor isn't within 25 ticks of the goal position, move the claw
-                        if (!(robot.intakeRight.getCurrentPosition() + 25 > goalPosition &&
-                                robot.intakeRight.getCurrentPosition() - 25 < goalPosition)) {
-                            setPower(carriagePID.getPID());
-                            atPosition = false;
-                            carriagePID.update(goalPosition - robot.intakeRight.getCurrentPosition());
-                        } else {
-                            setPower(0);
-                            atPosition = true;
-                        }
-                    }
-
-                    lastState = carriageState;
-                }
-
-            }
-        };
-
-        ThreadPool.pool.submit(carriageThread);
-    }
-
-    /**
-     * Manual power control over the carriage
-     *
-     * @param power Power to be put into the carriage
-     */
-    public void manual(double power) {
-        if (carriageState == CarriagePosition.Manual) {
-            power = HelperMethods.clamp(-.85, power, .85);
-            robot.clawExtension1.setPower(power);
-            robot.clawExtension2.setPower(power);
+    public void run(Gamepad g) {
+        if (g.right_stick_y != 0||carriageState==CarriagePosition.Manual) {
+            carriageState = CarriagePosition.Manual;
+            setPower(g.right_stick_y);
+        } else if (carriageState == CarriagePosition.Extended1) {
+            if (pid == null)
+                pid = new PID(extendedPosition1 - robot.intakeRight.getCurrentPosition(), P, I, D);
+            pid.update(extendedPosition1 - robot.intakeRight.getCurrentPosition());
+            setPower(pid.getPID());
+            if (Math.abs(extendedPosition1 - robot.intakeRight.getCurrentPosition()) < 30)
+                carriageState = CarriagePosition.Manual;
         }
+        else if (carriageState == CarriagePosition.Extended2) {
+            if (pid == null)
+                pid = new PID(extendedPosition2 - robot.intakeRight.getCurrentPosition(), P, I, D);
+            pid.update(extendedPosition2 - robot.intakeRight.getCurrentPosition());
+            setPower(pid.getPID());
+            if (Math.abs(extendedPosition2 - robot.intakeRight.getCurrentPosition()) < 30)
+                carriageState = CarriagePosition.Manual;
+        }
+        else if (carriageState == CarriagePosition.Retracted) {
+            if (pid == null)
+                pid = new PID(retractedPosition - robot.intakeRight.getCurrentPosition(), P, I, D);
+            pid.update(retractedPosition - robot.intakeRight.getCurrentPosition());
+            setPower(pid.getPID());
+            if (Math.abs(retractedPosition - robot.intakeRight.getCurrentPosition()) < 30)
+                carriageState = CarriagePosition.Manual;
+        }
+    }
+
+    public void setExtendedPosition(int stackHeight) {
+        extendedPosition1=extensions1[stackHeight];
+        extendedPosition2=extensions2[stackHeight];
     }
 
     private void setPower(double power) {
@@ -110,6 +134,7 @@ public class Carriage {
         goalPosition = (carriageState == CarriagePosition.Extended1) ?
                 extendedPosition1 :
                 extendedPosition2;
+        pid=null;
     }
 
     /**
@@ -118,6 +143,7 @@ public class Carriage {
     public void retract() {
         carriageState = CarriagePosition.Retracted;
         goalPosition = retractedPosition;
+        pid=null;
     }
 
     /**
