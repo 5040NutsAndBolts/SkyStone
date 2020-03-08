@@ -163,9 +163,9 @@ public abstract class AutoMethods extends LinearOpMode {
                 telemetry.addData("Block Selected", skystonePosition);
             }
             else if (visionAuto && onRed) {
-                if (screenPosition.x < 75)
+                if (screenPosition.x < 85)
                     skystonePosition = 1;
-                else if (screenPosition.x < 100)
+                else if (screenPosition.x < 120)
                     skystonePosition = 2;
                 else
                     skystonePosition = 3;
@@ -245,7 +245,7 @@ public abstract class AutoMethods extends LinearOpMode {
         else if (error < -Math.PI)
             error = -error - Math.PI;
 
-        PID pid = new PID(error,1,0,.2);
+        PID pid = new PID(error,1.1,0,.2);
         while (opModeIsActive() && !nearAngle(robot.theta, angle, tolerance)) {
             error = robot.theta - angle;
 
@@ -295,25 +295,48 @@ public abstract class AutoMethods extends LinearOpMode {
         pointTurnToAngle(goToAngle, proximityTolerance);
 
         // Drop the block out the back
-        carriage.carriageState = Carriage.CarriagePosition.Extended1;
-        while(opModeIsActive() && carriage.carriageState != Carriage.CarriagePosition.Manual)
-            carriage.run(gamepad2);
+        timer.reset();
+        timer.startTime();
+        while(robot.intakeRight.getCurrentPosition()>-4000&&opModeIsActive())
+        {
 
-        // Drop block
+            robot.clawExtension1.setPower(-.75);
+            robot.clawExtension2.setPower(-.75);
+
+        }
+        robot.clawExtension1.setPower(0);
+        robot.clawExtension2.setPower(0);
+        timer.reset();
         carriage.openClaw();
+        Thread t = new Thread()
+        {
 
-        // Pull claw back in so it doesn't hit anything
-        waitTime(.1);
-        carriage.carriageState = Carriage.CarriagePosition.Retracted;
-        while(opModeIsActive() && carriage.carriageState != Carriage.CarriagePosition.Manual)
-            carriage.run(gamepad2);
+            @Override
+            public void run()
+            {
+
+                waitTime(.4);
+                while(robot.intakeRight.getCurrentPosition()<-15&&opModeIsActive())
+                {
+
+                    robot.clawExtension1.setPower(.75);
+                    robot.clawExtension2.setPower(.75);
+
+                }
+                robot.clawExtension1.setPower(0);
+                robot.clawExtension2.setPower(0);
+            }
+
+        };
+        pool.submit(t);
+        waitTime(.2);
     }
 
     /**
      * Grabs the block then places it outside the robot at its current position
      */
     protected void placeBlock() {
-        placeBlock(robot.theta, 10);
+        placeBlock(robot.theta, 20);
     }
 
 
@@ -470,14 +493,14 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Position to grab the right most skystone closest to the sky bridge
-            cp_grabSkystone1_pos1 = new CheckPoint(50.75, 96, .5, robot),
+            cp_grabSkystone1_pos1 = new CheckPoint(50.5, 96, .5, robot),
             // Position to grab the right most skystone closest to the wall
             cp_grabSkystone2_pos1 = new CheckPoint(51.5, 122, .5, robot),
 
             // Position to grab the middle skystone closest to the sky bridge
-            cp_grabSkystone1_pos2 = new CheckPoint(50, 88, .5, robot),
+            cp_grabSkystone1_pos2 = new CheckPoint(50.6, 88.5, .5, robot),
             // Position to grab the middle skystone closest to the wall
-            cp_grabSkystone2_pos2 = new CheckPoint(52.5, 113, .5, robot),
+            cp_grabSkystone2_pos2 = new CheckPoint(53.5, 113, .5, robot),
 
             // Position to grab the left most skystone closest to the sky bridge
             cp_grabSkystone1_pos3 = new CheckPoint(52, 116, .5, robot),
@@ -488,20 +511,20 @@ public abstract class AutoMethods extends LinearOpMode {
             cp_prepareForDeposit = new CheckPoint(41, 97, 3, robot),
 
             // Driving and depositing the skystone
-            cp_depositSkystone = new CheckPoint(36, 57, 1.5, robot),
-            cp_depositSkystonePos3 = new CheckPoint(36, 57, 1, robot),
-            cp_depositSkystone_2 = new CheckPoint(34, 56, 1.5, robot),
-            cp_depositSkystone_2Pos3 = new CheckPoint(35, 56, 1.5, robot),
+            cp_depositSkystone = new CheckPoint(36, 57, 1.8, robot),
+            cp_depositSkystonePos3 = new CheckPoint(36, 57, 1.6, robot),
+            cp_depositSkystone_2 = new CheckPoint(34, 56, 1.8, robot),
+            cp_depositSkystone_2Pos3 = new CheckPoint(35, 56, 1.8, robot),
 
             // Driving back to the quarry
-            cp_prepareForSecondSkystone = new CheckPoint(22, 103, 8, robot);
+            cp_prepareForSecondSkystone = new CheckPoint(23, 102, 8, robot);
 
     public ArrayList<WayPoint>
             // Right most skystone paths
             wp_grabSkystone1_pos1 = new ArrayList<>(
             Arrays.asList(
                     new WayPoint(40, 96, 3 * Math.PI / 2),
-                    new WayPoint(50.75, 96, 3 * Math.PI / 2)
+                    new WayPoint(50.5, 96, 3 * Math.PI / 2)
             )),
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
@@ -511,13 +534,13 @@ public abstract class AutoMethods extends LinearOpMode {
             // Middle skystone paths
             wp_grabSkystone1_pos2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(9-0.7874016, 100, 3 * Math.PI / 2),
-                            new WayPoint(50, 88, 3 * Math.PI / 2)
+                            new WayPoint(9-0.7874016, 105, 3 * Math.PI / 2),
+                            new WayPoint(50.4, 88.6, 3 * Math.PI / 2)
                     )),
             wp_grabSkystone2_pos2 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(43, 113, 3 * Math.PI / 2),
-                            new WayPoint(52.5, 113, 3 * Math.PI / 2)
+                            new WayPoint(53.5, 113, 3 * Math.PI / 2)
                     )),
             // Left most skystone paths
             wp_grabSkystone1_pos3 = new ArrayList<>(
@@ -544,13 +567,13 @@ public abstract class AutoMethods extends LinearOpMode {
             ),
             wp_depositSkystone = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(31, 90, 3 * Math.PI / 2),
+                            new WayPoint(33, 90, 3 * Math.PI / 2),
                             new WayPoint(36, 57, 3 * Math.PI / 2)
                     )
             ),
             wp_depositSkystone_2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(34.25, 90, 3 * Math.PI / 2),
+                            new WayPoint(35.5, 90, 3 * Math.PI / 2),
                             new WayPoint(33.75, 56, 3 * Math.PI / 2)
                     )
             ),
@@ -563,8 +586,8 @@ public abstract class AutoMethods extends LinearOpMode {
             // Moving to grab the second skystone
             wp_prepareForSecondSkystone = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(31, 98, 3 * Math.PI / 2),
-                            new WayPoint(21, 102, 3 * Math.PI / 2)
+                            new WayPoint(32.9, 98, 3 * Math.PI / 2),
+                            new WayPoint(23, 102, 3 * Math.PI / 2)
                     ));
 
     // ============================

@@ -25,13 +25,14 @@ public class SkystoneAuto extends AutoMethods {
         if (onRed) {
             robot.resetOdometry(9,-103.5,3*Math.PI/2);
             timer.reset();
-            while (timer.seconds() < .6 && opModeIsActive())
+            while (timer.seconds() < .5 && opModeIsActive())
                 robot.updatePositionRoadRunner();
-                drive.drive(0,-.45,0);
-            while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, Math.PI/2, 10)) {
-                robot.updatePositionRoadRunner();
-                drive.drive(0, 0, .75);
-            }
+                drive.drive(0,-.6,0);
+            if(skystonePosition!=3)
+                while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, Math.PI/2, 10)) {
+                    robot.updatePositionRoadRunner();
+                    drive.drive(0, 0, .75);
+                }
         }
         else robot.resetOdometry(9,103.5,3 * Math.PI / 2);
 
@@ -42,12 +43,13 @@ public class SkystoneAuto extends AutoMethods {
                     wp_grabSkystone1_pos1,
                     1,
                     .009,
-                    .225,
+                    .2,
                     6,
                     1.3,
                     .2
             );
         }
+
         else if (skystonePosition == 2) {
             runPurePursuitPath(
                     cp_grabSkystone1_pos2,
@@ -64,11 +66,11 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos3,
                     wp_grabSkystone1_pos3,
-                    1.5,
+                    1.3,
                     .04,
-                    0.4,
+                    0.3,
                     4,
-                    2.5,
+                    1.5,
                     .15
             );
         }
@@ -102,7 +104,6 @@ public class SkystoneAuto extends AutoMethods {
             }
         }
         drive.hardBrakeMotors();
-
         // Drive backwards to be out of way with skystone
         runPurePursuitPath(
                 cp_prepareForDeposit,
@@ -130,7 +131,7 @@ public class SkystoneAuto extends AutoMethods {
         }
 
         // Places the block out the robot
-        placeBlock(0, .16);
+        placeBlock(0, .25);
 
         // Drive back to the quarry
         runPurePursuitPath(
@@ -140,8 +141,8 @@ public class SkystoneAuto extends AutoMethods {
                 .003,
                 .15,
                 8,
-                .01,
-                .5
+                .2,
+                .01
         );
 
         // Goes to position to grab second skystone

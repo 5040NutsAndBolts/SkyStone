@@ -140,7 +140,7 @@ public class SkystonePipeline extends OpenCvPipeline {
             // If the result is better then the previously tracked one,
             // and the top left coordinates are within the cropped area
             // set this rect as the new best
-            if(score < lowestScore && rect.tl().y >= 146 && rect.tl().x > 55 && rect.tl().x < 190){
+            if(score < lowestScore && rect.tl().y >= 160 && rect.tl().x > 65 && rect.tl().x < 190){
                 lowestScore = score;
                 bestRect = rect;
             }
