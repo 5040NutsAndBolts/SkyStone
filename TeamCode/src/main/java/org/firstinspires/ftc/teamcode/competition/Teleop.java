@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.competition;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.competition.hardware.*;
 import org.firstinspires.ftc.teamcode.helperclasses.HelperMethods;
@@ -63,6 +64,14 @@ public class Teleop extends LinearOpMode {
         robot.intakeBlock.setPosition(.5);
         carriage.openClaw();
         foundationGrabbers.release();
+        robot.intakeBlock.setPosition(0);
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        timer.startTime();
+        while (opModeIsActive() && timer.seconds() < .5)
+            if (timer.seconds() > .3)
+                intake.setPower(1);
+        intake.setPower(0);
 
         while (opModeIsActive()) {
             // Telemetry
