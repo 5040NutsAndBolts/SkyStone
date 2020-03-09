@@ -25,9 +25,10 @@ public class SkystoneAuto extends AutoMethods {
         if (onRed) {
             robot.resetOdometry(9,-103.5,3*Math.PI/2);
             timer.reset();
-            while (timer.seconds() < .5 && opModeIsActive())
+            while (timer.seconds() < .5 && opModeIsActive()) {
                 robot.updatePositionRoadRunner();
-                drive.drive(0,-.6,0);
+                drive.drive(0, -.3, 0);
+            }
             if(skystonePosition!=3)
                 while (opModeIsActive() && !HelperMethods.inThreshold(robot.theta, Math.PI/2, 10)) {
                     robot.updatePositionRoadRunner();
@@ -35,7 +36,27 @@ public class SkystoneAuto extends AutoMethods {
                 }
         }
         else robot.resetOdometry(9,103.5,3 * Math.PI / 2);
+        if(onRed)
+        {
 
+            timer.reset();
+            timer.startTime();
+            while (timer.seconds() < .3 && opModeIsActive()) {
+                robot.updatePositionRoadRunner();
+                drive.drive(0, -.6, 0);
+            }
+
+        }else
+            {
+
+                timer.reset();
+                timer.startTime();
+                while (timer.seconds() < .3 && opModeIsActive()) {
+                    robot.updatePositionRoadRunner();
+                    drive.drive(0, -.3, 0);
+                }
+
+            }
         // Goes to position to grab skystone
         if (skystonePosition == 1) {
             runPurePursuitPath(
@@ -54,8 +75,8 @@ public class SkystoneAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos2,
                     wp_grabSkystone1_pos2,
-                    .6,
-                    .018,
+                    .62,
+                    .019,
                     0.1,
                     8,
                     1.2,
@@ -125,14 +146,14 @@ public class SkystoneAuto extends AutoMethods {
                     cp_depositSkystonePos3,
                     wp_depositSkystonePos3,
                     4,
-                    .75,
+                    .95,
                     .15
             );
         }
 
         // Places the block out the robot
         placeBlock(0, .25);
-
+        pointTurnToAngle(3*Math.PI/2,30);
         // Drive back to the quarry
         runPurePursuitPath(
                 cp_prepareForSecondSkystone,
@@ -141,8 +162,8 @@ public class SkystoneAuto extends AutoMethods {
                 .003,
                 .15,
                 8,
-                .2,
-                .01
+                .4,
+                .2
         );
 
         // Goes to position to grab second skystone
@@ -154,7 +175,7 @@ public class SkystoneAuto extends AutoMethods {
                     0.02,
                     .07,
                     4,
-                    1.5,
+                    2,
                     .3
             );
         }
@@ -166,7 +187,7 @@ public class SkystoneAuto extends AutoMethods {
                     .01,
                     0.2,
                     5,
-                    1.3,
+                    1.7,
                     .2
             );
         }
@@ -178,7 +199,7 @@ public class SkystoneAuto extends AutoMethods {
                     .1,
                     .35,
                     4,
-                    1.75,
+                    2,
                     .1
             );
         }

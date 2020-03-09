@@ -81,7 +81,7 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Lift Speed", robot.liftMotor1.getPower());
             telemetry.addData("Gamepad2 Left Stick Y", gamepad2.left_stick_y);
             telemetry.addData("Lift encoder", robot.intakeLeft.getCurrentPosition());
-            telemetry.addData("Lift Speed", lift.speed);
+            telemetry.addData("Capstone PWM", robot.capstoneDropper.getPosition()*2502);
             telemetry.addData("Left Y-Stick", gamepad2.left_stick_y);
             if (debugging) {
                 robot.updatePositionRoadRunner();
@@ -157,7 +157,7 @@ public class Teleop extends LinearOpMode {
 
             // Release the capstone
             if (gamepad2.back)
-                capstoneDropper.dropping = true;
+                capstoneDropper.drop();
 
             // =======================
             // Bottom Half (Gamepad 1) - Intake, Drive, Foundation Grabbers

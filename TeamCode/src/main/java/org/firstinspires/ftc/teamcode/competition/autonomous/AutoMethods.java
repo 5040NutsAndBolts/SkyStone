@@ -245,7 +245,7 @@ public abstract class AutoMethods extends LinearOpMode {
         else if (error < -Math.PI)
             error = -error - Math.PI;
 
-        PID pid = new PID(error,1.1,0,.2);
+        PID pid = new PID(error,.35,0,.2);
         while (opModeIsActive() && !nearAngle(robot.theta, angle, tolerance)) {
             error = robot.theta - angle;
 
@@ -493,9 +493,9 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Position to grab the right most skystone closest to the sky bridge
-            cp_grabSkystone1_pos1 = new CheckPoint(50.5, 96, .5, robot),
+            cp_grabSkystone1_pos1 = new CheckPoint(51.5, 96, .5, robot),
             // Position to grab the right most skystone closest to the wall
-            cp_grabSkystone2_pos1 = new CheckPoint(51.5, 122, .5, robot),
+            cp_grabSkystone2_pos1 = new CheckPoint(55.5, 122, .5, robot),
 
             // Position to grab the middle skystone closest to the sky bridge
             cp_grabSkystone1_pos2 = new CheckPoint(50.6, 88.5, .5, robot),
@@ -524,12 +524,12 @@ public abstract class AutoMethods extends LinearOpMode {
             wp_grabSkystone1_pos1 = new ArrayList<>(
             Arrays.asList(
                     new WayPoint(40, 96, 3 * Math.PI / 2),
-                    new WayPoint(50.5, 96, 3 * Math.PI / 2)
+                    new WayPoint(51.5, 96, 3 * Math.PI / 2)
             )),
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(40.5-0.7874016, 120, 3 * Math.PI / 2),
-                            new WayPoint(51.5, 122, 3 * Math.PI / 2)
+                            new WayPoint(55.5, 122, 3 * Math.PI / 2)
                     )),
             // Middle skystone paths
             wp_grabSkystone1_pos2 = new ArrayList<>(
@@ -546,7 +546,7 @@ public abstract class AutoMethods extends LinearOpMode {
             wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(18-0.7874016, 118.5, Math.PI/2),
-                            new WayPoint(52, 116, Math.PI/2)
+                            new WayPoint(52, 114, Math.PI/2)
                     )),
             wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
