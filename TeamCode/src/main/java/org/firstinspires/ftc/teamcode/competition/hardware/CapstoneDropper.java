@@ -1,44 +1,28 @@
 package org.firstinspires.ftc.teamcode.competition.hardware;
 
-import org.firstinspires.ftc.teamcode.helperclasses.ThreadPool;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class CapstoneDropper {
 
     private Hardware robot;
 
-    private int pwm = 2502;
+    public boolean dropping = false;
+    private int currentPWM = 1450;
 
-    ScheduledExecutorService executor =
-            Executors.newSingleThreadScheduledExecutor();
     public CapstoneDropper(Hardware robot) {
         this.robot = robot;
-
     }
 
-    Runnable decreasePWM = new Runnable() {
-        public void run() {
-            robot.capstoneDropper.setPosition(pwm--/2502);
-            if(pwm<600) {
-                executor.shutdownNow();
-                executor = Executors.newSingleThreadScheduledExecutor();
-            }
+    public void reset() {
+        currentPWM = 1450;
+        robot.capstoneDropper.setPosition(1);
+    }
 
-
+    public void run() {
+        if (dropping) {
+            robot.capstoneDropper.setPosition(currentPWM-- / 2502.0);
         }
-    };
-
-    /**
-     * Create a new thread for the dropping mechanism
-     */
-    public void drop()
-    {
-
-        executor.scheduleAtFixedRate(decreasePWM, 0,14, TimeUnit.MILLISECONDS);
-
+        if (currentPWM < 1050) {
+            dropping = false;
+            currentPWM = 1450;
+        }
     }
-
 }
