@@ -495,17 +495,17 @@ public abstract class AutoMethods extends LinearOpMode {
             // Position to grab the right most skystone closest to the sky bridge
             cp_grabSkystone1_pos1 = new CheckPoint(51.5, 96, .5, robot),
             // Position to grab the right most skystone closest to the wall
-            cp_grabSkystone2_pos1 = new CheckPoint(55.5, 122, .5, robot),
+            cp_grabSkystone2_pos1 = new CheckPoint(55.5, 123, .5, robot),
 
             // Position to grab the middle skystone closest to the sky bridge
-            cp_grabSkystone1_pos2 = new CheckPoint(50.6, 88.5, .5, robot),
+            cp_grabSkystone1_pos2 = new CheckPoint(50.6, 88.7, .5, robot),
             // Position to grab the middle skystone closest to the wall
             cp_grabSkystone2_pos2 = new CheckPoint(53.5, 113, .5, robot),
 
             // Position to grab the left most skystone closest to the sky bridge
-            cp_grabSkystone1_pos3 = new CheckPoint(52, 116, .5, robot),
+            cp_grabSkystone1_pos3 = new CheckPoint(52, 115, .5, robot),
             // Position to grab the left most skystone closest to the wall
-            cp_grabSkystone2_pos3 = new CheckPoint(64, 104.5, .5, robot),
+            cp_grabSkystone2_pos3 = new CheckPoint(64, 106.5, .5, robot),
 
             // Backing up and preparing to deposit the first skystone
             cp_prepareForDeposit = new CheckPoint(41, 97, 3, robot),
@@ -529,13 +529,13 @@ public abstract class AutoMethods extends LinearOpMode {
             wp_grabSkystone2_pos1 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(40.5-0.7874016, 120, 3 * Math.PI / 2),
-                            new WayPoint(55.5, 122, 3 * Math.PI / 2)
+                            new WayPoint(55.5, 123, 3 * Math.PI / 2)
                     )),
             // Middle skystone paths
             wp_grabSkystone1_pos2 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(9-0.7874016, 105, 3 * Math.PI / 2),
-                            new WayPoint(50.4, 88.6, 3 * Math.PI / 2)
+                            new WayPoint(50.4, 88.7, 3 * Math.PI / 2)
                     )),
             wp_grabSkystone2_pos2 = new ArrayList<>(
                     Arrays.asList(
@@ -546,11 +546,11 @@ public abstract class AutoMethods extends LinearOpMode {
             wp_grabSkystone1_pos3 = new ArrayList<>(
                     Arrays.asList(
                             new WayPoint(18-0.7874016, 118.5, Math.PI/2),
-                            new WayPoint(52, 114, Math.PI/2)
+                            new WayPoint(52, 115.5, Math.PI/2)
                     )),
             wp_grabSkystone2_pos3 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(64, 104.5, 3 * Math.PI / 2)
+                            new WayPoint(64, 106.5, 3 * Math.PI / 2)
                     )),
             // Depositing the skystones
             wp_prepareForDeposit = new ArrayList<>(
@@ -596,41 +596,40 @@ public abstract class AutoMethods extends LinearOpMode {
 
     public CheckPoint
             // Position to grab the left most skystone closest to the wall
-            cp_foundationGrabSkystone2_pos3 = new CheckPoint(53, 103, 2.1, robot),
+            cp_skystone2_pos3_f = new CheckPoint(67, 106.5, .5, robot),
+            cp_skystone2_pos1_f = new CheckPoint(56, 123, .5, robot),
             // run to the foundation with the skystone
-            cp_skystoneToFoundation = new CheckPoint(43, 17, 2.6, robot),
-            cp_awayFromFoundation = new CheckPoint(11, 50, 3, robot),
+            cp_skystoneToFoundation = new CheckPoint(37, 25, 2.6, robot),
+            cp_awayFromFoundation = new CheckPoint(35, 50, 3, robot),
             cp_awayFromPartner = new CheckPoint(28, 50, 4, robot),
             cp_awayFromBridge = new CheckPoint(40, 98, 4, robot),
-            cp_skystoneToFoundation_2 = new CheckPoint(33, 105, 2, robot);
+            cp_skystoneToFoundation_2 = new CheckPoint(33.75, 32, 2, robot);
 
     public ArrayList<WayPoint>
-            wp_foundationGrabSkystone2_pos3 = new ArrayList<>(
-            Arrays.asList(
-                    new WayPoint(51, 103, 3 * Math.PI / 2),
-                    new WayPoint(50, 100.5, 3 * Math.PI / 2)
-            )),
+
             wp_skystoneToFoundation = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(32, 60, 0),
-                            new WayPoint(32, 45, 0),
-                            new WayPoint(25, 25, 0),
-                            new WayPoint(43, 17, 0)
+                            new WayPoint(33, 90, 3 * Math.PI / 2),
+                            new WayPoint(36, 40, 0),
+                            new WayPoint(37, 25, 0)
                     )),
-            wp_awayFromFoundation=new ArrayList<>(
+            wp_grabSkystone2_pos3_f= new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(11,50,0)
+                            new WayPoint(67, 106.5, 3 * Math.PI / 2)
                     )),
-            wp_awayFromPartner=new ArrayList<>(
+            wp_grabSkystone2_pos1_f= new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(28,50,0)
+                            new WayPoint(40.5-0.7874016, 120, 3 * Math.PI / 2),
+                            new WayPoint(56, 123, 3 * Math.PI / 2)
                     )),
-            wp_awayFromBridge=new ArrayList<>(
+            wp_awayFromFoundation= new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(40, 98, 3 * Math.PI / 2)
+                            new WayPoint(34, 33, 3 * Math.PI / 2),
+                            new WayPoint(35, 50, 3 * Math.PI / 2)
                     )),
             wp_skystoneToFoundation_2 = new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(33, 105, 3*Math.PI/2)
+                            new WayPoint(35.5, 90, 3 * Math.PI / 2),
+                            new WayPoint(33.75, 32, 3 * Math.PI / 2)
                     ));
 }

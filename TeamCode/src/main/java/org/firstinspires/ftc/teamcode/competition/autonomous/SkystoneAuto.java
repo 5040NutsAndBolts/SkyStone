@@ -41,7 +41,7 @@ public class SkystoneAuto extends AutoMethods {
 
             timer.reset();
             timer.startTime();
-            while (timer.seconds() < .3 && opModeIsActive()) {
+            while (timer.seconds() < .1 && opModeIsActive()) {
                 robot.updatePositionRoadRunner();
                 drive.drive(0, -.6, 0);
             }
@@ -51,11 +51,16 @@ public class SkystoneAuto extends AutoMethods {
 
                 timer.reset();
                 timer.startTime();
-                while (timer.seconds() < .3 && opModeIsActive()) {
-                    robot.updatePositionRoadRunner();
-                    drive.drive(0, -.3, 0);
-                }
-
+                if(skystonePosition!=3)
+                    while (timer.seconds() < .3 && opModeIsActive()) {
+                        robot.updatePositionRoadRunner();
+                        drive.drive(0, -.3, 0);
+                    }
+                else
+                    while (timer.seconds() < .2 && opModeIsActive()) {
+                        robot.updatePositionRoadRunner();
+                        drive.drive(0, -.3, 0);
+                    }
             }
         // Goes to position to grab skystone
         if (skystonePosition == 1) {
