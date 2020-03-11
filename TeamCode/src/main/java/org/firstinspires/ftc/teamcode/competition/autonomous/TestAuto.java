@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-@Disabled
 @Config
 @Autonomous(group = "Auto", name = "Test Auto")
 public class TestAuto extends AutoMethods {
@@ -23,13 +22,20 @@ public class TestAuto extends AutoMethods {
     public void runOpMode() {
         enableDashboard();
 
-        ServoImplEx capDrop = hardwareMap.get(ServoImplEx.class, "capDrop");
+        ServoImplEx capDrop = hardwareMap.get(ServoImplEx.class, "capstoneDropper");
         capDrop.setPwmRange(new PwmControl.PwmRange(uS_min, uS_max));
 
         waitForStart();
 
+        capDrop.setPosition(uS_min);
+        for(int i=end_i; i<start_i; i+=decr_val) {
+            capDrop.setPosition(i);
+            telemetry.addData("i",i);
+            telemetry.update();
+        }
+        capDrop.setPosition(uS_max);
         for(int i=start_i; i>end_i; i-=decr_val) {
-            capDrop.setPosition(i/uS_max);
+            capDrop.setPosition(i);
             telemetry.addData("i",i);
             telemetry.update();
         }
