@@ -97,10 +97,10 @@ public class SkystoneFoundationAuto extends AutoMethods {
                     wp_grabSkystone1_pos3,
                     1.3,
                     .04,
-                    0.3,
+                    0.175,
                     4,
-                    1.5,
-                    .15
+                    2,
+                    .2
             );
         }
         drive.hardBrakeMotors();
@@ -142,25 +142,21 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 wp_prepareForDeposit
         );
 
-        // Run to build zone with the skystone
-
+        // Run to foundation with the skystone
+        intake.setPower(0);
+        carriage.closeClaw();
             runPurePursuitPath(
                     cp_skystoneToFoundation,
                     wp_skystoneToFoundation,
+                    .3,
+                    .001,
+                    .1,
                     4,
-                    .75,
-                    .25
+                    1.5,
+                    .35
             );
 
-        intake.setPower(0);
-        carriage.closeClaw();
-        timer.reset();
-        timer.startTime();
-        while(timer.seconds()<.85) {
-            robot.updatePositionRoadRunner();
-            drive.drive(-.3, 0, 0);
-        }
-        drive.hardBrakeMotors();
+
         foundationGrabbers.grab();
         while(robot.intakeRight.getCurrentPosition()>-4000&&opModeIsActive())
         {
@@ -181,7 +177,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             public void run()
             {
 
-                waitTime(.4);
+
                 while(robot.intakeRight.getCurrentPosition()<-15&&opModeIsActive())
                 {
 
@@ -194,6 +190,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             }
 
         };
+        waitTimeWithOdom(.4);
         pool.submit(t);
 
 
@@ -201,34 +198,37 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 cp_awayFromFoundation,
                 wp_awayFromFoundation,
                 .25,
-                .003,
+                .05,
                 .15,
                 5,
-                1,
+                1.6,
                 .4
         );
         drive.hardBrakeMotors();
         foundationGrabbers.release();
-        timer.reset();
-        timer.startTime();
-        while (opModeIsActive() && timer.seconds() < .7) {
-            drive.drive(0, -0.4, 0);
-            robot.updatePositionRoadRunner();
-        }
+        runPurePursuitPath(
+                cp_toBridge,
+                wp_toBridge,
+                .35,
+                .05,
+                .1,
+                5,
+                1.1,
+                .3
+        );
 
         drive.hardBrakeMotors();
 
-        pointTurnToAngle(3*Math.PI/2,30);
         // Drive back to the quarry
         runPurePursuitPath(
-                cp_prepareForSecondSkystone,
+                cp_prepareForSecondSkystone_f,
                 wp_prepareForSecondSkystone,
                 .25,
                 .003,
                 .15,
                 8,
-                .7,
-                .2
+                1.8,
+                .5
         );
 
         // Goes to position to grab second skystone
@@ -289,7 +289,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         drive.hardBrakeMotors();
 
         // Intake for a second to ensure the block is grabbed
-        waitTime(1);
+        waitTimeWithOdom(1);
 
         // Run to build zone with the skystone
 
@@ -306,7 +306,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         drive.hardBrakeMotors();
         intake.setPower(0);
         carriage.closeClaw();
-        waitTime(.2);
+        waitTimeWithOdom(.2);
         while(robot.intakeRight.getCurrentPosition()>-4000&&opModeIsActive())
         {
 
@@ -326,7 +326,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             public void run()
             {
 
-                waitTime(.4);
+
                 while(robot.intakeRight.getCurrentPosition()<-15&&opModeIsActive())
                 {
 
@@ -339,6 +339,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             }
 
         };
+        waitTimeWithOdom(.4);
         pool.submit(t1);
         // Places the block out the back
 

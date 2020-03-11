@@ -77,8 +77,8 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
                     .006,
                     0,
                     4,
-                    1,
-                    .7
+                    1.1,
+                    .65
             );
         }
 
@@ -100,7 +100,7 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
         // Drive backwards to be out of way with skystone
         runPurePursuitPath(
                 cp_prepareForDeposit,
-                wp_prepareForDeposit
+                wp_prepareForDeposit_f
         );
 
         // Point turn to avoid hitting things
@@ -120,7 +120,8 @@ public class SingleSkystoneFoundationAuto extends AutoMethods {
                 .0017555,
                 .7,
                 4,
-                .4,.1
+                .8,
+                .1
 
         );
 

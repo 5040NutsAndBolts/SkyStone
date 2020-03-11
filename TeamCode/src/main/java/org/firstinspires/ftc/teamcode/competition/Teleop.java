@@ -166,7 +166,7 @@ public class Teleop extends LinearOpMode {
 
             // Release the capstone
             if (gamepad2.back)
-                capstoneDropper.drop();
+                capstoneDropper.dropping=true;
 
             // =======================
             // Bottom Half (Gamepad 1) - Intake, Drive, Foundation Grabbers
