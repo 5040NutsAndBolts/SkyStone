@@ -610,7 +610,7 @@ public abstract class AutoMethods extends LinearOpMode {
             // run to the foundation with the skystone
             cp_skystoneToFoundation = new CheckPoint(46, 17, 2.6, robot),
             cp_awayFromFoundation = new CheckPoint(23, 48, 3, robot),
-            cp_toBridge = new CheckPoint(38.5, 48, .7, robot),
+            cp_toBridge = new CheckPoint(38.4, 48, .7, robot),
             cp_awayFromPartner = new CheckPoint(28, 50, 4, robot),
             cp_awayFromBridge = new CheckPoint(40, 98, 4, robot),
             cp_skystoneToFoundation_2 = new CheckPoint(32.75, 29, 2, robot),
@@ -645,7 +645,7 @@ public abstract class AutoMethods extends LinearOpMode {
             ),
             wp_toBridge= new ArrayList<>(
                     Arrays.asList(
-                            new WayPoint(38.5, 48, 3 * Math.PI / 2)
+                            new WayPoint(38.4, 48, 3 * Math.PI / 2)
                     )),
             wp_skystoneToFoundation_2 = new ArrayList<>(
                     Arrays.asList(

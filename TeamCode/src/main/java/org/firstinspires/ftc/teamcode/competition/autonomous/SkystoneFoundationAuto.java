@@ -190,7 +190,9 @@ public class SkystoneFoundationAuto extends AutoMethods {
             }
 
         };
-        waitTimeWithOdom(.4);
+        robot.clawExtension1.setPower(0.001);
+        robot.clawExtension2.setPower(0.001);
+        waitTimeWithOdom(.1);
         pool.submit(t);
 
 
@@ -201,19 +203,19 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 .05,
                 .15,
                 5,
-                1.6,
-                .4
+                1.65,
+                .35
         );
         drive.hardBrakeMotors();
         foundationGrabbers.release();
         runPurePursuitPath(
                 cp_toBridge,
                 wp_toBridge,
-                .35,
+                .32,
                 .05,
-                .1,
+                .075,
                 5,
-                1.1,
+                .95,
                 .3
         );
 
