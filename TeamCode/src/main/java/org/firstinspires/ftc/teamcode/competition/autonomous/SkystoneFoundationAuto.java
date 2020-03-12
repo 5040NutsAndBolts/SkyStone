@@ -139,7 +139,10 @@ public class SkystoneFoundationAuto extends AutoMethods {
         // Drive backwards to be out of way with skystone
         runPurePursuitPath(
                 cp_prepareForDeposit,
-                wp_prepareForDeposit
+                wp_prepareForDeposit_f,
+                4,
+                1.6,
+                1
         );
 
         // Run to foundation with the skystone
@@ -152,8 +155,8 @@ public class SkystoneFoundationAuto extends AutoMethods {
                     .001,
                     .1,
                     4,
-                    1.5,
-                    .35
+                    1.4,
+                    .5
             );
 
 
@@ -203,8 +206,8 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 .05,
                 .15,
                 5,
-                1.65,
-                .35
+                1.5,
+                .25
         );
         drive.hardBrakeMotors();
         foundationGrabbers.release();
@@ -227,10 +230,10 @@ public class SkystoneFoundationAuto extends AutoMethods {
                 wp_prepareForSecondSkystone,
                 .25,
                 .003,
-                .15,
+                .1,
                 8,
                 1.8,
-                .5
+                .3
         );
 
         // Goes to position to grab second skystone
