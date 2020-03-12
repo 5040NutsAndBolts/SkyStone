@@ -16,6 +16,7 @@ public class FoundationAuto extends AutoMethods {
         runPurePursuitPath(
                 cp_foundationGrab,
                 wp_foundationGrab,
+                8,
                 .4,
                 0,
                 1.1,
@@ -65,6 +66,7 @@ public class FoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_foundationParkWall,
                     wp_foundationParkWall,
+                    8,
                     4,
                     1.7,
                     1
@@ -73,6 +75,7 @@ public class FoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_foundationParkBridge,
                     wp_foundationParkBridge,
+                    8,
                     4,
                     1.7,
                     1

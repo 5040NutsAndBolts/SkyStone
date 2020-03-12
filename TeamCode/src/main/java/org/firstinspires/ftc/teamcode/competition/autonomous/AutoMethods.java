@@ -388,7 +388,7 @@ public abstract class AutoMethods extends LinearOpMode {
      * @param speed         Max speed the robot will follow the path at
      * @param turnSpeed     Max speed the robot will curve at while following the path
      */
-    public void runPurePursuitPath(CheckPoint checkPoint, ArrayList<WayPoint> path,
+    public void runPurePursuitPath(CheckPoint checkPoint, ArrayList<WayPoint> path, double timeout,
                                    double P, double I, double D,
                                    double lookAheadDist, double speed, double turnSpeed) {
         // Flips the path to work for red alliance
@@ -410,7 +410,7 @@ public abstract class AutoMethods extends LinearOpMode {
             purePursuit.followPath(path, lookAheadDist, speed, turnSpeed);
 
             // If its been more than 5 seconds and the checkpoint hasn't been hit, just say it has
-            if (timer.seconds() >= 8) {
+            if (timer.seconds() >= timeout) {
                 checkPoint.isHit = true;
                 checkPoint.onHit();
                 checkPoint.terminate();
@@ -425,13 +425,22 @@ public abstract class AutoMethods extends LinearOpMode {
             flipPath(false, checkPoint, path);
     }
 
+    public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path, double timeout,
+                                   double lookAheadDist, double speed, double turnSpeed) {
+        runPurePursuitPath(cp, path, timeout, .06, .005, .05, lookAheadDist, speed, turnSpeed);
+    }
+
     public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path,
                                    double lookAheadDist, double speed, double turnSpeed) {
-        runPurePursuitPath(cp, path, .06, .005, .05, lookAheadDist, speed, turnSpeed);
+        runPurePursuitPath(cp, path, 8, .06, .005, .05, lookAheadDist, speed, turnSpeed);
+    }
+
+    public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path, double timeout) {
+        runPurePursuitPath(cp, path, timeout, .06, .005, .05, 4, 1.5, 1);
     }
 
     public void runPurePursuitPath(CheckPoint cp, ArrayList<WayPoint> path) {
-        runPurePursuitPath(cp, path, .06, .005, .05, 4, 1.5, 1);
+        runPurePursuitPath(cp, path, 8, .06, .005, .05, 4, 1.5, 1);
     }
 
     // =======

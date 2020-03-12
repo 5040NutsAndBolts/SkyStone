@@ -70,6 +70,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos1,
                     wp_grabSkystone1_pos1,
+                    8,
                     1,
                     .009,
                     .2,
@@ -83,6 +84,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos2,
                     wp_grabSkystone1_pos2,
+                    8,
                     .62,
                     .019,
                     0.1,
@@ -95,6 +97,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone1_pos3,
                     wp_grabSkystone1_pos3,
+                    8,
                     1.3,
                     .04,
                     0.175,
@@ -151,6 +154,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_skystoneToFoundation,
                     wp_skystoneToFoundation,
+                    8,
                     .3,
                     .001,
                     .1,
@@ -202,6 +206,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         runPurePursuitPath(
                 cp_awayFromFoundation,
                 wp_awayFromFoundation,
+                8,
                 .25,
                 .05,
                 .15,
@@ -214,6 +219,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         runPurePursuitPath(
                 cp_toBridge,
                 wp_toBridge,
+                8,
                 .32,
                 .05,
                 .075,
@@ -228,6 +234,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
         runPurePursuitPath(
                 cp_prepareForSecondSkystone_f,
                 wp_prepareForSecondSkystone,
+                8,
                 .25,
                 .003,
                 .1,
@@ -241,6 +248,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_skystone2_pos1_f,
                     wp_grabSkystone2_pos1_f,
+                    8,
                     .75,
                     0.02,
                     .07,
@@ -253,6 +261,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_grabSkystone2_pos2,
                     wp_grabSkystone2_pos2,
+                    8,
                     .7,
                     .01,
                     0.2,
@@ -265,6 +274,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_skystone2_pos3_f,
                     wp_grabSkystone2_pos3_f,
+                    8,
                     .9,
                     .1,
                     .35,
@@ -301,6 +311,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_skystoneToFoundation_2,
                     wp_skystoneToFoundation_2,
+                    8,
                     .5,
                     .02,
                     .2,
@@ -353,6 +364,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_parkBridge,
                     wp_parkBridge,
+                    8,
                     .06,
                     .005,
                     .07,
@@ -365,6 +377,7 @@ public class SkystoneFoundationAuto extends AutoMethods {
             runPurePursuitPath(
                     cp_parkWall,
                     wp_ParkWall,
+                    8,
                     .06,
                     .005,
                     .07,
