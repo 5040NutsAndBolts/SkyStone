@@ -119,8 +119,7 @@ public abstract class AutoMethods extends LinearOpMode {
                 onRed = false;
             }
             if (gamepad1.b || gamepad2.b) {
-                if (!onRed)
-                {
+                if (!onRed) {
                     robot.resetOdometry(robot.x, -robot.y, robot.theta);
                 }
                 onRed = true;
@@ -439,12 +438,6 @@ public abstract class AutoMethods extends LinearOpMode {
     // PARKING
     // =======
 
-    public CheckPoint
-            // Parking against the wall
-            cp_parkWall = new CheckPoint(8, 70, 2, robot),
-            // Parking against the neutral bridge
-            cp_parkBridge = new CheckPoint(35, 70, 2, robot);
-
     public ArrayList<WayPoint>
             // Robot quickly rotates then moves next to the wall and slides down
             wp_ParkWall = new ArrayList<>(
@@ -452,23 +445,22 @@ public abstract class AutoMethods extends LinearOpMode {
                     new WayPoint(8, 60, Math.PI / 2),
                     new WayPoint(8, 70, Math.PI / 2)
             )),
-            // Robot quickly rotates then moves up to near the neutral bridge and over to park
-            wp_parkBridge = new ArrayList<>(
-                    Arrays.asList(
-                            new WayPoint(37, 72, 3 * Math.PI / 2),
-                            new WayPoint(35, 70, 3 * Math.PI / 2)
-                    ));
+    // Robot quickly rotates then moves up to near the neutral bridge and over to park
+    wp_parkBridge = new ArrayList<>(
+            Arrays.asList(
+                    new WayPoint(37, 72, 3 * Math.PI / 2),
+                    new WayPoint(35, 70, 3 * Math.PI / 2)
+            ));
+
+    public CheckPoint
+            // Parking against the wall
+            cp_parkWall = new CheckPoint(wp_ParkWall,2, robot),
+            // Parking against the neutral bridge
+            cp_parkBridge = new CheckPoint(wp_parkBridge,2, robot);
 
     // ===============
     // FOUNDATION AUTO
     // ===============
-
-    public CheckPoint
-            cp_foundationGrab = new CheckPoint(31.5, 11, 2, robot),
-            cp_foundationPushImproved = new CheckPoint(36, 11, 2.5, robot),
-            cp_foundationParkPrep = new CheckPoint(40, 44, 2, robot),
-            cp_foundationParkWall = new CheckPoint(0, 70, 2, robot),
-            cp_foundationParkBridge = new CheckPoint(21, 75, 2, robot);
 
     public ArrayList<WayPoint>
             wp_foundationGrab = new ArrayList<>(
@@ -496,37 +488,16 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(30,70,0)
                     ));
 
+    public CheckPoint
+            cp_foundationGrab = new CheckPoint(wp_foundationGrab, 2, robot),
+            cp_foundationPushImproved = new CheckPoint(wp_foundationPushImproved, 2.5, robot),
+            cp_foundationParkPrep = new CheckPoint(wp_foundationParkPrep, 2, robot),
+            cp_foundationParkWall = new CheckPoint(wp_foundationParkWall, 2, robot),
+            cp_foundationParkBridge = new CheckPoint(wp_foundationParkBridge, 2, robot);
+
     // =============
     // SKYSTONE AUTO
     // =============
-
-    public CheckPoint
-            // Position to grab the right most skystone closest to the sky bridge
-            cp_grabSkystone1_pos1 = new CheckPoint(51.5, 96, .5, robot),
-            // Position to grab the right most skystone closest to the wall
-            cp_grabSkystone2_pos1 = new CheckPoint(55.5, 123, .5, robot),
-
-            // Position to grab the middle skystone closest to the sky bridge
-            cp_grabSkystone1_pos2 = new CheckPoint(50.6, 88.7, .5, robot),
-            // Position to grab the middle skystone closest to the wall
-            cp_grabSkystone2_pos2 = new CheckPoint(53.5, 113, .5, robot),
-
-            // Position to grab the left most skystone closest to the sky bridge
-            cp_grabSkystone1_pos3 = new CheckPoint(52, 116, .5, robot),
-            // Position to grab the left most skystone closest to the wall
-            cp_grabSkystone2_pos3 = new CheckPoint(64, 106.5, .5, robot),
-
-            // Backing up and preparing to deposit the first skystone
-            cp_prepareForDeposit = new CheckPoint(41, 97, 3, robot),
-
-            // Driving and depositing the skystone
-            cp_depositSkystone = new CheckPoint(36, 57, 1.8, robot),
-            cp_depositSkystonePos3 = new CheckPoint(36, 57, 1.6, robot),
-            cp_depositSkystone_2 = new CheckPoint(34, 56, 1.8, robot),
-            cp_depositSkystone_2Pos3 = new CheckPoint(35, 56, 1.8, robot),
-
-            // Driving back to the quarry
-            cp_prepareForSecondSkystone = new CheckPoint(23, 102, 8, robot);
 
     public ArrayList<WayPoint>
             // Right most skystone paths
@@ -599,22 +570,38 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(23, 102, 3 * Math.PI / 2)
                     ));
 
+    public CheckPoint
+            // Position to grab the right most skystone closest to the sky bridge
+            cp_grabSkystone1_pos1 = new CheckPoint(wp_grabSkystone1_pos1, .5, robot),
+            // Position to grab the right most skystone closest to the wall
+            cp_grabSkystone2_pos1 = new CheckPoint(wp_grabSkystone2_pos1, .5, robot),
+
+            // Position to grab the middle skystone closest to the sky bridge
+            cp_grabSkystone1_pos2 = new CheckPoint(wp_grabSkystone1_pos2, .5, robot),
+            // Position to grab the middle skystone closest to the wall
+            cp_grabSkystone2_pos2 = new CheckPoint(wp_grabSkystone2_pos2, .5, robot),
+
+            // Position to grab the left most skystone closest to the sky bridge
+            cp_grabSkystone1_pos3 = new CheckPoint(wp_grabSkystone1_pos3, .5, robot),
+            // Position to grab the left most skystone closest to the wall
+            cp_grabSkystone2_pos3 = new CheckPoint(wp_grabSkystone2_pos3, .5, robot),
+
+            // Backing up and preparing to deposit the first skystone
+            cp_prepareForDeposit = new CheckPoint(wp_prepareForDeposit, 3, robot),
+
+            // Driving and depositing the skystone
+            cp_depositSkystone = new CheckPoint(wp_depositSkystone, 1.8, robot),
+            cp_depositSkystonePos3 = new CheckPoint(wp_depositSkystonePos3, 1.6, robot),
+            cp_depositSkystone_2 = new CheckPoint(wp_depositSkystone_2, 1.8, robot),
+            cp_depositSkystone_2Pos3 = new CheckPoint(wp_depositSkystone_2Pos3, 1.8, robot),
+
+            // Driving back to the quarry
+            cp_prepareForSecondSkystone = new CheckPoint(wp_prepareForSecondSkystone, 8, robot);
+
     // ============================
     // SKYSTONE AND FOUNDATION AUTO
     // ============================
 
-    public CheckPoint
-            // Position to grab the left most skystone closest to the wall
-            cp_skystone2_pos3_f = new CheckPoint(67, 102.5, .5, robot),
-            cp_skystone2_pos1_f = new CheckPoint(54.5, 122, .5, robot),
-            // run to the foundation with the skystone
-            cp_skystoneToFoundation = new CheckPoint(46, 17, 2.6, robot),
-            cp_awayFromFoundation = new CheckPoint(23, 48, 3, robot),
-            cp_toBridge = new CheckPoint(38, 48, .6, robot),
-            cp_awayFromPartner = new CheckPoint(28, 50, 4, robot),
-            cp_awayFromBridge = new CheckPoint(40, 98, 4, robot),
-            cp_skystoneToFoundation_2 = new CheckPoint(32.75, 29, 2, robot),
-            cp_prepareForSecondSkystone_f = new CheckPoint(23, 102, 4, robot);
     public ArrayList<WayPoint>
 
             wp_skystoneToFoundation = new ArrayList<>(
@@ -653,4 +640,15 @@ public abstract class AutoMethods extends LinearOpMode {
                             new WayPoint(33.75, 32, 3 * Math.PI / 2),
                             new WayPoint(32.75,29,3*Math.PI/2)
                     ));
+
+    public CheckPoint
+            // Position to grab the left most skystone closest to the wall
+            cp_skystone2_pos3_f = new CheckPoint(wp_grabSkystone2_pos3_f, .5, robot),
+            cp_skystone2_pos1_f = new CheckPoint(wp_grabSkystone2_pos1_f, .5, robot),
+            // run to the foundation with the skystone
+            cp_skystoneToFoundation = new CheckPoint(wp_skystoneToFoundation, 2.6, robot),
+            cp_awayFromFoundation = new CheckPoint(wp_awayFromFoundation, 3, robot),
+            cp_toBridge = new CheckPoint(wp_toBridge, .6, robot),
+            cp_skystoneToFoundation_2 = new CheckPoint(wp_skystoneToFoundation_2, 2, robot),
+            cp_prepareForSecondSkystone_f = new CheckPoint(wp_prepareForSecondSkystone, 4, robot);
 }

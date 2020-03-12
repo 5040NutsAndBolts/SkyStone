@@ -21,8 +21,6 @@ public class PurePursuit {
     private boolean toPID = false;
     // Last position selected on path
     public double[] lastGoal = new double[3];
-    // Goal point the robot is headed towards
-    public double[] pointToMoveTo;
 
     public PurePursuit(Hardware r) {
         robot = r;
@@ -171,8 +169,6 @@ public class PurePursuit {
         drive.drive(-movementYPower * speedPercentage / speed, movementXPower * speedPercentage / speed, movementTurn / 6 / turnSpeed);
 
     }
-
-    //follow path with pure pursuit
 
     /**
      * Initializes the Pure Pursuit path
